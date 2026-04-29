@@ -1,0 +1,40 @@
+{
+  "@@locale": "eu",
+  "appTitle": "BalanceTracker",
+  "hello": "Kaixo",
+  "signOut": "Saioa itxi",
+  "signOutConfirm": "Ziur zaude saioa itxi nahi duzula?",
+  "cancel": "Utzi",
+  "changeLanguage": "Hizkuntza aldatu",
+  "balance": "Hileko saldoa",
+  "showMore": "Gehiago ikusi",
+  "latestTransactions": "Azken transakzioak",
+  "upcomingPayments": "Datozen ordainketak",
+  "noTransactions": "Oraindik transakziorik ez",
+  "noPayments": "Ez dago ordainketarik",
+  "income": "Sarrera",
+  "expense": "Gastua",
+  "daysLeft": "{days} egunetan",
+  "@daysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "appSubtitle": "Kontrolatu zure finantza pertsonalak",
+  "login": "Saioa hasi",
+  "email": "Emaila",
+  "password": "Pasahitza",
+  "enterEmail": "Sartu zure emaila",
+  "invalidEmail": "Emaila ez da baliozkoa",
+  "enterPassword": "Sartu zure pasahitza",
+  "minChars": "Gutxienez 6 karaktere",
+  "noAccount": "Ez duzu konturik? ",
+  "register": "Erregistratu",
+  "errorDefault": "Errore bat gertatu da. Saiatu berriro.",
+  "errorUserNotFound": "Ez dago konturik email honekin.",
+  "errorWrongPassword": "Pasahitz okerra.",
+  "errorUserDisabled": "Kontu hau desgaituta dago.",
+  "errorInvalidCredential": "Email edo pasahitz okerra."
+}

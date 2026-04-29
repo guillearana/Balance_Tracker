@@ -1,0 +1,40 @@
+{
+  "@@locale": "en",
+  "appTitle": "BalanceTracker",
+  "hello": "Hello",
+  "signOut": "Sign out",
+  "signOutConfirm": "Are you sure you want to sign out?",
+  "cancel": "Cancel",
+  "changeLanguage": "Change language",
+  "balance": "Monthly balance",
+  "showMore": "Show more",
+  "latestTransactions": "Latest transactions",
+  "upcomingPayments": "Upcoming payments",
+  "noTransactions": "No transactions yet",
+  "noPayments": "No upcoming payments",
+  "income": "Income",
+  "expense": "Expense",
+  "daysLeft": "In {days} days",
+  "@daysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "appSubtitle": "Control your personal finances",
+  "login": "Sign in",
+  "email": "Email",
+  "password": "Password",
+  "enterEmail": "Enter your email",
+  "invalidEmail": "Invalid email",
+  "enterPassword": "Enter your password",
+  "minChars": "Minimum 6 characters",
+  "noAccount": "Don't have an account? ",
+  "register": "Sign up",
+  "errorDefault": "An error occurred. Please try again.",
+  "errorUserNotFound": "No account found with this email.",
+  "errorWrongPassword": "Incorrect password.",
+  "errorUserDisabled": "This account has been disabled.",
+  "errorInvalidCredential": "Incorrect email or password."
+}

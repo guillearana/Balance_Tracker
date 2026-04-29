@@ -1,0 +1,40 @@
+{
+  "@@locale": "es",
+  "appTitle": "BalanceTracker",
+  "hello": "Hola",
+  "signOut": "Cerrar sesión",
+  "signOutConfirm": "¿Seguro que quieres cerrar sesión?",
+  "cancel": "Cancelar",
+  "changeLanguage": "Cambiar idioma",
+  "balance": "Balance del mes",
+  "showMore": "Mostrar más",
+  "latestTransactions": "Últimas transacciones",
+  "upcomingPayments": "Próximos pagos",
+  "noTransactions": "No hay transacciones aún",
+  "noPayments": "No hay pagos próximos",
+  "income": "Ingreso",
+  "expense": "Gasto",
+  "daysLeft": "En {days} días",
+  "@daysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "appSubtitle": "Controla tus finanzas personales",
+  "login": "Iniciar sesión",
+  "email": "Email",
+  "password": "Contraseña",
+  "enterEmail": "Introduce tu email",
+  "invalidEmail": "Email no válido",
+  "enterPassword": "Introduce tu contraseña",
+  "minChars": "Mínimo 6 caracteres",
+  "noAccount": "¿No tienes cuenta? ",
+  "register": "Regístrate",
+  "errorDefault": "Ha ocurrido un error. Inténtalo de nuevo.",
+  "errorUserNotFound": "No existe ninguna cuenta con este email.",
+  "errorWrongPassword": "Contraseña incorrecta.",
+  "errorUserDisabled": "Esta cuenta ha sido desactivada.",
+  "errorInvalidCredential": "Email o contraseña incorrectos."
+}
