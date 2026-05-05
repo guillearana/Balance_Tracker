@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:balance_tracker/l10n/app_localizations.dart';
 
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
@@ -12,6 +13,7 @@ class GroupsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final groupsAsync = ref.watch(userGroupsProvider);
     return Scaffold(
       body: SafeArea(
@@ -24,7 +26,7 @@ class GroupsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Grupos',
+                    l10n.groups,
                     style: GoogleFonts.inter(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -33,8 +35,10 @@ class GroupsScreen extends ConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () => _showCreateGroupSheet(context, ref),
-                    icon: Icon(Icons.add_circle_outline,
-                        color: theme.colorScheme.primary),
+                    icon: Icon(
+                      Icons.add_circle_outline,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                 ],
               ),
@@ -48,24 +52,28 @@ class GroupsScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.group_outlined,
-                              size: 64,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.2)),
+                          Icon(
+                            Icons.group_outlined,
+                            size: 64,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.2,
+                            ),
+                          ),
                           const SizedBox(height: 16),
                           Text(
-                            'No hay grupos creados',
+                            l10n.noGroupsCreated,
                             style: GoogleFonts.inter(
                               fontSize: 16,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.4),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 8),
                           TextButton(
                             onPressed: () =>
                                 _showCreateGroupSheet(context, ref),
-                            child: const Text('Crear grupo'),
+                            child: Text(l10n.createGroup),
                           ),
                         ],
                       ),
@@ -85,35 +93,43 @@ class GroupsScreen extends ConsumerWidget {
                             alignment: Alignment.centerRight,
                             padding: const EdgeInsets.only(right: 20),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFF7675),
+                              color: const Color(0xFFEF4444),
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: const Icon(Icons.delete_outline,
-                                color: Colors.white),
+                            child: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.white,
+                            ),
                           ),
                           confirmDismiss: (_) async {
                             return await showDialog<bool>(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: const Text('Borrar grupo'),
-                                content: Text(
-                                    '¿Seguro que quieres borrar "${group['name']}"?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(ctx).pop(false),
-                                    child: const Text('Cancelar'),
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: Text(l10n.deleteGroup),
+                                    content: Text(
+                                      l10n.deleteGroupConfirm(
+                                        group['name'] as String? ?? '',
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(ctx).pop(false),
+                                        child: Text(l10n.cancel),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(ctx).pop(true),
+                                        child: Text(
+                                          l10n.delete,
+                                          style: const TextStyle(
+                                            color: Color(0xFFEF4444),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(ctx).pop(true),
-                                    child: const Text('Borrar',
-                                        style: TextStyle(
-                                            color: Color(0xFFFF7675))),
-                                  ),
-                                ],
-                              ),
-                            ) ??
+                                ) ??
                                 false;
                           },
                           onDismissed: (_) async {
@@ -130,10 +146,9 @@ class GroupsScreen extends ConsumerWidget {
                     },
                   );
                 },
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, __) {
-                  return const Center(child: Text('Error cargando grupos'));
+                  return Center(child: Text(l10n.errorLoadingGroups));
                 },
               ),
             ),
@@ -159,8 +174,11 @@ class GroupsScreen extends ConsumerWidget {
     );
   }
 
-  void _openGroup(BuildContext context, WidgetRef ref,
-      Map<String, dynamic> group) {
+  void _openGroup(
+    BuildContext context,
+    WidgetRef ref,
+    Map<String, dynamic> group,
+  ) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ProviderScope(
@@ -186,7 +204,7 @@ class _GroupCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.cardTheme.color,
+          color: const Color(0xFFE8EDF4),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -212,7 +230,7 @@ class _GroupCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                group['name'] as String? ?? 'Grupo',
+                group['name'] as String? ?? '',
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -220,8 +238,10 @@ class _GroupCard extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(Icons.chevron_right,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
+            Icon(
+              Icons.chevron_right,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+            ),
           ],
         ),
       ),
@@ -247,19 +267,20 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Introduce un nombre para el grupo')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.enterGroupName)));
       return;
     }
     setState(() => _isLoading = true);
     try {
       final user = ref.read(currentUserProvider);
       if (user == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Usuario no autenticado')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.userNotAuthenticated)));
         return;
       }
       await ref
@@ -268,8 +289,9 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -278,18 +300,28 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+        20,
+        20,
+        20,
+        MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Nuevo grupo',
-                  style: GoogleFonts.inter(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
+              Text(
+                l10n.newGroup,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
@@ -299,9 +331,9 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
           const SizedBox(height: 16),
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Nombre del grupo',
-              prefixIcon: Icon(Icons.group_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.groupName,
+              prefixIcon: const Icon(Icons.group_outlined),
             ),
           ),
           const SizedBox(height: 24),
@@ -314,8 +346,11 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
-                  : const Text('Crear grupo'),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(l10n.createGroup),
             ),
           ),
         ],
@@ -330,8 +365,7 @@ class _GroupDetailScreen extends ConsumerStatefulWidget {
   const _GroupDetailScreen({required this.group});
 
   @override
-  ConsumerState<_GroupDetailScreen> createState() =>
-      _GroupDetailScreenState();
+  ConsumerState<_GroupDetailScreen> createState() => _GroupDetailScreenState();
 }
 
 class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
@@ -377,14 +411,14 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final groupId = widget.group['id'] as String;
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
-    final balances = _calculateBalances();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.group['name'] as String? ?? 'Grupo',
+          widget.group['name'] as String? ?? '',
           style: GoogleFonts.inter(fontWeight: FontWeight.w600),
         ),
         actions: [
@@ -409,33 +443,41 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                   padding: const EdgeInsets.all(20),
                   children: [
                     if (balances.isNotEmpty) ...[
-                      Text('Balances',
-                          style: GoogleFonts.inter(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                      Text(
+                        l10n.balances,
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       ...balances.entries.map((e) {
                         final isPositive = e.value >= 0;
                         return Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
-                            color: theme.cardTheme.color,
+                            color: const Color(0xFFE8EDF4),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(e.key,
-                                  style: GoogleFonts.inter(fontSize: 14)),
+                              Text(
+                                e.key,
+                                style: GoogleFonts.inter(fontSize: 14),
+                              ),
                               Text(
                                 '${isPositive ? '+' : ''}${currencyFormat.format(e.value)}',
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: isPositive
-                                      ? const Color(0xFF55EFC4)
-                                      : const Color(0xFFFF7675),
+                                      ? const Color(0xFF10B981)
+                                      : const Color(0xFFEF4444),
                                 ),
                               ),
                             ],
@@ -444,61 +486,75 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                       }),
                       const SizedBox(height: 24),
                     ],
-                    Text('Gastos',
-                        style: GoogleFonts.inter(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text(
+                      l10n.expenses,
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     if (expenses.isEmpty)
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 32),
-                          child: Text('No hay gastos aún',
-                              style: GoogleFonts.inter(
-                                  color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.4))),
+                          child: Text(
+                            l10n.noExpensesYet,
+                            style: GoogleFonts.inter(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.4,
+                              ),
+                            ),
+                          ),
                         ),
                       )
                     else
-                      ...expenses.map((expense) => Container(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: theme.cardTheme.color,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        expense['description'] as String? ??
-                                            'Gasto',
-                                        style: GoogleFonts.inter(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
+                      ...expenses.map(
+                        (expense) => Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE8EDF4),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      expense['description'] as String? ??
+                                          l10n.expense,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      Text(
-                                        'Pagado por: ${expense['paidBy']}',
-                                        style: GoogleFonts.inter(
-                                            fontSize: 12,
-                                            color: theme.colorScheme.onSurface
-                                                .withValues(alpha: 0.5)),
+                                    ),
+                                    Text(
+                                      l10n.paidBy(
+                                        expense['paidBy'] as String? ?? '',
                                       ),
-                                    ],
-                                  ),
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.5),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  currencyFormat.format(expense['amount']),
-                                  style: GoogleFonts.inter(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
+                              ),
+                              Text(
+                                currencyFormat.format(expense['amount']),
+                                style: GoogleFonts.inter(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ],
-                            ),
-                          )),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 );
               },
@@ -554,16 +610,16 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_descController.text.isEmpty ||
         _amountController.text.isEmpty ||
         _paidBy == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa todos los campos')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.completeAllFields)));
       return;
     }
-    final amount =
-        double.tryParse(_amountController.text.replaceAll(',', '.'));
+    final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     if (amount == null || amount <= 0) return;
 
     setState(() => _isLoading = true);
@@ -582,8 +638,9 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -592,18 +649,28 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+        20,
+        20,
+        20,
+        MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Añadir gasto',
-                  style: GoogleFonts.inter(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
+              Text(
+                l10n.addExpense,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
@@ -613,19 +680,18 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
           const SizedBox(height: 16),
           TextField(
             controller: _descController,
-            decoration: const InputDecoration(
-              labelText: 'Descripción',
-              prefixIcon: Icon(Icons.notes_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.description,
+              prefixIcon: const Icon(Icons.notes_outlined),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _amountController,
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'Importe (€)',
-              prefixIcon: Icon(Icons.euro_outlined),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              labelText: l10n.amount,
+              prefixIcon: const Icon(Icons.euro_outlined),
             ),
           ),
           const SizedBox(height: 24),
@@ -638,8 +704,11 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
-                  : const Text('Guardar'),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(l10n.save),
             ),
           ),
         ],

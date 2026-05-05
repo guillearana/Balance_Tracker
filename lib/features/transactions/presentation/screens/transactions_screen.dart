@@ -1,3 +1,4 @@
+import 'package:balance_tracker/core/utils/category_translator.dart';
 import 'package:balance_tracker/features/categories/data/repositories/category_provider.dart';
 import 'package:balance_tracker/features/categories/domain/models/category_model.dart';
 import 'package:balance_tracker/features/transactions/data/repositories/transaction_provider.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:balance_tracker/l10n/app_localizations.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
   const TransactionsScreen({super.key});
@@ -20,8 +22,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final transactionsAsync = ref.watch(transactionsProvider);
     final categoriesAsync = ref.watch(allCategoriesProvider);
+    final locale = Localizations.localeOf(context).toString();
 
     return Scaffold(
       body: SafeArea(
@@ -31,7 +35,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
               child: Text(
-                'Transacciones',
+                l10n.transactions,
                 style: GoogleFonts.inter(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -40,26 +44,25 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            // Filtros
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
                   _FilterChip(
-                    label: 'Todos',
+                    label: l10n.all,
                     selected: _filter == 'all',
                     onTap: () => setState(() => _filter = 'all'),
                   ),
                   const SizedBox(width: 8),
                   _FilterChip(
-                    label: 'Ingresos',
+                    label: l10n.income,
                     selected: _filter == 'income',
                     onTap: () => setState(() => _filter = 'income'),
                     color: const Color(0xFF55EFC4),
                   ),
                   const SizedBox(width: 8),
                   _FilterChip(
-                    label: 'Gastos',
+                    label: l10n.expense,
                     selected: _filter == 'expense',
                     onTap: () => setState(() => _filter = 'expense'),
                     color: const Color(0xFFFF7675),
@@ -72,8 +75,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               child: transactionsAsync.when(
                 data: (transactions) {
                   final filtered = transactions.where((t) {
-                    if (_filter == 'income') return t.type == TransactionType.income;
-                    if (_filter == 'expense') return t.type == TransactionType.expense;
+                    if (_filter == 'income')
+                      return t.type == TransactionType.income;
+                    if (_filter == 'expense')
+                      return t.type == TransactionType.expense;
                     return true;
                   }).toList();
 
@@ -85,14 +90,18 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                           Icon(
                             Icons.receipt_long_outlined,
                             size: 64,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.2,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No hay transacciones',
+                            l10n.noTransactionsFound,
                             style: GoogleFonts.inter(
                               fontSize: 16,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
                           ),
                         ],
@@ -102,7 +111,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 
                   return categoriesAsync.when(
                     data: (categories) {
-                      final grouped = _groupByDate(filtered);
+                      final grouped = _groupByDate(filtered, locale);
                       return ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         itemCount: grouped.length,
@@ -112,42 +121,49 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                                 child: Text(
                                   entry.key,
                                   style: GoogleFonts.inter(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
                                   ),
                                 ),
                               ),
-                              ...entry.value.map((t) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: _TransactionCard(
-                                      transaction: t,
-                                      category: categories.firstWhere(
-                                        (c) => c.id == t.categoryId,
-                                        orElse: () => CategoryModel(
-                                          id: '',
-                                          name: 'Sin categoría',
-                                          icon: 'category',
-                                          color: '#B2BEB5',
-                                        ),
+                              ...entry.value.map(
+                                (t) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: _TransactionCard(
+                                    transaction: t,
+                                    category: categories.firstWhere(
+                                      (c) => c.id == t.categoryId,
+                                      orElse: () => CategoryModel(
+                                        id: '',
+                                        name: l10n.noCategory,
+                                        icon: 'category',
+                                        color: '#B2BEB5',
                                       ),
                                     ),
-                                  )),
+                                  ),
+                                ),
+                              ),
                             ],
                           );
                         },
                       );
                     },
-                    loading: () => const Center(child: CircularProgressIndicator()),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                     error: (_, __) => const SizedBox.shrink(),
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (_, __) => const Center(child: Text('Error cargando transacciones')),
+                error: (_, __) =>
+                    Center(child: Text(l10n.errorLoadingTransactions)),
               ),
             ),
           ],
@@ -156,10 +172,13 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     );
   }
 
-  Map<String, List<TransactionModel>> _groupByDate(List<TransactionModel> transactions) {
+  Map<String, List<TransactionModel>> _groupByDate(
+    List<TransactionModel> transactions,
+    String locale,
+  ) {
     final Map<String, List<TransactionModel>> grouped = {};
     for (final t in transactions) {
-      final key = DateFormat('dd MMMM yyyy', 'es_ES').format(t.date);
+      final key = DateFormat('dd MMMM yyyy', locale).format(t.date);
       grouped.putIfAbsent(key, () => []).add(t);
     }
     return grouped;
@@ -189,7 +208,9 @@ class _FilterChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? activeColor.withValues(alpha: 0.15) : theme.colorScheme.surfaceContainerHighest,
+          color: selected
+              ? activeColor.withValues(alpha: 0.15)
+              : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: selected ? activeColor : Colors.transparent,
@@ -201,7 +222,9 @@ class _FilterChip extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: selected ? activeColor : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            color: selected
+                ? activeColor
+                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ),
@@ -213,10 +236,7 @@ class _TransactionCard extends StatelessWidget {
   final TransactionModel transaction;
   final CategoryModel category;
 
-  const _TransactionCard({
-    required this.transaction,
-    required this.category,
-  });
+  const _TransactionCard({required this.transaction, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +261,9 @@ class _TransactionCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+              isIncome
+                  ? Icons.arrow_downward_rounded
+                  : Icons.arrow_upward_rounded,
               color: categoryColor,
               size: 20,
             ),
@@ -252,7 +274,8 @@ class _TransactionCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.note ?? category.name,
+                  transaction.note ??
+                      CategoryTranslator.translate(context, category.name),
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -260,7 +283,7 @@ class _TransactionCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  category.name,
+                  CategoryTranslator.translate(context, category.name),
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -274,7 +297,9 @@ class _TransactionCard extends StatelessWidget {
             style: GoogleFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: isIncome ? const Color(0xFF55EFC4) : const Color(0xFFFF7675),
+              color: isIncome
+                  ? const Color(0xFF55EFC4)
+                  : const Color(0xFFFF7675),
             ),
           ),
         ],

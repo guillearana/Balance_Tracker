@@ -17,9 +17,7 @@
   "daysLeft": "{days} egunetan",
   "@daysLeft": {
     "placeholders": {
-      "days": {
-        "type": "int"
-      }
+      "days": { "type": "int" }
     }
   },
   "appSubtitle": "Kontrolatu zure finantza pertsonalak",
@@ -36,5 +34,177 @@
   "errorUserNotFound": "Ez dago konturik email honekin.",
   "errorWrongPassword": "Pasahitz okerra.",
   "errorUserDisabled": "Kontu hau desgaituta dago.",
-  "errorInvalidCredential": "Email edo pasahitz okerra."
+  "errorInvalidCredential": "Email edo pasahitz okerra.",
+
+  "createAccount": "Kontua sortu",
+  "createAccountSubtitle": "Hasi zure finantzak kontrolatzen gaur",
+  "name": "Izena",
+  "enterName": "Sartu zure izena",
+  "confirmPassword": "Pasahitza berretsi",
+  "confirmYourPassword": "Berretsi zure pasahitza",
+  "passwordsDoNotMatch": "Pasahitzak ez datoz bat",
+  "alreadyHaveAccount": "Kontua baduzu? ",
+  "signIn": "Saioa hasi",
+  "errorEmailInUse": "Dagoeneko kontu bat dago email honekin.",
+  "errorWeakPassword": "Pasahitza ahulegia da.",
+
+  "transactions": "Transakzioak",
+  "all": "Denak",
+  "noTransactionsFound": "Ez dago transakziorik",
+  "noCategory": "Kategoriarik gabe",
+  "errorLoadingTransactions": "Errorea transakzioak kargatzean",
+
+  "newTransaction": "Transakzio berria",
+  "selectCategory": "Hautatu kategoria bat",
+  "enterAmount": "Sartu kopuru bat",
+  "invalidAmount": "Kopuru baliogabea",
+  "category": "Kategoria",
+  "date": "Data",
+  "noteOptional": "Oharra (aukerakoa)",
+  "save": "Gorde",
+  "errorLoadingCategories": "Errorea kategoriak kargatzean",
+
+  "financialControl": "Finantza kontrola",
+  "budgets": "Aurrekontuak",
+  "debts": "Zorrak",
+  "add": "Gehitu",
+  "noBudgets": "Ez dago aurrekonturik",
+  "addBudget": "Aurrekontua gehitu",
+  "newBudget": "Aurrekontu berria",
+  "monthlyLimit": "Hileko muga (€)",
+  "limitExceededBy": "Muga gaindituta {amount}-(e)n",
+  "@limitExceededBy": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "nearLimitRemaining": "Mugaren ondoan — {amount} geratzen da",
+  "@nearLimitRemaining": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "spentOf": "{spent} / {total}",
+  "@spentOf": {
+    "placeholders": {
+      "spent": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "completeAllFields": "Bete eremu guztiak",
+
+  "noDebts": "Ez dago zorrik erregistratuta",
+  "addDebt": "Zorra gehitu",
+  "newDebt": "Zor berria",
+  "totalPending": "Guztira zain",
+  "totalAmount": "Kopuru osoa (€)",
+  "monthlyPayment": "Hileko kuota (€)",
+  "dueDate": "Epemuga",
+  "due": "Epemuga: {date}",
+  "@due": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "ofTotal": "/ {total}",
+  "@ofTotal": {
+    "placeholders": {
+      "total": { "type": "String" }
+    }
+  },
+  "installment": "Kuota: {amount}/hil",
+  "@installment": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "markPaid": "Ordainduta markatu",
+  "delete": "Ezabatu",
+  "deleteDebt": "Zorra ezabatu",
+  "deleteDebtConfirm": "\"{name}\" ezabatu?",
+  "@deleteDebtConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "no": "Ez",
+  "yesDelete": "Bai, ezabatu",
+
+  "subscriptions": "Harpidetzak",
+  "noActiveSubscriptions": "Ez dago harpidetza aktiborik",
+  "addSubscription": "Harpidetza gehitu",
+  "newSubscription": "Harpidetza berria",
+  "totalMonthlyExpense": "Hileko gastu osoa",
+  "monthly": "Hilekoa",
+  "annual": "Urtekoa",
+  "weekly": "Astekoa",
+  "nextIn": "Hurrengo {days} egunetan",
+  "@nextIn": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "cancelSubscription": "Harpidetza bertan behera utzi",
+  "cancelSubscriptionConfirm": "\"{name}\" bertan behera utzi? Kobruak sortzeari utziko dio.",
+  "@cancelSubscriptionConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "yesCancel": "Bai, utzi",
+  "amount": "Kopurua (€)",
+  "frequency": "Maiztasuna",
+  "paymentMode": "Ordainketa modua",
+  "automatic": "Automatikoa",
+  "manual": "Eskuzkoa",
+
+  "groups": "Taldeak",
+  "noGroupsCreated": "Ez dago talderik sortuta",
+  "createGroup": "Taldea sortu",
+  "newGroup": "Talde berria",
+  "groupName": "Taldearen izena",
+  "enterGroupName": "Sartu taldearen izena",
+  "deleteGroup": "Taldea ezabatu",
+  "deleteGroupConfirm": "Ziur zaude \"{name}\" ezabatu nahi duzula?",
+  "@deleteGroupConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "balances": "Saldoak",
+  "expenses": "Gastuak",
+  "noExpensesYet": "Oraindik gasturik ez",
+  "paidBy": "Ordaindu du: {name}",
+  "@paidBy": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "addExpense": "Gastua gehitu",
+  "description": "Deskribapena",
+  "errorLoadingGroups": "Errorea taldeak kargatzean",
+  "userNotAuthenticated": "Erabiltzailea autentifikatu gabe",
+  "errorLoadingData": "Errorea datuak kargatzean",
+
+  "analysis": "Analisia",
+  "incomeVsExpense": "Sarrerak vs Gastuak",
+  "last6Months": "Azken 6 hilabeteak",
+  "expensesByCategory": "Gastuak kategoriaka",
+  "noExpensesThisMonth": "Hilabete honetan gasturik ez",
+  "incomes": "Sarrerak",
+
+  "cat_comida": "Janaria",
+  "cat_transporte": "Garraioa",
+  "cat_ocio": "Aisia",
+  "cat_salud": "Osasuna",
+  "cat_hogar": "Etxea",
+  "cat_ropa": "Arropa",
+  "cat_educacion": "Hezkuntza",
+  "cat_otros": "Beste batzuk",
+  "cat_sueldo": "Soldata",
+  "cat_freelance": "Freelance",
+  "cat_inversiones": "Inbertsioak",
+  "cat_regalos": "Opariak",
+  "cat_suscripciones": "Harpidetzak",
+  "cat_vivienda": "Etxebizitza"
 }

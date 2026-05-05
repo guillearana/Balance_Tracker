@@ -1,3 +1,4 @@
+import 'package:balance_tracker/core/utils/category_translator.dart';
 import 'package:balance_tracker/features/auth/providers/auth_provider.dart';
 import 'package:balance_tracker/features/budgets/data/repositories/budget_provider.dart';
 import 'package:balance_tracker/features/budgets/data/repositories/budget_repository.dart';
@@ -14,12 +15,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:balance_tracker/l10n/app_localizations.dart';
 
 class BudgetsScreen extends ConsumerWidget {
   const BudgetsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -30,7 +34,7 @@ class BudgetsScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
                 child: Text(
-                  'Control financiero',
+                  l10n.financialControl,
                   style: GoogleFonts.inter(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -42,9 +46,9 @@ class BudgetsScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TabBar(
-                  tabs: const [
-                    Tab(text: 'Presupuestos'),
-                    Tab(text: 'Deudas'),
+                  tabs: [
+                    Tab(text: l10n.budgets),
+                    Tab(text: l10n.debts),
                   ],
                   labelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
                   unselectedLabelStyle: GoogleFonts.inter(),
@@ -52,12 +56,7 @@ class BudgetsScreen extends ConsumerWidget {
                 ),
               ),
               const Expanded(
-                child: TabBarView(
-                  children: [
-                    _BudgetsTab(),
-                    _DebtsTab(),
-                  ],
-                ),
+                child: TabBarView(children: [_BudgetsTab(), _DebtsTab()]),
               ),
             ],
           ),
@@ -73,10 +72,12 @@ class _BudgetsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final budgetsAsync = ref.watch(budgetsProvider);
     final transactionsAsync = ref.watch(transactionsProvider);
     final categoriesAsync = ref.watch(allCategoriesProvider);
     final now = DateTime.now();
+    final locale = Localizations.localeOf(context).toString();
 
     return Column(
       children: [
@@ -86,7 +87,7 @@ class _BudgetsTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                DateFormat('MMMM yyyy', 'es_ES').format(now),
+                DateFormat('MMMM yyyy', locale).format(now),
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -95,7 +96,7 @@ class _BudgetsTab extends ConsumerWidget {
               TextButton.icon(
                 onPressed: () => _showAddBudgetSheet(context, ref),
                 icon: const Icon(Icons.add, size: 18),
-                label: const Text('Añadir'),
+                label: Text(l10n.add),
               ),
             ],
           ),
@@ -108,21 +109,27 @@ class _BudgetsTab extends ConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.pie_chart_outline,
-                          size: 64,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2)),
+                      Icon(
+                        Icons.pie_chart_outline,
+                        size: 64,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.2,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       Text(
-                        'No hay presupuestos',
+                        l10n.noBudgets,
                         style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.4,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
                       TextButton(
                         onPressed: () => _showAddBudgetSheet(context, ref),
-                        child: const Text('Añadir presupuesto'),
+                        child: Text(l10n.addBudget),
                       ),
                     ],
                   ),
@@ -131,10 +138,12 @@ class _BudgetsTab extends ConsumerWidget {
               return transactionsAsync.when(
                 data: (transactions) {
                   final monthTransactions = transactions
-                      .where((t) =>
-                          t.date.month == now.month &&
-                          t.date.year == now.year &&
-                          t.type == TransactionType.expense)
+                      .where(
+                        (t) =>
+                            t.date.month == now.month &&
+                            t.date.year == now.year &&
+                            t.type == TransactionType.expense,
+                      )
                       .toList();
                   return categoriesAsync.when(
                     data: (categories) => ListView.builder(
@@ -149,7 +158,7 @@ class _BudgetsTab extends ConsumerWidget {
                           (c) => c.id == budget.categoryId,
                           orElse: () => CategoryModel(
                             id: '',
-                            name: 'Sin categoría',
+                            name: l10n.noCategory,
                             icon: 'category',
                             color: '#B2BEB5',
                           ),
@@ -165,7 +174,8 @@ class _BudgetsTab extends ConsumerWidget {
                         );
                       },
                     ),
-                    loading: () => const Center(child: CircularProgressIndicator()),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                     error: (_, __) => const SizedBox.shrink(),
                   );
                 },
@@ -181,7 +191,11 @@ class _BudgetsTab extends ConsumerWidget {
     );
   }
 
-  void _deleteBudget(BuildContext context, WidgetRef ref, BudgetModel budget) async {
+  void _deleteBudget(
+    BuildContext context,
+    WidgetRef ref,
+    BudgetModel budget,
+  ) async {
     final user = ref.read(currentUserProvider);
     if (user == null) return;
     await ref.read(budgetRepositoryProvider).deleteBudget(user.uid, budget.id);
@@ -210,6 +224,7 @@ class _DebtsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final debtsAsync = ref.watch(debtsProvider);
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
 
@@ -223,7 +238,7 @@ class _DebtsTab extends ConsumerWidget {
               TextButton.icon(
                 onPressed: () => _showAddSheet(context, ref),
                 icon: const Icon(Icons.add, size: 18),
-                label: const Text('Añadir'),
+                label: Text(l10n.add),
               ),
             ],
           ),
@@ -236,21 +251,27 @@ class _DebtsTab extends ConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.account_balance_outlined,
-                          size: 64,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2)),
+                      Icon(
+                        Icons.account_balance_outlined,
+                        size: 64,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.2,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       Text(
-                        'No hay deudas registradas',
+                        l10n.noDebts,
                         style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.4,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
                       TextButton(
                         onPressed: () => _showAddSheet(context, ref),
-                        child: const Text('Añadir deuda'),
+                        child: Text(l10n.addDebt),
                       ),
                     ],
                   ),
@@ -262,24 +283,29 @@ class _DebtsTab extends ConsumerWidget {
               return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF7675).withValues(alpha: 0.1),
+                        color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total pendiente',
-                              style: GoogleFonts.inter(fontSize: 14)),
+                          Text(
+                            l10n.totalPending,
+                            style: GoogleFonts.inter(fontSize: 14),
+                          ),
                           Text(
                             currencyFormat.format(totalPending),
                             style: GoogleFonts.inter(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFFFF7675),
+                              color: const Color(0xFFEF4444),
                             ),
                           ),
                         ],
@@ -322,19 +348,20 @@ class _DebtsTab extends ConsumerWidget {
   }
 
   void _deleteDebt(BuildContext context, WidgetRef ref, DebtModel debt) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Eliminar deuda'),
-        content: Text('¿Eliminar "${debt.name}"?'),
+        title: Text(l10n.deleteDebt),
+        content: Text(l10n.deleteDebtConfirm(debt.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('No'),
+            child: Text(l10n.no),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sí, eliminar'),
+            child: Text(l10n.yesDelete),
           ),
         ],
       ),
@@ -369,6 +396,26 @@ class _BudgetCard extends StatelessWidget {
   final double spent;
   final VoidCallback onDelete;
 
+  IconData _getCategoryIcon(String iconName) {
+    const iconMap = {
+      'restaurant': Icons.restaurant,
+      'directions_car': Icons.directions_car,
+      'sports_esports': Icons.sports_esports,
+      'favorite': Icons.favorite,
+      'home': Icons.home,
+      'checkroom': Icons.checkroom,
+      'school': Icons.school,
+      'category': Icons.category,
+      'work': Icons.work,
+      'savings': Icons.savings,
+      'card_giftcard': Icons.card_giftcard,
+      'account_balance': Icons.account_balance,
+      'attach_money': Icons.attach_money,
+      'trending_up': Icons.trending_up,
+    };
+    return iconMap[iconName] ?? Icons.category;
+  }
+
   const _BudgetCard({
     required this.budget,
     required this.category,
@@ -379,6 +426,7 @@ class _BudgetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
     final progress = (spent / budget.limitAmount).clamp(0.0, 1.0);
     final isOverBudget = spent >= budget.limitAmount;
@@ -387,17 +435,17 @@ class _BudgetCard extends StatelessWidget {
 
     Color progressColor;
     if (isOverBudget) {
-      progressColor = const Color(0xFFFF7675);
+      progressColor = const Color(0xFFEF4444);
     } else if (isNearLimit) {
       progressColor = const Color(0xFFFDCB6E);
     } else {
-      progressColor = const Color(0xFF55EFC4);
+      progressColor = const Color(0xFF10B981);
     }
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
+        color: const Color(0xFFE8EDF4),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -412,28 +460,45 @@ class _BudgetCard extends StatelessWidget {
                   color: categoryColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(Icons.category_outlined, color: categoryColor, size: 18),
+                child: Icon(
+                  _getCategoryIcon(category.icon),
+                  color: categoryColor,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(category.name,
-                        style: GoogleFonts.inter(
-                            fontSize: 15, fontWeight: FontWeight.w600)),
                     Text(
-                      '${currencyFormat.format(spent)} de ${currencyFormat.format(budget.limitAmount)}',
+                      CategoryTranslator.translate(context, category.name),
                       style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      l10n.spentOf(
+                        currencyFormat.format(spent),
+                        currencyFormat.format(budget.limitAmount),
+                      ),
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.delete_outline,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3), size: 20),
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                  size: 20,
+                ),
                 onPressed: onDelete,
               ),
             ],
@@ -452,11 +517,20 @@ class _BudgetCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.warning_amber_rounded, color: Color(0xFFFF7675), size: 14),
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Color(0xFFEF4444),
+                  size: 14,
+                ),
                 const SizedBox(width: 4),
                 Text(
-                  'Límite superado por ${currencyFormat.format(spent - budget.limitAmount)}',
-                  style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFFF7675)),
+                  l10n.limitExceededBy(
+                    currencyFormat.format(spent - budget.limitAmount),
+                  ),
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: const Color(0xFFEF4444),
+                  ),
                 ),
               ],
             ),
@@ -464,11 +538,20 @@ class _BudgetCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.info_outline, color: Color(0xFFFDCB6E), size: 14),
+                const Icon(
+                  Icons.info_outline,
+                  color: Color(0xFFFDCB6E),
+                  size: 14,
+                ),
                 const SizedBox(width: 4),
                 Text(
-                  'Cerca del límite — queda ${currencyFormat.format(budget.limitAmount - spent)}',
-                  style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFFDCB6E)),
+                  l10n.nearLimitRemaining(
+                    currencyFormat.format(budget.limitAmount - spent),
+                  ),
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: const Color(0xFFFDCB6E),
+                  ),
                 ),
               ],
             ),
@@ -501,18 +584,23 @@ class _DebtCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
     final isPaid = debt.status == DebtStatus.paid;
     final isOverdue = debt.dueDate.isBefore(DateTime.now()) && !isPaid;
-    final progress = ((debt.totalAmount - debt.pendingAmount) / debt.totalAmount).clamp(0.0, 1.0);
+    final progress =
+        ((debt.totalAmount - debt.pendingAmount) / debt.totalAmount).clamp(
+          0.0,
+          1.0,
+        );
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
+        color: const Color(0xFFE8EDF4),
         borderRadius: BorderRadius.circular(16),
         border: isOverdue
-            ? Border.all(color: const Color(0xFFFF7675).withValues(alpha: 0.5))
+            ? Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.5))
             : null,
       ),
       child: Column(
@@ -525,13 +613,17 @@ class _DebtCard extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   color: isPaid
-                      ? const Color(0xFF55EFC4).withValues(alpha: 0.15)
-                      : const Color(0xFFFF7675).withValues(alpha: 0.15),
+                      ? const Color(0xFF10B981).withValues(alpha: 0.15)
+                      : const Color(0xFFEF4444).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  isPaid ? Icons.check_circle_outline : Icons.account_balance_outlined,
-                  color: isPaid ? const Color(0xFF55EFC4) : const Color(0xFFFF7675),
+                  isPaid
+                      ? Icons.check_circle_outline
+                      : Icons.account_balance_outlined,
+                  color: isPaid
+                      ? const Color(0xFF10B981)
+                      : const Color(0xFFEF4444),
                   size: 20,
                 ),
               ),
@@ -549,12 +641,14 @@ class _DebtCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Vence: ${DateFormat('dd/MM/yyyy').format(debt.dueDate)}',
+                      l10n.due(DateFormat('dd/MM/yyyy').format(debt.dueDate)),
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         color: isOverdue
-                            ? const Color(0xFFFF7675)
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            ? const Color(0xFFEF4444)
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                       ),
                     ),
                   ],
@@ -568,11 +662,13 @@ class _DebtCard extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: isPaid ? const Color(0xFF55EFC4) : const Color(0xFFFF7675),
+                      color: isPaid
+                          ? const Color(0xFF10B981)
+                          : const Color(0xFFEF4444),
                     ),
                   ),
                   Text(
-                    'de ${currencyFormat.format(debt.totalAmount)}',
+                    l10n.ofTotal(currencyFormat.format(debt.totalAmount)),
                     style: GoogleFonts.inter(
                       fontSize: 11,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
@@ -589,7 +685,7 @@ class _DebtCard extends StatelessWidget {
               value: progress,
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(
-                isPaid ? const Color(0xFF55EFC4) : const Color(0xFF6C63FF),
+                isPaid ? const Color(0xFF10B981) : const Color(0xFF3B82F6),
               ),
               minHeight: 6,
             ),
@@ -599,7 +695,7 @@ class _DebtCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Cuota: ${currencyFormat.format(debt.monthlyPayment)}/mes',
+                l10n.installment(currencyFormat.format(debt.monthlyPayment)),
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -611,10 +707,10 @@ class _DebtCard extends StatelessWidget {
                     GestureDetector(
                       onTap: onMarkPaid,
                       child: Text(
-                        'Marcar pagada',
+                        l10n.markPaid,
                         style: GoogleFonts.inter(
                           fontSize: 12,
-                          color: const Color(0xFF55EFC4),
+                          color: const Color(0xFF10B981),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -623,10 +719,10 @@ class _DebtCard extends StatelessWidget {
                   GestureDetector(
                     onTap: onDelete,
                     child: Text(
-                      'Eliminar',
+                      l10n.delete,
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: const Color(0xFFFF7675),
+                        color: const Color(0xFFEF4444),
                       ),
                     ),
                   ),
@@ -659,10 +755,11 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedCategoryId == null || _amountController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa todos los campos')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.completeAllFields)));
       return;
     }
     final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
@@ -684,8 +781,9 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -695,11 +793,16 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final categoriesAsync = ref.watch(allCategoriesProvider);
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+        20,
+        20,
+        20,
+        MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -707,9 +810,13 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Nuevo presupuesto',
-                  style: GoogleFonts.inter(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
+              Text(
+                l10n.newBudget,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
@@ -720,21 +827,26 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
           TextField(
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'Límite mensual (€)',
-              prefixIcon: Icon(Icons.euro_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.monthlyLimit,
+              prefixIcon: const Icon(Icons.euro_outlined),
             ),
           ),
           const SizedBox(height: 16),
-          Text('Categoría',
-              style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
+          Text(
+            l10n.category,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
           const SizedBox(height: 8),
           categoriesAsync.when(
             data: (categories) {
-              final expenses = categories.where((c) => c.type == 'expense').toList();
+              final expenses = categories
+                  .where((c) => c.type == 'expense')
+                  .toList();
               return Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -743,7 +855,10 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
                   return GestureDetector(
                     onTap: () => setState(() => _selectedCategoryId = cat.id),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? theme.colorScheme.primary
@@ -751,11 +866,13 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        cat.name,
+                        CategoryTranslator.translate(context, cat.name),
                         style: GoogleFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: isSelected ? Colors.white : theme.colorScheme.onSurface,
+                          color: isSelected
+                              ? Colors.white
+                              : theme.colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -776,8 +893,11 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
-                  : const Text('Guardar'),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(l10n.save),
             ),
           ),
         ],
@@ -819,16 +939,19 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_nameController.text.isEmpty ||
         _totalController.text.isEmpty ||
         _monthlyController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa todos los campos')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.completeAllFields)));
       return;
     }
     final total = double.tryParse(_totalController.text.replaceAll(',', '.'));
-    final monthly = double.tryParse(_monthlyController.text.replaceAll(',', '.'));
+    final monthly = double.tryParse(
+      _monthlyController.text.replaceAll(',', '.'),
+    );
     if (total == null || monthly == null) return;
     setState(() => _isLoading = true);
     try {
@@ -847,8 +970,9 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -858,10 +982,15 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+        20,
+        20,
+        20,
+        MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -869,9 +998,13 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Nueva deuda',
-                  style: GoogleFonts.inter(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
+              Text(
+                l10n.newDebt,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
@@ -881,27 +1014,27 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
           const SizedBox(height: 16),
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Nombre',
-              prefixIcon: Icon(Icons.label_outline),
+            decoration: InputDecoration(
+              labelText: l10n.name,
+              prefixIcon: const Icon(Icons.label_outline),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _totalController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'Importe total (€)',
-              prefixIcon: Icon(Icons.euro_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.totalAmount,
+              prefixIcon: const Icon(Icons.euro_outlined),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _monthlyController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'Cuota mensual (€)',
-              prefixIcon: Icon(Icons.calendar_month_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.monthlyPayment,
+              prefixIcon: const Icon(Icons.calendar_month_outlined),
             ),
           ),
           const SizedBox(height: 12),
@@ -913,11 +1046,13 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.calendar_today_outlined,
-                  color: theme.colorScheme.primary, size: 20),
+              child: Icon(
+                Icons.calendar_today_outlined,
+                color: theme.colorScheme.primary,
+                size: 20,
+              ),
             ),
-            title: Text('Fecha de vencimiento',
-                style: GoogleFonts.inter(fontSize: 14)),
+            title: Text(l10n.dueDate, style: GoogleFonts.inter(fontSize: 14)),
             trailing: Text(
               '${_dueDate.day}/${_dueDate.month}/${_dueDate.year}',
               style: GoogleFonts.inter(
@@ -938,8 +1073,11 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
-                  : const Text('Guardar'),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(l10n.save),
             ),
           ),
         ],

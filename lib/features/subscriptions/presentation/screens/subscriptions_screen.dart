@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:balance_tracker/l10n/app_localizations.dart';
 
 class SubscriptionsScreen extends ConsumerWidget {
   const SubscriptionsScreen({super.key});
@@ -14,6 +15,7 @@ class SubscriptionsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final subscriptionsAsync = ref.watch(subscriptionsProvider);
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
 
@@ -28,7 +30,7 @@ class SubscriptionsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Suscripciones',
+                    l10n.subscriptions,
                     style: GoogleFonts.inter(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -37,8 +39,10 @@ class SubscriptionsScreen extends ConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () => _showAddSheet(context, ref),
-                    icon: Icon(Icons.add_circle_outline,
-                        color: theme.colorScheme.primary),
+                    icon: Icon(
+                      Icons.add_circle_outline,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                 ],
               ),
@@ -52,23 +56,27 @@ class SubscriptionsScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.repeat_outlined,
-                              size: 64,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.2)),
+                          Icon(
+                            Icons.repeat_outlined,
+                            size: 64,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.2,
+                            ),
+                          ),
                           const SizedBox(height: 16),
                           Text(
-                            'No hay suscripciones activas',
+                            l10n.noActiveSubscriptions,
                             style: GoogleFonts.inter(
                               fontSize: 16,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.4),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 8),
                           TextButton(
                             onPressed: () => _showAddSheet(context, ref),
-                            child: const Text('Añadir suscripción'),
+                            child: Text(l10n.addSubscription),
                           ),
                         ],
                       ),
@@ -76,7 +84,9 @@ class SubscriptionsScreen extends ConsumerWidget {
                   }
 
                   final totalMonthly = subscriptions
-                      .where((s) => s.frequency == SubscriptionFrequency.monthly)
+                      .where(
+                        (s) => s.frequency == SubscriptionFrequency.monthly,
+                      )
                       .fold(0.0, (sum, s) => sum + s.amount);
 
                   return Column(
@@ -86,14 +96,16 @@ class SubscriptionsScreen extends ConsumerWidget {
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Gasto mensual total',
+                                l10n.totalMonthlyExpense,
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   color: theme.colorScheme.onSurface,
@@ -122,7 +134,8 @@ class SubscriptionsScreen extends ConsumerWidget {
                               padding: const EdgeInsets.only(bottom: 12),
                               child: _SubscriptionCard(
                                 subscription: sub,
-                                onCancel: () => _cancelSubscription(context, ref, sub),
+                                onCancel: () =>
+                                    _cancelSubscription(context, ref, sub),
                               ),
                             );
                           },
@@ -141,20 +154,25 @@ class SubscriptionsScreen extends ConsumerWidget {
     );
   }
 
-  void _cancelSubscription(BuildContext context, WidgetRef ref, SubscriptionModel sub) async {
+  void _cancelSubscription(
+    BuildContext context,
+    WidgetRef ref,
+    SubscriptionModel sub,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Cancelar suscripción'),
-        content: Text('¿Cancelar "${sub.name}"? Dejará de generar cobros.'),
+        title: Text(l10n.cancelSubscription),
+        content: Text(l10n.cancelSubscriptionConfirm(sub.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('No'),
+            child: Text(l10n.no),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sí, cancelar'),
+            child: Text(l10n.yesCancel),
           ),
         ],
       ),
@@ -162,7 +180,9 @@ class SubscriptionsScreen extends ConsumerWidget {
     if (confirmed == true) {
       final user = ref.read(currentUserProvider);
       if (user == null) return;
-      await ref.read(subscriptionRepositoryProvider).cancelSubscription(user.uid, sub.id);
+      await ref
+          .read(subscriptionRepositoryProvider)
+          .cancelSubscription(user.uid, sub.id);
     }
   }
 
@@ -187,14 +207,12 @@ class _SubscriptionCard extends StatelessWidget {
   final SubscriptionModel subscription;
   final VoidCallback onCancel;
 
-  const _SubscriptionCard({
-    required this.subscription,
-    required this.onCancel,
-  });
+  const _SubscriptionCard({required this.subscription, required this.onCancel});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
     final daysLeft = subscription.nextPayment.difference(DateTime.now()).inDays;
     final isUrgent = daysLeft <= 3;
@@ -202,20 +220,20 @@ class _SubscriptionCard extends StatelessWidget {
     String frequencyLabel;
     switch (subscription.frequency) {
       case SubscriptionFrequency.monthly:
-        frequencyLabel = 'Mensual';
+        frequencyLabel = l10n.monthly;
         break;
       case SubscriptionFrequency.annual:
-        frequencyLabel = 'Anual';
+        frequencyLabel = l10n.annual;
         break;
       case SubscriptionFrequency.weekly:
-        frequencyLabel = 'Semanal';
+        frequencyLabel = l10n.weekly;
         break;
     }
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
+        color: const Color(0xFFE8EDF4),
         borderRadius: BorderRadius.circular(16),
         border: isUrgent
             ? Border.all(color: const Color(0xFFFF7675).withValues(alpha: 0.5))
@@ -230,8 +248,11 @@ class _SubscriptionCard extends StatelessWidget {
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(Icons.repeat_rounded,
-                color: theme.colorScheme.primary, size: 20),
+            child: Icon(
+              Icons.repeat_rounded,
+              color: theme.colorScheme.primary,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -252,17 +273,21 @@ class _SubscriptionCard extends StatelessWidget {
                       frequencyLabel,
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '· Próximo en $daysLeft días',
+                      '· ${l10n.nextIn(daysLeft)}',
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         color: isUrgent
-                            ? const Color(0xFFFF7675)
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            ? const Color(0xFFEF4444)
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                       ),
                     ),
                   ],
@@ -284,10 +309,10 @@ class _SubscriptionCard extends StatelessWidget {
               GestureDetector(
                 onTap: onCancel,
                 child: Text(
-                  'Cancelar',
+                  l10n.cancel,
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: const Color(0xFFFF7675),
+                    color: const Color(0xFFEF4444),
                   ),
                 ),
               ),
@@ -334,10 +359,11 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_nameController.text.isEmpty || _amountController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa todos los campos')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.completeAllFields)));
       return;
     }
     final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
@@ -363,9 +389,9 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -375,10 +401,15 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+        20,
+        20,
+        20,
+        MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -387,7 +418,7 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Nueva suscripción',
+                l10n.newSubscription,
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -402,23 +433,23 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
           const SizedBox(height: 16),
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Nombre',
-              prefixIcon: Icon(Icons.label_outline),
+            decoration: InputDecoration(
+              labelText: l10n.name,
+              prefixIcon: const Icon(Icons.label_outline),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'Importe (€)',
-              prefixIcon: Icon(Icons.euro_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.amount,
+              prefixIcon: const Icon(Icons.euro_outlined),
             ),
           ),
           const SizedBox(height: 16),
           Text(
-            'Frecuencia',
+            l10n.frequency,
             style: GoogleFonts.inter(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -430,16 +461,18 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
             spacing: 8,
             children: SubscriptionFrequency.values.map((f) {
               final label = f == SubscriptionFrequency.monthly
-                  ? 'Mensual'
+                  ? l10n.monthly
                   : f == SubscriptionFrequency.annual
-                      ? 'Anual'
-                      : 'Semanal';
+                  ? l10n.annual
+                  : l10n.weekly;
               final isSelected = _frequency == f;
               return GestureDetector(
                 onTap: () => setState(() => _frequency = f),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? theme.colorScheme.primary
@@ -462,7 +495,7 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Modo de pago',
+            l10n.paymentMode,
             style: GoogleFonts.inter(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -477,7 +510,9 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
                 onTap: () => setState(() => _paymentMode = PaymentMode.auto),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: _paymentMode == PaymentMode.auto
                         ? theme.colorScheme.primary
@@ -485,7 +520,7 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    'Automático',
+                    l10n.automatic,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -500,7 +535,9 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
                 onTap: () => setState(() => _paymentMode = PaymentMode.manual),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: _paymentMode == PaymentMode.manual
                         ? theme.colorScheme.primary
@@ -508,7 +545,7 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    'Manual',
+                    l10n.manual,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -531,9 +568,11 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
                     )
-                  : const Text('Guardar'),
+                  : Text(l10n.save),
             ),
           ),
         ],

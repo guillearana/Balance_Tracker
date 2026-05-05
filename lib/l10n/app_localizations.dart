@@ -279,6 +279,648 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Email o contraseña incorrectos.'**
   String get errorInvalidCredential;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get createAccount;
+
+  /// No description provided for @createAccountSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Empieza a controlar tus finanzas hoy'**
+  String get createAccountSubtitle;
+
+  /// No description provided for @name.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get name;
+
+  /// No description provided for @enterName.
+  ///
+  /// In es, this message translates to:
+  /// **'Introduce tu nombre'**
+  String get enterName;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar contraseña'**
+  String get confirmPassword;
+
+  /// No description provided for @confirmYourPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma tu contraseña'**
+  String get confirmYourPassword;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Las contraseñas no coinciden'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Ya tienes cuenta? '**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @signIn.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión'**
+  String get signIn;
+
+  /// No description provided for @errorEmailInUse.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya existe una cuenta con este email.'**
+  String get errorEmailInUse;
+
+  /// No description provided for @errorWeakPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'La contraseña es demasiado débil.'**
+  String get errorWeakPassword;
+
+  /// No description provided for @transactions.
+  ///
+  /// In es, this message translates to:
+  /// **'Transacciones'**
+  String get transactions;
+
+  /// No description provided for @all.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get all;
+
+  /// No description provided for @noTransactionsFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay transacciones'**
+  String get noTransactionsFound;
+
+  /// No description provided for @noCategory.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin categoría'**
+  String get noCategory;
+
+  /// No description provided for @errorLoadingTransactions.
+  ///
+  /// In es, this message translates to:
+  /// **'Error cargando transacciones'**
+  String get errorLoadingTransactions;
+
+  /// No description provided for @newTransaction.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva transacción'**
+  String get newTransaction;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona una categoría'**
+  String get selectCategory;
+
+  /// No description provided for @enterAmount.
+  ///
+  /// In es, this message translates to:
+  /// **'Introduce una cantidad'**
+  String get enterAmount;
+
+  /// No description provided for @invalidAmount.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad no válida'**
+  String get invalidAmount;
+
+  /// No description provided for @category.
+  ///
+  /// In es, this message translates to:
+  /// **'Categoría'**
+  String get category;
+
+  /// No description provided for @date.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get date;
+
+  /// No description provided for @noteOptional.
+  ///
+  /// In es, this message translates to:
+  /// **'Nota (opcional)'**
+  String get noteOptional;
+
+  /// No description provided for @save.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get save;
+
+  /// No description provided for @errorLoadingCategories.
+  ///
+  /// In es, this message translates to:
+  /// **'Error cargando categorías'**
+  String get errorLoadingCategories;
+
+  /// No description provided for @financialControl.
+  ///
+  /// In es, this message translates to:
+  /// **'Control financiero'**
+  String get financialControl;
+
+  /// No description provided for @budgets.
+  ///
+  /// In es, this message translates to:
+  /// **'Presupuestos'**
+  String get budgets;
+
+  /// No description provided for @debts.
+  ///
+  /// In es, this message translates to:
+  /// **'Deudas'**
+  String get debts;
+
+  /// No description provided for @add.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir'**
+  String get add;
+
+  /// No description provided for @noBudgets.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay presupuestos'**
+  String get noBudgets;
+
+  /// No description provided for @addBudget.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir presupuesto'**
+  String get addBudget;
+
+  /// No description provided for @newBudget.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo presupuesto'**
+  String get newBudget;
+
+  /// No description provided for @monthlyLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'Límite mensual (€)'**
+  String get monthlyLimit;
+
+  /// No description provided for @limitExceededBy.
+  ///
+  /// In es, this message translates to:
+  /// **'Límite superado por {amount}'**
+  String limitExceededBy(String amount);
+
+  /// No description provided for @nearLimitRemaining.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerca del límite — queda {amount}'**
+  String nearLimitRemaining(String amount);
+
+  /// No description provided for @spentOf.
+  ///
+  /// In es, this message translates to:
+  /// **'{spent} de {total}'**
+  String spentOf(String spent, String total);
+
+  /// No description provided for @completeAllFields.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa todos los campos'**
+  String get completeAllFields;
+
+  /// No description provided for @noDebts.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay deudas registradas'**
+  String get noDebts;
+
+  /// No description provided for @addDebt.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir deuda'**
+  String get addDebt;
+
+  /// No description provided for @newDebt.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva deuda'**
+  String get newDebt;
+
+  /// No description provided for @totalPending.
+  ///
+  /// In es, this message translates to:
+  /// **'Total pendiente'**
+  String get totalPending;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In es, this message translates to:
+  /// **'Importe total (€)'**
+  String get totalAmount;
+
+  /// No description provided for @monthlyPayment.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuota mensual (€)'**
+  String get monthlyPayment;
+
+  /// No description provided for @dueDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de vencimiento'**
+  String get dueDate;
+
+  /// No description provided for @due.
+  ///
+  /// In es, this message translates to:
+  /// **'Vence: {date}'**
+  String due(String date);
+
+  /// No description provided for @ofTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'de {total}'**
+  String ofTotal(String total);
+
+  /// No description provided for @installment.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuota: {amount}/mes'**
+  String installment(String amount);
+
+  /// No description provided for @markPaid.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar pagada'**
+  String get markPaid;
+
+  /// No description provided for @delete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get delete;
+
+  /// No description provided for @deleteDebt.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar deuda'**
+  String get deleteDebt;
+
+  /// No description provided for @deleteDebtConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar \"{name}\"?'**
+  String deleteDebtConfirm(String name);
+
+  /// No description provided for @no.
+  ///
+  /// In es, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @yesDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, eliminar'**
+  String get yesDelete;
+
+  /// No description provided for @subscriptions.
+  ///
+  /// In es, this message translates to:
+  /// **'Suscripciones'**
+  String get subscriptions;
+
+  /// No description provided for @noActiveSubscriptions.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay suscripciones activas'**
+  String get noActiveSubscriptions;
+
+  /// No description provided for @addSubscription.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir suscripción'**
+  String get addSubscription;
+
+  /// No description provided for @newSubscription.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva suscripción'**
+  String get newSubscription;
+
+  /// No description provided for @totalMonthlyExpense.
+  ///
+  /// In es, this message translates to:
+  /// **'Gasto mensual total'**
+  String get totalMonthlyExpense;
+
+  /// No description provided for @monthly.
+  ///
+  /// In es, this message translates to:
+  /// **'Mensual'**
+  String get monthly;
+
+  /// No description provided for @annual.
+  ///
+  /// In es, this message translates to:
+  /// **'Anual'**
+  String get annual;
+
+  /// No description provided for @weekly.
+  ///
+  /// In es, this message translates to:
+  /// **'Semanal'**
+  String get weekly;
+
+  /// No description provided for @nextIn.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo en {days} días'**
+  String nextIn(int days);
+
+  /// No description provided for @cancelSubscription.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar suscripción'**
+  String get cancelSubscription;
+
+  /// No description provided for @cancelSubscriptionConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cancelar \"{name}\"? Dejará de generar cobros.'**
+  String cancelSubscriptionConfirm(String name);
+
+  /// No description provided for @yesCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, cancelar'**
+  String get yesCancel;
+
+  /// No description provided for @amount.
+  ///
+  /// In es, this message translates to:
+  /// **'Importe (€)'**
+  String get amount;
+
+  /// No description provided for @frequency.
+  ///
+  /// In es, this message translates to:
+  /// **'Frecuencia'**
+  String get frequency;
+
+  /// No description provided for @paymentMode.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo de pago'**
+  String get paymentMode;
+
+  /// No description provided for @automatic.
+  ///
+  /// In es, this message translates to:
+  /// **'Automático'**
+  String get automatic;
+
+  /// No description provided for @manual.
+  ///
+  /// In es, this message translates to:
+  /// **'Manual'**
+  String get manual;
+
+  /// No description provided for @groups.
+  ///
+  /// In es, this message translates to:
+  /// **'Grupos'**
+  String get groups;
+
+  /// No description provided for @noGroupsCreated.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay grupos creados'**
+  String get noGroupsCreated;
+
+  /// No description provided for @createGroup.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear grupo'**
+  String get createGroup;
+
+  /// No description provided for @newGroup.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo grupo'**
+  String get newGroup;
+
+  /// No description provided for @groupName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del grupo'**
+  String get groupName;
+
+  /// No description provided for @enterGroupName.
+  ///
+  /// In es, this message translates to:
+  /// **'Introduce un nombre para el grupo'**
+  String get enterGroupName;
+
+  /// No description provided for @deleteGroup.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar grupo'**
+  String get deleteGroup;
+
+  /// No description provided for @deleteGroupConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Seguro que quieres borrar \"{name}\"?'**
+  String deleteGroupConfirm(String name);
+
+  /// No description provided for @balances.
+  ///
+  /// In es, this message translates to:
+  /// **'Balances'**
+  String get balances;
+
+  /// No description provided for @expenses.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos'**
+  String get expenses;
+
+  /// No description provided for @noExpensesYet.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay gastos aún'**
+  String get noExpensesYet;
+
+  /// No description provided for @paidBy.
+  ///
+  /// In es, this message translates to:
+  /// **'Pagado por: {name}'**
+  String paidBy(String name);
+
+  /// No description provided for @addExpense.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir gasto'**
+  String get addExpense;
+
+  /// No description provided for @description.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get description;
+
+  /// No description provided for @errorLoadingGroups.
+  ///
+  /// In es, this message translates to:
+  /// **'Error cargando grupos'**
+  String get errorLoadingGroups;
+
+  /// No description provided for @userNotAuthenticated.
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario no autenticado'**
+  String get userNotAuthenticated;
+
+  /// No description provided for @errorLoadingData.
+  ///
+  /// In es, this message translates to:
+  /// **'Error cargando datos'**
+  String get errorLoadingData;
+
+  /// No description provided for @analysis.
+  ///
+  /// In es, this message translates to:
+  /// **'Análisis'**
+  String get analysis;
+
+  /// No description provided for @incomeVsExpense.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresos vs Gastos'**
+  String get incomeVsExpense;
+
+  /// No description provided for @last6Months.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimos 6 meses'**
+  String get last6Months;
+
+  /// No description provided for @expensesByCategory.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos por categoría'**
+  String get expensesByCategory;
+
+  /// No description provided for @noExpensesThisMonth.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay gastos este mes'**
+  String get noExpensesThisMonth;
+
+  /// No description provided for @incomes.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresos'**
+  String get incomes;
+
+  /// No description provided for @cat_comida.
+  ///
+  /// In es, this message translates to:
+  /// **'Comida'**
+  String get cat_comida;
+
+  /// No description provided for @cat_transporte.
+  ///
+  /// In es, this message translates to:
+  /// **'Transporte'**
+  String get cat_transporte;
+
+  /// No description provided for @cat_ocio.
+  ///
+  /// In es, this message translates to:
+  /// **'Ocio'**
+  String get cat_ocio;
+
+  /// No description provided for @cat_salud.
+  ///
+  /// In es, this message translates to:
+  /// **'Salud'**
+  String get cat_salud;
+
+  /// No description provided for @cat_hogar.
+  ///
+  /// In es, this message translates to:
+  /// **'Hogar'**
+  String get cat_hogar;
+
+  /// No description provided for @cat_ropa.
+  ///
+  /// In es, this message translates to:
+  /// **'Ropa'**
+  String get cat_ropa;
+
+  /// No description provided for @cat_educacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Educación'**
+  String get cat_educacion;
+
+  /// No description provided for @cat_otros.
+  ///
+  /// In es, this message translates to:
+  /// **'Otros'**
+  String get cat_otros;
+
+  /// No description provided for @cat_sueldo.
+  ///
+  /// In es, this message translates to:
+  /// **'Sueldo'**
+  String get cat_sueldo;
+
+  /// No description provided for @cat_freelance.
+  ///
+  /// In es, this message translates to:
+  /// **'Freelance'**
+  String get cat_freelance;
+
+  /// No description provided for @cat_inversiones.
+  ///
+  /// In es, this message translates to:
+  /// **'Inversiones'**
+  String get cat_inversiones;
+
+  /// No description provided for @cat_regalos.
+  ///
+  /// In es, this message translates to:
+  /// **'Regalos'**
+  String get cat_regalos;
+
+  /// No description provided for @cat_suscripciones.
+  ///
+  /// In es, this message translates to:
+  /// **'Suscripciones'**
+  String get cat_suscripciones;
+
+  /// No description provided for @cat_vivienda.
+  ///
+  /// In es, this message translates to:
+  /// **'Vivienda'**
+  String get cat_vivienda;
 }
 
 class _AppLocalizationsDelegate

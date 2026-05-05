@@ -99,4 +99,347 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorInvalidCredential => 'Incorrect email or password.';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String get createAccountSubtitle => 'Start managing your finances today';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get enterName => 'Enter your name';
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get confirmYourPassword => 'Confirm your password';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get errorEmailInUse => 'An account already exists with this email.';
+
+  @override
+  String get errorWeakPassword => 'The password is too weak.';
+
+  @override
+  String get transactions => 'Transactions';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get noTransactionsFound => 'No transactions';
+
+  @override
+  String get noCategory => 'No category';
+
+  @override
+  String get errorLoadingTransactions => 'Error loading transactions';
+
+  @override
+  String get newTransaction => 'New transaction';
+
+  @override
+  String get selectCategory => 'Select a category';
+
+  @override
+  String get enterAmount => 'Enter an amount';
+
+  @override
+  String get invalidAmount => 'Invalid amount';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get noteOptional => 'Note (optional)';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get errorLoadingCategories => 'Error loading categories';
+
+  @override
+  String get financialControl => 'Financial control';
+
+  @override
+  String get budgets => 'Budgets';
+
+  @override
+  String get debts => 'Debts';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get noBudgets => 'No budgets';
+
+  @override
+  String get addBudget => 'Add budget';
+
+  @override
+  String get newBudget => 'New budget';
+
+  @override
+  String get monthlyLimit => 'Monthly limit (€)';
+
+  @override
+  String limitExceededBy(String amount) {
+    return 'Limit exceeded by $amount';
+  }
+
+  @override
+  String nearLimitRemaining(String amount) {
+    return 'Near limit — $amount remaining';
+  }
+
+  @override
+  String spentOf(String spent, String total) {
+    return '$spent of $total';
+  }
+
+  @override
+  String get completeAllFields => 'Complete all fields';
+
+  @override
+  String get noDebts => 'No debts recorded';
+
+  @override
+  String get addDebt => 'Add debt';
+
+  @override
+  String get newDebt => 'New debt';
+
+  @override
+  String get totalPending => 'Total pending';
+
+  @override
+  String get totalAmount => 'Total amount (€)';
+
+  @override
+  String get monthlyPayment => 'Monthly payment (€)';
+
+  @override
+  String get dueDate => 'Due date';
+
+  @override
+  String due(String date) {
+    return 'Due: $date';
+  }
+
+  @override
+  String ofTotal(String total) {
+    return 'of $total';
+  }
+
+  @override
+  String installment(String amount) {
+    return 'Payment: $amount/mo';
+  }
+
+  @override
+  String get markPaid => 'Mark as paid';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get deleteDebt => 'Delete debt';
+
+  @override
+  String deleteDebtConfirm(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get yesDelete => 'Yes, delete';
+
+  @override
+  String get subscriptions => 'Subscriptions';
+
+  @override
+  String get noActiveSubscriptions => 'No active subscriptions';
+
+  @override
+  String get addSubscription => 'Add subscription';
+
+  @override
+  String get newSubscription => 'New subscription';
+
+  @override
+  String get totalMonthlyExpense => 'Total monthly expense';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get annual => 'Annual';
+
+  @override
+  String get weekly => 'Weekly';
+
+  @override
+  String nextIn(int days) {
+    return 'Next in $days days';
+  }
+
+  @override
+  String get cancelSubscription => 'Cancel subscription';
+
+  @override
+  String cancelSubscriptionConfirm(String name) {
+    return 'Cancel \"$name\"? It will stop generating charges.';
+  }
+
+  @override
+  String get yesCancel => 'Yes, cancel';
+
+  @override
+  String get amount => 'Amount (€)';
+
+  @override
+  String get frequency => 'Frequency';
+
+  @override
+  String get paymentMode => 'Payment mode';
+
+  @override
+  String get automatic => 'Automatic';
+
+  @override
+  String get manual => 'Manual';
+
+  @override
+  String get groups => 'Groups';
+
+  @override
+  String get noGroupsCreated => 'No groups created';
+
+  @override
+  String get createGroup => 'Create group';
+
+  @override
+  String get newGroup => 'New group';
+
+  @override
+  String get groupName => 'Group name';
+
+  @override
+  String get enterGroupName => 'Enter a name for the group';
+
+  @override
+  String get deleteGroup => 'Delete group';
+
+  @override
+  String deleteGroupConfirm(String name) {
+    return 'Are you sure you want to delete \"$name\"?';
+  }
+
+  @override
+  String get balances => 'Balances';
+
+  @override
+  String get expenses => 'Expenses';
+
+  @override
+  String get noExpensesYet => 'No expenses yet';
+
+  @override
+  String paidBy(String name) {
+    return 'Paid by: $name';
+  }
+
+  @override
+  String get addExpense => 'Add expense';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get errorLoadingGroups => 'Error loading groups';
+
+  @override
+  String get userNotAuthenticated => 'User not authenticated';
+
+  @override
+  String get errorLoadingData => 'Error loading data';
+
+  @override
+  String get analysis => 'Analytics';
+
+  @override
+  String get incomeVsExpense => 'Income vs Expenses';
+
+  @override
+  String get last6Months => 'Last 6 months';
+
+  @override
+  String get expensesByCategory => 'Expenses by category';
+
+  @override
+  String get noExpensesThisMonth => 'No expenses this month';
+
+  @override
+  String get incomes => 'Income';
+
+  @override
+  String get cat_comida => 'Food';
+
+  @override
+  String get cat_transporte => 'Transport';
+
+  @override
+  String get cat_ocio => 'Leisure';
+
+  @override
+  String get cat_salud => 'Health';
+
+  @override
+  String get cat_hogar => 'Home';
+
+  @override
+  String get cat_ropa => 'Clothing';
+
+  @override
+  String get cat_educacion => 'Education';
+
+  @override
+  String get cat_otros => 'Other';
+
+  @override
+  String get cat_sueldo => 'Salary';
+
+  @override
+  String get cat_freelance => 'Freelance';
+
+  @override
+  String get cat_inversiones => 'Investments';
+
+  @override
+  String get cat_regalos => 'Gifts';
+
+  @override
+  String get cat_suscripciones => 'Subscriptions';
+
+  @override
+  String get cat_vivienda => 'Housing';
 }

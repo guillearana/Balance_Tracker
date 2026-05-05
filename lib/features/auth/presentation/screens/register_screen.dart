@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:balance_tracker/features/auth/data/repositories/category_seeder.dart';
+import 'package:balance_tracker/l10n/app_localizations.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -41,12 +42,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
       await credential.user?.updateDisplayName(_nameController.text.trim());
-      
-      // Seeding de categorías por defecto
+
       if (credential.user != null) {
         await CategorySeeder.seedDefaultCategories(credential.user!.uid);
       }
@@ -58,21 +58,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   String _getErrorMessage(String code) {
+    final l10n = AppLocalizations.of(context)!;
     switch (code) {
       case 'email-already-in-use':
-        return 'Ya existe una cuenta con este email.';
+        return l10n.errorEmailInUse;
       case 'invalid-email':
-        return 'El email no es válido.';
+        return l10n.invalidEmail;
       case 'weak-password':
-        return 'La contraseña es demasiado débil.';
+        return l10n.errorWeakPassword;
       default:
-        return 'Ha ocurrido un error. Inténtalo de nuevo.';
+        return l10n.errorDefault;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -89,7 +91,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             children: [
               const SizedBox(height: 16),
               Text(
-                'Crear cuenta',
+                l10n.createAccount,
                 style: GoogleFonts.inter(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -98,7 +100,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Empieza a controlar tus finanzas hoy',
+                l10n.createAccountSubtitle,
                 style: GoogleFonts.inter(
                   fontSize: 15,
                   color: theme.colorScheme.onSurface.withOpacity(0.6),
@@ -111,12 +113,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   children: [
                     TextFormField(
                       controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Nombre',
-                        prefixIcon: Icon(Icons.person_outline),
+                      decoration: InputDecoration(
+                        labelText: l10n.name,
+                        prefixIcon: const Icon(Icons.person_outline),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Introduce tu nombre';
+                        if (v == null || v.isEmpty) return l10n.enterName;
                         return null;
                       },
                     ),
@@ -124,13 +126,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      decoration: InputDecoration(
+                        labelText: l10n.email,
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Introduce tu email';
-                        if (!v.contains('@')) return 'Email no válido';
+                        if (v == null || v.isEmpty) return l10n.enterEmail;
+                        if (!v.contains('@')) return l10n.invalidEmail;
                         return null;
                       },
                     ),
@@ -139,7 +141,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        labelText: 'Contraseña',
+                        labelText: l10n.password,
                         prefixIcon: const Icon(Icons.lock_outlined),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -148,12 +150,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 : Icons.visibility_off_outlined,
                           ),
                           onPressed: () => setState(
-                              () => _obscurePassword = !_obscurePassword),
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Introduce una contraseña';
-                        if (v.length < 6) return 'Mínimo 6 caracteres';
+                        if (v == null || v.isEmpty) return l10n.enterPassword;
+                        if (v.length < 6) return l10n.minChars;
                         return null;
                       },
                     ),
@@ -162,7 +165,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       controller: _confirmPasswordController,
                       obscureText: _obscureConfirm,
                       decoration: InputDecoration(
-                        labelText: 'Confirmar contraseña',
+                        labelText: l10n.confirmPassword,
                         prefixIcon: const Icon(Icons.lock_outlined),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -171,13 +174,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 : Icons.visibility_off_outlined,
                           ),
                           onPressed: () => setState(
-                              () => _obscureConfirm = !_obscureConfirm),
+                            () => _obscureConfirm = !_obscureConfirm,
+                          ),
                         ),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Confirma tu contraseña';
+                        if (v == null || v.isEmpty)
+                          return l10n.confirmYourPassword;
                         if (v != _passwordController.text)
-                          return 'Las contraseñas no coinciden';
+                          return l10n.passwordsDoNotMatch;
                         return null;
                       },
                     ),
@@ -191,15 +196,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.error_outline,
-                                color: theme.colorScheme.error, size: 18),
+                            Icon(
+                              Icons.error_outline,
+                              color: theme.colorScheme.error,
+                              size: 18,
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 _errorMessage!,
                                 style: TextStyle(
-                                    color: theme.colorScheme.error,
-                                    fontSize: 13),
+                                  color: theme.colorScheme.error,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
                           ],
@@ -220,7 +229,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text('Crear cuenta'),
+                            : Text(l10n.createAccount),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -228,7 +237,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '¿Ya tienes cuenta? ',
+                          l10n.alreadyHaveAccount,
                           style: TextStyle(
                             color: theme.colorScheme.onSurface.withOpacity(0.6),
                           ),
@@ -236,7 +245,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         GestureDetector(
                           onTap: () => context.pop(),
                           child: Text(
-                            'Inicia sesión',
+                            l10n.signIn,
                             style: TextStyle(
                               color: theme.colorScheme.primary,
                               fontWeight: FontWeight.w600,

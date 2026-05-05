@@ -1,4 +1,6 @@
 import 'package:balance_tracker/core/providers/locale_provider.dart';
+import 'package:balance_tracker/features/categories/data/repositories/category_provider.dart';
+import 'package:balance_tracker/core/utils/category_translator.dart';
 import 'package:balance_tracker/core/router/app_router.dart';
 import 'package:balance_tracker/features/auth/providers/auth_provider.dart';
 import 'package:balance_tracker/features/transactions/data/repositories/transaction_provider.dart';
@@ -14,6 +16,13 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/features/transactions/presentation/screens/add_transaction_screen.dart';
+
+String _getGreeting(DateTime now) {
+  final hour = now.hour;
+  if (hour < 13) return 'Buenos días';
+  if (hour < 20) return 'Buenas tardes';
+  return 'Buenas noches';
+}
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -51,8 +60,10 @@ class DashboardScreen extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.logout, color: Color(0xFFFF7675)),
-                title: Text(l10n.signOut,
-                    style: const TextStyle(color: Color(0xFFFF7675))),
+                title: Text(
+                  l10n.signOut,
+                  style: const TextStyle(color: Color(0xFFFF7675)),
+                ),
                 onTap: () async {
                   Navigator.of(ctx).pop();
                   final confirm = await showDialog<bool>(
@@ -67,9 +78,10 @@ class DashboardScreen extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(d).pop(true),
-                          child: Text(l10n.signOut,
-                              style: const TextStyle(
-                                  color: Color(0xFFFF7675))),
+                          child: Text(
+                            l10n.signOut,
+                            style: const TextStyle(color: Color(0xFFFF7675)),
+                          ),
                         ),
                       ],
                     ),
@@ -165,7 +177,7 @@ class DashboardScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${l10n.hello}, ${user?.displayName?.split(' ').first ?? 'Usuario'}',
+                          '${_getGreeting(now)}, ${user?.displayName?.split(' ').first ?? 'Usuario'}',
                           style: GoogleFonts.inter(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -176,8 +188,9 @@ class DashboardScreen extends ConsumerWidget {
                           DateFormat('MMMM yyyy', locale).format(now),
                           style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                       ],
@@ -206,9 +219,11 @@ class DashboardScreen extends ConsumerWidget {
               child: transactionsAsync.when(
                 data: (transactions) {
                   final monthTransactions = transactions
-                      .where((t) =>
-                          t.date.month == now.month &&
-                          t.date.year == now.year)
+                      .where(
+                        (t) =>
+                            t.date.month == now.month &&
+                            t.date.year == now.year,
+                      )
                       .toList();
                   final income = monthTransactions
                       .where((t) => t.type == TransactionType.income)
@@ -255,8 +270,9 @@ class DashboardScreen extends ConsumerWidget {
                                       l10n.showMore,
                                       style: GoogleFonts.inter(
                                         fontSize: 12,
-                                        color: Colors.white
-                                            .withValues(alpha: 0.8),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.8,
+                                        ),
                                         decoration: TextDecoration.underline,
                                         decorationColor: Colors.white
                                             .withValues(alpha: 0.8),
@@ -266,8 +282,9 @@ class DashboardScreen extends ConsumerWidget {
                                     Icon(
                                       Icons.arrow_forward_ios,
                                       size: 10,
-                                      color: Colors.white
-                                          .withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -280,7 +297,9 @@ class DashboardScreen extends ConsumerWidget {
                             style: GoogleFonts.inter(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: balance < 0
+                                  ? const Color(0xFFFF7675)
+                                  : Colors.white,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -344,8 +363,12 @@ class DashboardScreen extends ConsumerWidget {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 4),
+                      padding: EdgeInsets.fromLTRB(
+                        20,
+                        index == 0 ? 4 : 0,
+                        20,
+                        8,
+                      ),
                       child: _TransactionTile(transaction: recent[index]),
                     ),
                     childCount: recent.length,
@@ -389,15 +412,16 @@ class DashboardScreen extends ConsumerWidget {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 4),
+                        horizontal: 20,
+                        vertical: 4,
+                      ),
                       child: _SubscriptionTile(subscription: upcoming[index]),
                     ),
                     childCount: upcoming.length,
                   ),
                 );
               },
-              loading: () =>
-                  const SliverToBoxAdapter(child: SizedBox.shrink()),
+              loading: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
               error: (_, __) =>
                   const SliverToBoxAdapter(child: SizedBox.shrink()),
             ),
@@ -505,23 +529,74 @@ class _SummaryChip extends StatelessWidget {
   }
 }
 
-class _TransactionTile extends StatelessWidget {
+class _TransactionTile extends ConsumerWidget {
   final TransactionModel transaction;
 
   const _TransactionTile({required this.transaction});
 
+  IconData _getCategoryIcon(String iconName) {
+    const iconMap = {
+      'restaurant': Icons.restaurant,
+      'directions_car': Icons.directions_car,
+      'sports_esports': Icons.sports_esports,
+      'favorite': Icons.favorite,
+      'home': Icons.home,
+      'checkroom': Icons.checkroom,
+      'school': Icons.school,
+      'category': Icons.category,
+      'work': Icons.work,
+      'savings': Icons.savings,
+      'card_giftcard': Icons.card_giftcard,
+      'account_balance': Icons.account_balance,
+      'attach_money': Icons.attach_money,
+      'trending_up': Icons.trending_up,
+    };
+    return iconMap[iconName] ?? Icons.category;
+  }
+
+  Color _parseColor(String color) {
+    if (color.startsWith('#')) {
+      final hex = color.replaceFirst('#', '');
+      return Color(int.parse('FF$hex', radix: 16));
+    }
+    return Color(int.parse(color));
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toString();
     final theme = Theme.of(context);
     final isIncome = transaction.type == TransactionType.income;
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final categoriesAsync = ref.watch(allCategoriesProvider);
+
+    final category = categoriesAsync.whenOrNull(
+      data: (cats) {
+        try {
+          return cats.firstWhere((c) => c.id == transaction.categoryId);
+        } catch (_) {
+          return null;
+        }
+      },
+    );
+
+    final catColor = category != null
+        ? _parseColor(category.color)
+        : (isIncome ? const Color(0xFF10B981) : const Color(0xFFEF4444));
+    final catIcon = category != null
+        ? _getCategoryIcon(category.icon)
+        : (isIncome
+              ? Icons.arrow_downward_rounded
+              : Icons.arrow_upward_rounded);
+    final catName = category != null
+        ? CategoryTranslator.translate(context, category.name)
+        : (isIncome ? l10n.income : l10n.expense);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
+        color: const Color(0xFFE8EDF4),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -530,20 +605,10 @@ class _TransactionTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: isIncome
-                  ? const Color(0xFF55EFC4).withValues(alpha: 0.15)
-                  : const Color(0xFFFF7675).withValues(alpha: 0.15),
+              color: catColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              isIncome
-                  ? Icons.arrow_downward_rounded
-                  : Icons.arrow_upward_rounded,
-              color: isIncome
-                  ? const Color(0xFF55EFC4)
-                  : const Color(0xFFFF7675),
-              size: 20,
-            ),
+            child: Icon(catIcon, color: catColor, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -551,16 +616,16 @@ class _TransactionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.note ??
-                      (isIncome ? l10n.income : l10n.expense),
+                  transaction.note ?? catName,
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
-                  DateFormat('dd MMM yyyy', locale).format(transaction.date),
+                  '${catName} · ${DateFormat('dd MMM', locale).format(transaction.date)}',
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -575,8 +640,8 @@ class _TransactionTile extends StatelessWidget {
               fontSize: 15,
               fontWeight: FontWeight.w600,
               color: isIncome
-                  ? const Color(0xFF55EFC4)
-                  : const Color(0xFFFF7675),
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFFEF4444),
             ),
           ),
         ],
@@ -595,13 +660,12 @@ class _SubscriptionTile extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
-    final daysLeft =
-        subscription.nextPayment.difference(DateTime.now()).inDays;
+    final daysLeft = subscription.nextPayment.difference(DateTime.now()).inDays;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
+        color: const Color(0xFFE8EDF4),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -610,8 +674,8 @@ class _SubscriptionTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xFFE8EDF4),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
               Icons.repeat_rounded,
@@ -668,13 +732,22 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-      child: Row(
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+      child: Column(
         children: [
-          Icon(icon,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-              size: 20),
-          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: theme.colorScheme.primary.withValues(alpha: 0.4),
+              size: 32,
+            ),
+          ),
+          const SizedBox(height: 12),
           Text(
             message,
             style: GoogleFonts.inter(

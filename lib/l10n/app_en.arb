@@ -17,9 +17,7 @@
   "daysLeft": "In {days} days",
   "@daysLeft": {
     "placeholders": {
-      "days": {
-        "type": "int"
-      }
+      "days": { "type": "int" }
     }
   },
   "appSubtitle": "Control your personal finances",
@@ -36,5 +34,177 @@
   "errorUserNotFound": "No account found with this email.",
   "errorWrongPassword": "Incorrect password.",
   "errorUserDisabled": "This account has been disabled.",
-  "errorInvalidCredential": "Incorrect email or password."
+  "errorInvalidCredential": "Incorrect email or password.",
+
+  "createAccount": "Create account",
+  "createAccountSubtitle": "Start managing your finances today",
+  "name": "Name",
+  "enterName": "Enter your name",
+  "confirmPassword": "Confirm password",
+  "confirmYourPassword": "Confirm your password",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "alreadyHaveAccount": "Already have an account? ",
+  "signIn": "Sign in",
+  "errorEmailInUse": "An account already exists with this email.",
+  "errorWeakPassword": "The password is too weak.",
+
+  "transactions": "Transactions",
+  "all": "All",
+  "noTransactionsFound": "No transactions",
+  "noCategory": "No category",
+  "errorLoadingTransactions": "Error loading transactions",
+
+  "newTransaction": "New transaction",
+  "selectCategory": "Select a category",
+  "enterAmount": "Enter an amount",
+  "invalidAmount": "Invalid amount",
+  "category": "Category",
+  "date": "Date",
+  "noteOptional": "Note (optional)",
+  "save": "Save",
+  "errorLoadingCategories": "Error loading categories",
+
+  "financialControl": "Financial control",
+  "budgets": "Budgets",
+  "debts": "Debts",
+  "add": "Add",
+  "noBudgets": "No budgets",
+  "addBudget": "Add budget",
+  "newBudget": "New budget",
+  "monthlyLimit": "Monthly limit (€)",
+  "limitExceededBy": "Limit exceeded by {amount}",
+  "@limitExceededBy": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "nearLimitRemaining": "Near limit — {amount} remaining",
+  "@nearLimitRemaining": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "spentOf": "{spent} of {total}",
+  "@spentOf": {
+    "placeholders": {
+      "spent": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "completeAllFields": "Complete all fields",
+
+  "noDebts": "No debts recorded",
+  "addDebt": "Add debt",
+  "newDebt": "New debt",
+  "totalPending": "Total pending",
+  "totalAmount": "Total amount (€)",
+  "monthlyPayment": "Monthly payment (€)",
+  "dueDate": "Due date",
+  "due": "Due: {date}",
+  "@due": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "ofTotal": "of {total}",
+  "@ofTotal": {
+    "placeholders": {
+      "total": { "type": "String" }
+    }
+  },
+  "installment": "Payment: {amount}/mo",
+  "@installment": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "markPaid": "Mark as paid",
+  "delete": "Delete",
+  "deleteDebt": "Delete debt",
+  "deleteDebtConfirm": "Delete \"{name}\"?",
+  "@deleteDebtConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "no": "No",
+  "yesDelete": "Yes, delete",
+
+  "subscriptions": "Subscriptions",
+  "noActiveSubscriptions": "No active subscriptions",
+  "addSubscription": "Add subscription",
+  "newSubscription": "New subscription",
+  "totalMonthlyExpense": "Total monthly expense",
+  "monthly": "Monthly",
+  "annual": "Annual",
+  "weekly": "Weekly",
+  "nextIn": "Next in {days} days",
+  "@nextIn": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "cancelSubscription": "Cancel subscription",
+  "cancelSubscriptionConfirm": "Cancel \"{name}\"? It will stop generating charges.",
+  "@cancelSubscriptionConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "yesCancel": "Yes, cancel",
+  "amount": "Amount (€)",
+  "frequency": "Frequency",
+  "paymentMode": "Payment mode",
+  "automatic": "Automatic",
+  "manual": "Manual",
+
+  "groups": "Groups",
+  "noGroupsCreated": "No groups created",
+  "createGroup": "Create group",
+  "newGroup": "New group",
+  "groupName": "Group name",
+  "enterGroupName": "Enter a name for the group",
+  "deleteGroup": "Delete group",
+  "deleteGroupConfirm": "Are you sure you want to delete \"{name}\"?",
+  "@deleteGroupConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "balances": "Balances",
+  "expenses": "Expenses",
+  "noExpensesYet": "No expenses yet",
+  "paidBy": "Paid by: {name}",
+  "@paidBy": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "addExpense": "Add expense",
+  "description": "Description",
+  "errorLoadingGroups": "Error loading groups",
+  "userNotAuthenticated": "User not authenticated",
+  "errorLoadingData": "Error loading data",
+
+  "analysis": "Analytics",
+  "incomeVsExpense": "Income vs Expenses",
+  "last6Months": "Last 6 months",
+  "expensesByCategory": "Expenses by category",
+  "noExpensesThisMonth": "No expenses this month",
+  "incomes": "Income",
+
+  "cat_comida": "Food",
+  "cat_transporte": "Transport",
+  "cat_ocio": "Leisure",
+  "cat_salud": "Health",
+  "cat_hogar": "Home",
+  "cat_ropa": "Clothing",
+  "cat_educacion": "Education",
+  "cat_otros": "Other",
+  "cat_sueldo": "Salary",
+  "cat_freelance": "Freelance",
+  "cat_inversiones": "Investments",
+  "cat_regalos": "Gifts",
+  "cat_suscripciones": "Subscriptions",
+  "cat_vivienda": "Housing"
 }

@@ -43,16 +43,17 @@ class MainScreen extends StatelessWidget {
                 _NavItem(
                   icon: Icons.bar_chart_outlined,
                   activeIcon: Icons.bar_chart,
+                  label: 'Análisis',
                   isActive: currentIndex == 0,
                   onTap: () => context.go(AppRoutes.analytics),
                 ),
                 _NavItem(
                   icon: Icons.receipt_long_outlined,
                   activeIcon: Icons.receipt_long,
+                  label: 'Límites',
                   isActive: currentIndex == 1,
                   onTap: () => context.go(AppRoutes.budgets),
                 ),
-                // Botón central destacado
                 GestureDetector(
                   onTap: () => context.go(AppRoutes.main),
                   child: Container(
@@ -63,13 +64,15 @@ class MainScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.4,
+                          ),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.dashboard,
                       color: Colors.white,
                       size: 26,
@@ -79,12 +82,14 @@ class MainScreen extends StatelessWidget {
                 _NavItem(
                   icon: Icons.repeat_outlined,
                   activeIcon: Icons.repeat,
+                  label: 'Pagos',
                   isActive: currentIndex == 3,
                   onTap: () => context.go(AppRoutes.subscriptions),
                 ),
                 _NavItem(
                   icon: Icons.group_outlined,
                   activeIcon: Icons.group,
+                  label: 'Grupos',
                   isActive: currentIndex == 4,
                   onTap: () => context.go(AppRoutes.groups),
                 ),
@@ -100,12 +105,14 @@ class MainScreen extends StatelessWidget {
 class _NavItem extends StatelessWidget {
   final IconData icon;
   final IconData activeIcon;
+  final String label;
   final bool isActive;
   final VoidCallback onTap;
 
   const _NavItem({
     required this.icon,
     required this.activeIcon,
+    required this.label,
     required this.isActive,
     required this.onTap,
   });
@@ -117,14 +124,30 @@ class _NavItem extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 48,
+        width: 56,
         height: 56,
-        child: Icon(
-          isActive ? activeIcon : icon,
-          color: isActive
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurface.withValues(alpha: 0.4),
-          size: 24,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isActive ? activeIcon : icon,
+              color: isActive
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+              size: 22,
+            ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                color: isActive
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+              ),
+            ),
+          ],
         ),
       ),
     );

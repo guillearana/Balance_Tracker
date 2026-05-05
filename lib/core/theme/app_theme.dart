@@ -2,40 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const _primaryColor = Color(0xFF6C63FF);
-  static const _secondaryColor = Color(0xFF03DAC6);
+  // Deep Navy palette
+  static const _primaryColor = Color(0xFF3B82F6);
+  static const _secondaryColor = Color(0xFF10B981);
 
   static final light = ThemeData(
     useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: _primaryColor,
+    colorScheme: ColorScheme.light(
+      primary: _primaryColor,
       secondary: _secondaryColor,
-      brightness: Brightness.light,
+      surface: Colors.white,
+      onSurface: const Color(0xFF0F172A),
+      surfaceContainerHighest: const Color(0xFFF1F5F9),
+      error: const Color(0xFFEF4444),
     ),
     textTheme: GoogleFonts.interTextTheme(),
-    scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+    scaffoldBackgroundColor: const Color(0xFFF8FAFC),
     cardTheme: CardThemeData(
-    elevation: 0,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: Colors.white,
     ),
-    color: Colors.white,
-),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
       backgroundColor: Colors.transparent,
-      foregroundColor: Color(0xFF1A1A2E),
+      foregroundColor: Color(0xFF0F172A),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: _primaryColor,
-      unselectedItemColor: Color(0xFF9E9E9E),
+      unselectedItemColor: Color(0xFF94A3B8),
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: const Color(0xFFF1F3F4),
+      fillColor: const Color(0xFFF1F5F9),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -56,45 +58,43 @@ class AppTheme {
         foregroundColor: Colors.white,
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
   );
 
   static final dark = ThemeData(
     useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: _primaryColor,
+    colorScheme: ColorScheme.dark(
+      primary: _primaryColor,
       secondary: _secondaryColor,
-      brightness: Brightness.dark,
+      surface: const Color(0xFF1E293B),
+      onSurface: const Color(0xFFF1F5F9),
+      surfaceContainerHighest: const Color(0xFF334155),
+      error: const Color(0xFFEF4444),
     ),
-    textTheme: GoogleFonts.interTextTheme(),
-    scaffoldBackgroundColor: const Color(0xFF0F0F1A),
+    textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
+    scaffoldBackgroundColor: const Color(0xFF0F172A),
     cardTheme: CardThemeData(
-    elevation: 0,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
-    ),
-    color: const Color(0xFF1A1A2E),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: const Color(0xFF1E293B),
     ),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
       backgroundColor: Colors.transparent,
-      foregroundColor: Colors.white,
+      foregroundColor: Color(0xFFF1F5F9),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: _primaryColor,
-      unselectedItemColor: Color(0xFF6B6B8A),
+      unselectedItemColor: Color(0xFF64748B),
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Color(0xFF1A1A2E),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: const Color(0xFF1E1E30),
+      fillColor: const Color(0xFF334155),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -115,9 +115,7 @@ class AppTheme {
         foregroundColor: Colors.white,
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
   );
