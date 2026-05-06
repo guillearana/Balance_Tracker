@@ -233,7 +233,7 @@ class _SubscriptionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8EDF4),
+        color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
         border: isUrgent
             ? Border.all(color: const Color(0xFFFF7675).withValues(alpha: 0.5))

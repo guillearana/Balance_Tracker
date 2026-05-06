@@ -9,6 +9,7 @@ import 'package:balance_tracker/features/debts/data/repositories/debt_provider.d
 import 'package:balance_tracker/features/transactions/domain/models/transaction_model.dart';
 import 'package:balance_tracker/features/subscriptions/domain/models/subscription_model.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
+import 'package:balance_tracker/core/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,6 +30,7 @@ class DashboardScreen extends ConsumerWidget {
 
   void _showProfileMenu(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = ref.read(themeNotifierProvider) == ThemeMode.dark;
     showModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -51,6 +53,16 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               ),
               ListTile(
+                leading: Icon(
+                  isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                ),
+                title: Text(isDark ? 'Modo claro' : 'Modo oscuro'),
+                onTap: () {
+                  ref.read(themeNotifierProvider.notifier).toggleTheme();
+                  Navigator.of(ctx).pop();
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.language_outlined),
                 title: Text(l10n.changeLanguage),
                 onTap: () {
@@ -59,10 +71,10 @@ class DashboardScreen extends ConsumerWidget {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.logout, color: Color(0xFFFF7675)),
+                leading: const Icon(Icons.logout, color: Color(0xFFEF4444)),
                 title: Text(
                   l10n.signOut,
-                  style: const TextStyle(color: Color(0xFFFF7675)),
+                  style: const TextStyle(color: Color(0xFFEF4444)),
                 ),
                 onTap: () async {
                   Navigator.of(ctx).pop();
@@ -80,7 +92,7 @@ class DashboardScreen extends ConsumerWidget {
                           onPressed: () => Navigator.of(d).pop(true),
                           child: Text(
                             l10n.signOut,
-                            style: const TextStyle(color: Color(0xFFFF7675)),
+                            style: const TextStyle(color: Color(0xFFEF4444)),
                           ),
                         ),
                       ],
@@ -670,7 +682,7 @@ class _TransactionTile extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8EDF4),
+        color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -750,7 +762,7 @@ class _SubscriptionTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8EDF4),
+        color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -759,7 +771,7 @@ class _SubscriptionTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: const Color(0xFFE8EDF4),
+              color: theme.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
