@@ -9,6 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:balance_tracker/features/main/presentation/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,21 +26,23 @@ class BalanceTrackerApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final locale = ref.watch(localeNotifierProvider);
 
-    return MaterialApp.router(
-      title: 'BalanceTracker',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ref.watch(themeNotifierProvider),
-      locale: locale,
-      supportedLocales: const [Locale('es'), Locale('en'), Locale('eu')],
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      routerConfig: router,
+    return SplashScreen(
+      child: MaterialApp.router(
+        title: 'BalanceTracker',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ref.watch(themeNotifierProvider),
+        locale: locale,
+        supportedLocales: const [Locale('es'), Locale('en'), Locale('eu')],
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        routerConfig: router,
+      ),
     );
   }
 }
