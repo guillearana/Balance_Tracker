@@ -475,7 +475,7 @@ abstract class AppLocalizations {
   /// No description provided for @monthlyLimit.
   ///
   /// In es, this message translates to:
-  /// **'Límite mensual (€)'**
+  /// **'Límite mensual'**
   String get monthlyLimit;
 
   /// No description provided for @limitExceededBy.
@@ -529,7 +529,7 @@ abstract class AppLocalizations {
   /// No description provided for @totalAmount.
   ///
   /// In es, this message translates to:
-  /// **'Importe total (€)'**
+  /// **'Importe total'**
   String get totalAmount;
 
   /// No description provided for @monthlyPayment.
@@ -673,7 +673,7 @@ abstract class AppLocalizations {
   /// No description provided for @amount.
   ///
   /// In es, this message translates to:
-  /// **'Importe (€)'**
+  /// **'Importe'**
   String get amount;
 
   /// No description provided for @frequency.

@@ -197,7 +197,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get newBudget => 'Aurrekontu berria';
 
   @override
-  String get monthlyLimit => 'Hileko muga (€)';
+  String get monthlyLimit => 'Hileko muga';
 
   @override
   String limitExceededBy(String amount) {
@@ -230,7 +230,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get totalPending => 'Guztira zain';
 
   @override
-  String get totalAmount => 'Kopuru osoa (€)';
+  String get totalAmount => 'Kopuru osoa';
 
   @override
   String get monthlyPayment => 'Hileko kuota (€)';
@@ -314,7 +314,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get yesCancel => 'Bai, utzi';
 
   @override
-  String get amount => 'Kopurua (€)';
+  String get amount => 'Kopurua';
 
   @override
   String get frequency => 'Maiztasuna';

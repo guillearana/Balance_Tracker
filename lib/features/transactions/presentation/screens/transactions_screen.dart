@@ -5,6 +5,7 @@ import 'package:balance_tracker/features/transactions/data/repositories/transact
 import 'package:balance_tracker/features/transactions/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:balance_tracker/core/providers/currency_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
@@ -232,17 +233,20 @@ class _FilterChip extends StatelessWidget {
   }
 }
 
-class _TransactionCard extends StatelessWidget {
+class _TransactionCard extends ConsumerWidget {
   final TransactionModel transaction;
   final CategoryModel category;
 
   const _TransactionCard({required this.transaction, required this.category});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isIncome = transaction.type == TransactionType.income;
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
     final categoryColor = _hexToColor(category.color);
 
     return Container(

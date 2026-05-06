@@ -71,7 +71,7 @@
   "noBudgets": "No budgets",
   "addBudget": "Add budget",
   "newBudget": "New budget",
-  "monthlyLimit": "Monthly limit (€)",
+  "monthlyLimit": "Monthly limit",
   "limitExceededBy": "Limit exceeded by {amount}",
   "@limitExceededBy": {
     "placeholders": {
@@ -97,7 +97,7 @@
   "addDebt": "Add debt",
   "newDebt": "New debt",
   "totalPending": "Total pending",
-  "totalAmount": "Total amount (€)",
+  "totalAmount": "Total amount",
   "monthlyPayment": "Monthly payment (€)",
   "dueDate": "Due date",
   "due": "Due: {date}",
@@ -152,7 +152,7 @@
     }
   },
   "yesCancel": "Yes, cancel",
-  "amount": "Amount (€)",
+  "amount": "Amount",
   "frequency": "Frequency",
   "paymentMode": "Payment mode",
   "automatic": "Automatic",

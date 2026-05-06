@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
+import 'package:balance_tracker/core/providers/currency_provider.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -17,7 +18,10 @@ class AnalyticsScreen extends ConsumerWidget {
     final categoriesAsync = ref.watch(allCategoriesProvider);
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
     final now = DateTime.now();
     final locale = Localizations.localeOf(context).toString();
 

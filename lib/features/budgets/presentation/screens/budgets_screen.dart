@@ -11,6 +11,7 @@ import 'package:balance_tracker/features/debts/domain/models/debt_model.dart';
 import 'package:balance_tracker/features/transactions/data/repositories/transaction_provider.dart';
 import 'package:balance_tracker/features/transactions/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
+import 'package:balance_tracker/core/providers/currency_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -242,7 +243,7 @@ class _BudgetsTab extends ConsumerWidget {
               ),
               decoration: const InputDecoration(
                 labelText: 'Nuevo límite (€)',
-                prefixIcon: Icon(Icons.euro_outlined),
+                prefixIcon: Icon(Icons.payments_outlined),
               ),
             ),
             const SizedBox(height: 24),
@@ -331,7 +332,10 @@ class _DebtsTab extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final debtsAsync = ref.watch(debtsProvider);
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
 
     return Column(
       children: [
@@ -495,7 +499,7 @@ class _DebtsTab extends ConsumerWidget {
   }
 }
 
-class _BudgetCard extends StatelessWidget {
+class _BudgetCard extends ConsumerWidget {
   final BudgetModel budget;
   final CategoryModel category;
   final double spent;
@@ -531,10 +535,13 @@ class _BudgetCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
     final progress = (spent / budget.limitAmount).clamp(0.0, 1.0);
     final isOverBudget = spent >= budget.limitAmount;
     final isNearLimit = progress >= budget.alertThreshold && !isOverBudget;
@@ -690,7 +697,7 @@ class _BudgetCard extends StatelessWidget {
   }
 }
 
-class _DebtCard extends StatelessWidget {
+class _DebtCard extends ConsumerWidget {
   final DebtModel debt;
   final VoidCallback onMarkPaid;
   final VoidCallback onDelete;
@@ -702,10 +709,13 @@ class _DebtCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
     final isPaid = debt.status == DebtStatus.paid;
     final isOverdue = debt.dueDate.isBefore(DateTime.now()) && !isPaid;
     final progress =
@@ -976,8 +986,8 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: l10n.monthlyLimit,
-              prefixIcon: const Icon(Icons.euro_outlined),
+              labelText: l10n.amount,
+              prefixIcon: const Icon(Icons.payments_outlined),
             ),
           ),
           const SizedBox(height: 16),
@@ -1186,7 +1196,7 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: l10n.totalAmount,
-              prefixIcon: const Icon(Icons.euro_outlined),
+              prefixIcon: const Icon(Icons.payments_outlined),
             ),
           ),
           const SizedBox(height: 12),

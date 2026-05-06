@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
+import 'package:balance_tracker/core/providers/currency_provider.dart';
 
 class SubscriptionsScreen extends ConsumerWidget {
   const SubscriptionsScreen({super.key});
@@ -17,7 +18,10 @@ class SubscriptionsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final subscriptionsAsync = ref.watch(subscriptionsProvider);
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
 
     return Scaffold(
       body: SafeArea(
@@ -203,17 +207,20 @@ class SubscriptionsScreen extends ConsumerWidget {
   }
 }
 
-class _SubscriptionCard extends StatelessWidget {
+class _SubscriptionCard extends ConsumerWidget {
   final SubscriptionModel subscription;
   final VoidCallback onCancel;
 
   const _SubscriptionCard({required this.subscription, required this.onCancel});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
     final daysLeft = subscription.nextPayment.difference(DateTime.now()).inDays;
     final isUrgent = daysLeft <= 3;
 
@@ -442,7 +449,7 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: l10n.amount,
-              prefixIcon: const Icon(Icons.euro_outlined),
+              prefixIcon: const Icon(Icons.payments_outlined),
             ),
           ),
           const SizedBox(height: 16),

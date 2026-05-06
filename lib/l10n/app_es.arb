@@ -71,7 +71,7 @@
   "noBudgets": "No hay presupuestos",
   "addBudget": "Añadir presupuesto",
   "newBudget": "Nuevo presupuesto",
-  "monthlyLimit": "Límite mensual (€)",
+  "monthlyLimit": "Límite mensual",
   "limitExceededBy": "Límite superado por {amount}",
   "@limitExceededBy": {
     "placeholders": {
@@ -97,7 +97,7 @@
   "addDebt": "Añadir deuda",
   "newDebt": "Nueva deuda",
   "totalPending": "Total pendiente",
-  "totalAmount": "Importe total (€)",
+  "totalAmount": "Importe total",
   "monthlyPayment": "Cuota mensual (€)",
   "dueDate": "Fecha de vencimiento",
   "due": "Vence: {date}",
@@ -152,7 +152,7 @@
     }
   },
   "yesCancel": "Sí, cancelar",
-  "amount": "Importe (€)",
+  "amount": "Importe",
   "frequency": "Frecuencia",
   "paymentMode": "Modo de pago",
   "automatic": "Automático",

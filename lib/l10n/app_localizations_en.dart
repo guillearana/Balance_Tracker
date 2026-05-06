@@ -197,7 +197,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newBudget => 'New budget';
 
   @override
-  String get monthlyLimit => 'Monthly limit (€)';
+  String get monthlyLimit => 'Monthly limit';
 
   @override
   String limitExceededBy(String amount) {
@@ -230,7 +230,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalPending => 'Total pending';
 
   @override
-  String get totalAmount => 'Total amount (€)';
+  String get totalAmount => 'Total amount';
 
   @override
   String get monthlyPayment => 'Monthly payment (€)';
@@ -314,7 +314,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yesCancel => 'Yes, cancel';
 
   @override
-  String get amount => 'Amount (€)';
+  String get amount => 'Amount';
 
   @override
   String get frequency => 'Frequency';

@@ -1,6 +1,7 @@
 import 'package:balance_tracker/core/providers/locale_provider.dart';
 import 'package:balance_tracker/features/categories/data/repositories/category_provider.dart';
 import 'package:balance_tracker/core/utils/category_translator.dart';
+import 'package:balance_tracker/core/providers/currency_provider.dart';
 import 'package:balance_tracker/core/router/app_router.dart';
 import 'package:balance_tracker/features/auth/providers/auth_provider.dart';
 import 'package:balance_tracker/features/transactions/data/repositories/transaction_provider.dart';
@@ -12,6 +13,7 @@ import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:balance_tracker/core/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:balance_tracker/core/utils/currency_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +29,103 @@ String _getGreeting(DateTime now) {
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
+
+  void _showCurrencyDialog(BuildContext context, WidgetRef ref) {
+    final currencies = [
+      {'symbol': '€', 'name': 'Euro'},
+      {'symbol': '\$', 'name': 'Dólar'},
+      {'symbol': '£', 'name': 'Libra'},
+      {'symbol': '¥', 'name': 'Yen'},
+      {'symbol': 'CHF', 'name': 'Franco suizo'},
+    ];
+    final current = ref.read(currencyNotifierProvider);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Seleccionar moneda',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...currencies.map(
+                (c) => ListTile(
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: c['symbol'] == current
+                          ? Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.1)
+                          : Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        c['symbol']!,
+                        style: GoogleFonts.inter(
+                          fontSize: c['symbol']!.length > 1 ? 13 : 18,
+                          fontWeight: FontWeight.w600,
+                          color: c['symbol'] == current
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    c['name']!,
+                    style: GoogleFonts.inter(fontSize: 15),
+                  ),
+                  trailing: c['symbol'] == current
+                      ? Icon(
+                          Icons.check,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : null,
+                  onTap: () {
+                    ref
+                        .read(currencyNotifierProvider.notifier)
+                        .setCurrency(c['symbol']!);
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   void _showProfileMenu(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
@@ -63,11 +162,91 @@ class DashboardScreen extends ConsumerWidget {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.payments_outlined),
+                title: const Text('Moneda'),
+                subtitle: Text(ref.read(currencyNotifierProvider)),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _showCurrencyDialog(context, ref);
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.language_outlined),
                 title: Text(l10n.changeLanguage),
                 onTap: () {
                   Navigator.of(ctx).pop();
                   _showLanguageDialog(context, ref);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: const Text('Sobre la app'),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) => AlertDialog(
+                      title: Row(
+                        children: [
+                          Icon(
+                            Icons.account_balance_wallet_outlined,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text('BalanceTracker'),
+                        ],
+                      ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Versión 1.0.0',
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'App de finanzas personales para controlar tus gastos, ingresos, presupuestos y deudas.',
+                            style: GoogleFonts.inter(fontSize: 14),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Desarrollado por:',
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Jeremy Delgado & Guille Arana',
+                            style: GoogleFonts.inter(fontSize: 13),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '© 2026 BalanceTracker',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: 0.4),
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(dialogContext),
+                          child: const Text('Cerrar'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -156,7 +335,6 @@ class DashboardScreen extends ConsumerWidget {
     ref.watch(debtsProvider);
     final theme = Theme.of(context);
     final now = DateTime.now();
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -305,7 +483,7 @@ class DashboardScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            currencyFormat.format(balance),
+                            formatCurrency(ref, balance),
                             style: GoogleFonts.inter(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
@@ -320,7 +498,7 @@ class DashboardScreen extends ConsumerWidget {
                               Expanded(
                                 child: _SummaryChip(
                                   label: l10n.income,
-                                  amount: currencyFormat.format(income),
+                                  amount: formatCurrency(ref, income),
                                   icon: Icons.arrow_downward_rounded,
                                   color: const Color(0xFF55EFC4),
                                 ),
@@ -329,7 +507,7 @@ class DashboardScreen extends ConsumerWidget {
                               Expanded(
                                 child: _SummaryChip(
                                   label: l10n.expense,
-                                  amount: currencyFormat.format(expense),
+                                  amount: formatCurrency(ref, expense),
                                   icon: Icons.arrow_upward_rounded,
                                   color: const Color(0xFFFF7675),
                                 ),
@@ -654,7 +832,10 @@ class _TransactionTile extends ConsumerWidget {
     final locale = Localizations.localeOf(context).toString();
     final theme = Theme.of(context);
     final isIncome = transaction.type == TransactionType.income;
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
     final categoriesAsync = ref.watch(allCategoriesProvider);
 
     final category = categoriesAsync.whenOrNull(
@@ -747,16 +928,20 @@ class _TransactionTile extends ConsumerWidget {
   }
 }
 
-class _SubscriptionTile extends StatelessWidget {
+class _SubscriptionTile extends ConsumerWidget {
   final SubscriptionModel subscription;
 
   const _SubscriptionTile({required this.subscription});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
+
     final daysLeft = subscription.nextPayment.difference(DateTime.now()).inDays;
 
     return Container(

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:balance_tracker/core/providers/currency_provider.dart';
 
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
@@ -701,7 +702,10 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final groupId = widget.group['id'] as String;
-    final currencyFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'es_ES',
+      symbol: ref.watch(currencyNotifierProvider),
+    );
 
     return Scaffold(
       appBar: AppBar(

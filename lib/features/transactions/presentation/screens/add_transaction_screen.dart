@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
+import 'package:balance_tracker/core/providers/currency_provider.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final TransactionModel? transaction;
@@ -245,7 +246,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                 ),
-                prefixText: '€ ',
+                prefixText: '${ref.watch(currencyNotifierProvider)} ',
                 prefixStyle: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,

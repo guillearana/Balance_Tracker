@@ -71,7 +71,7 @@
   "noBudgets": "Ez dago aurrekonturik",
   "addBudget": "Aurrekontua gehitu",
   "newBudget": "Aurrekontu berria",
-  "monthlyLimit": "Hileko muga (€)",
+  "monthlyLimit": "Hileko muga",
   "limitExceededBy": "Muga gaindituta {amount}-(e)n",
   "@limitExceededBy": {
     "placeholders": {
@@ -97,7 +97,7 @@
   "addDebt": "Zorra gehitu",
   "newDebt": "Zor berria",
   "totalPending": "Guztira zain",
-  "totalAmount": "Kopuru osoa (€)",
+  "totalAmount": "Kopuru osoa",
   "monthlyPayment": "Hileko kuota (€)",
   "dueDate": "Epemuga",
   "due": "Epemuga: {date}",
@@ -152,7 +152,7 @@
     }
   },
   "yesCancel": "Bai, utzi",
-  "amount": "Kopurua (€)",
+  "amount": "Kopurua",
   "frequency": "Maiztasuna",
   "paymentMode": "Ordainketa modua",
   "automatic": "Automatikoa",
