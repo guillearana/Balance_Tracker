@@ -162,16 +162,16 @@ class SubscriptionsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(l10n.cancelSubscription),
         content: Text(l10n.cancelSubscriptionConfirm(sub.name)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(dialogContext, false),
             child: Text(l10n.no),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dialogContext, true),
             child: Text(l10n.yesCancel),
           ),
         ],
@@ -306,15 +306,13 @@ class _SubscriptionCard extends StatelessWidget {
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              GestureDetector(
-                onTap: onCancel,
-                child: Text(
-                  l10n.cancel,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: const Color(0xFFEF4444),
-                  ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                  size: 20,
                 ),
+                onPressed: onCancel,
               ),
             ],
           ),

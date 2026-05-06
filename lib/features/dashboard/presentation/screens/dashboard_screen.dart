@@ -369,7 +369,60 @@ class DashboardScreen extends ConsumerWidget {
                         20,
                         8,
                       ),
-                      child: _TransactionTile(transaction: recent[index]),
+                      child: Dismissible(
+                        key: Key(recent[index].id),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEF4444),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.white,
+                          ),
+                        ),
+                        confirmDismiss: (_) async {
+                          return await showDialog<bool>(
+                                context: context,
+                                builder: (dialogContext) => AlertDialog(
+                                  title: const Text('Eliminar transacción'),
+                                  content: const Text(
+                                    '¿Estás seguro de eliminar esta transacción?',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(dialogContext, false),
+                                      child: const Text('No'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(dialogContext, true),
+                                      child: const Text(
+                                        'Sí, eliminar',
+                                        style: TextStyle(
+                                          color: Color(0xFFEF4444),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ) ??
+                              false;
+                        },
+                        onDismissed: (_) async {
+                          final user = ref.read(currentUserProvider);
+                          if (user != null) {
+                            await ref
+                                .read(transactionRepositoryProvider)
+                                .deleteTransaction(user.uid, recent[index].id);
+                          }
+                        },
+                        child: _TransactionTile(transaction: recent[index]),
+                      ),
                     ),
                     childCount: recent.length,
                   ),

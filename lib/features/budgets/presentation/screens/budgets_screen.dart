@@ -196,9 +196,34 @@ class _BudgetsTab extends ConsumerWidget {
     WidgetRef ref,
     BudgetModel budget,
   ) async {
-    final user = ref.read(currentUserProvider);
-    if (user == null) return;
-    await ref.read(budgetRepositoryProvider).deleteBudget(user.uid, budget.id);
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('Eliminar presupuesto'),
+        content: Text('¿Eliminar este presupuesto?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(l10n.no),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(
+              l10n.yesDelete,
+              style: const TextStyle(color: Color(0xFFEF4444)),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      final user = ref.read(currentUserProvider);
+      if (user == null) return;
+      await ref
+          .read(budgetRepositoryProvider)
+          .deleteBudget(user.uid, budget.id);
+    }
   }
 
   void _showAddBudgetSheet(BuildContext context, WidgetRef ref) {
@@ -736,6 +761,34 @@ class _DebtCard extends StatelessWidget {
   }
 }
 
+IconData _getCategoryIcon(String iconName) {
+  const iconMap = {
+    'restaurant': Icons.restaurant,
+    'directions_car': Icons.directions_car,
+    'sports_esports': Icons.sports_esports,
+    'favorite': Icons.favorite,
+    'home': Icons.home,
+    'checkroom': Icons.checkroom,
+    'school': Icons.school,
+    'category': Icons.category,
+    'work': Icons.work,
+    'savings': Icons.savings,
+    'card_giftcard': Icons.card_giftcard,
+    'account_balance': Icons.account_balance,
+    'attach_money': Icons.attach_money,
+    'trending_up': Icons.trending_up,
+  };
+  return iconMap[iconName] ?? Icons.category;
+}
+
+Color _parseColor(String color) {
+  if (color.startsWith('#')) {
+    final hex = color.replaceFirst('#', '');
+    return Color(int.parse('FF$hex', radix: 16));
+  }
+  return Color(int.parse(color));
+}
+
 class _AddBudgetSheet extends ConsumerStatefulWidget {
   const _AddBudgetSheet();
 
@@ -865,15 +918,28 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
                             : theme.colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Text(
-                        CategoryTranslator.translate(context, cat.name),
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: isSelected
-                              ? Colors.white
-                              : theme.colorScheme.onSurface,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            _getCategoryIcon(cat.icon),
+                            size: 16,
+                            color: isSelected
+                                ? Colors.white
+                                : _parseColor(cat.color),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            CategoryTranslator.translate(context, cat.name),
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: isSelected
+                                  ? Colors.white
+                                  : theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
