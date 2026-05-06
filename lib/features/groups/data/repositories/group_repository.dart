@@ -15,6 +15,7 @@ class GroupRepository {
       'name': name,
       'createdBy': createdBy,
       'inviteCode': code,
+      'memberIds': [createdBy],
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -46,6 +47,16 @@ class GroupRepository {
             .toList());
   }
 
+  Stream<List<Map<String, dynamic>>> watchMemberGroups(String userId) {
+    return _groups
+        .where('memberIds', arrayContains: userId)
+        .snapshots()
+        .map((snap) => snap.docs
+            .map((doc) =>
+                {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+            .toList());
+  }
+
   Future<void> addExpense(
       String groupId, Map<String, dynamic> expense) async {
     final ref = await _groups.doc(groupId).collection('expenses').add({
@@ -63,16 +74,14 @@ class GroupRepository {
         .collection('expenses')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snap) =>
-            snap.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList());
+        .map((snap) => snap.docs
+            .map((doc) => {'id': doc.id, ...doc.data()})
+            .toList());
   }
 
   Future<List<Map<String, dynamic>>> getGroupMembers(String groupId) async {
-    final snap =
-        await _groups.doc(groupId).collection('members').get();
-    return snap.docs
-        .map((doc) => {'id': doc.id, ...doc.data()})
-        .toList();
+    final snap = await _groups.doc(groupId).collection('members').get();
+    return snap.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
   }
 
   Future<void> addMember(
@@ -84,7 +93,6 @@ class GroupRepository {
     });
   }
 
-  // Une a un usuario a un grupo mediante código de invitación
   Future<String?> joinGroupByCode(
       String code, String userId, String displayName) async {
     final snap = await _groups
@@ -97,7 +105,6 @@ class GroupRepository {
     final groupDoc = snap.docs.first;
     final groupId = groupDoc.id;
 
-    // Comprueba si ya es miembro
     final memberDoc = await _groups
         .doc(groupId)
         .collection('members')
@@ -112,22 +119,10 @@ class GroupRepository {
       'joinedAt': FieldValue.serverTimestamp(),
     });
 
-    // Añade el grupo al stream del nuevo miembro también
     await _groups.doc(groupId).update({
       'memberIds': FieldValue.arrayUnion([userId]),
     });
 
     return groupId;
-  }
-
-  // Obtiene todos los grupos donde el usuario es miembro
-  Stream<List<Map<String, dynamic>>> watchAllUserGroups(String userId) {
-    return _groups
-        .where('memberIds', arrayContains: userId)
-        .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) =>
-                {'id': doc.id, ...doc.data() as Map<String, dynamic>})
-            .toList());
   }
 }
