@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:balance_tracker/core/providers/currency_provider.dart';
 
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
@@ -28,32 +27,23 @@ class GroupsScreen extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    l10n.groups,
-                    style: GoogleFonts.inter(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
+                  Text(l10n.groups,
+                      style: GoogleFonts.inter(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface)),
                   Row(
                     children: [
-                      // Botón unirse a grupo
                       IconButton(
                         onPressed: () => _showJoinGroupSheet(context, ref),
-                        icon: Icon(
-                          Icons.group_add_outlined,
-                          color: theme.colorScheme.primary,
-                        ),
+                        icon: Icon(Icons.group_add_outlined,
+                            color: theme.colorScheme.primary),
                         tooltip: 'Unirse a grupo',
                       ),
-                      // Botón crear grupo
                       IconButton(
                         onPressed: () => _showCreateGroupSheet(context, ref),
-                        icon: Icon(
-                          Icons.add_circle_outline,
-                          color: theme.colorScheme.primary,
-                        ),
+                        icon: Icon(Icons.add_circle_outline,
+                            color: theme.colorScheme.primary),
                         tooltip: 'Crear grupo',
                       ),
                     ],
@@ -70,23 +60,16 @@ class GroupsScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.group_outlined,
-                            size: 64,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.2,
-                            ),
-                          ),
+                          Icon(Icons.group_outlined,
+                              size: 64,
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.2)),
                           const SizedBox(height: 16),
-                          Text(
-                            l10n.noGroupsCreated,
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.4,
-                              ),
-                            ),
-                          ),
+                          Text(l10n.noGroupsCreated,
+                              style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.4))),
                           const SizedBox(height: 8),
                           TextButton(
                             onPressed: () =>
@@ -94,7 +77,8 @@ class GroupsScreen extends ConsumerWidget {
                             child: Text(l10n.createGroup),
                           ),
                           TextButton(
-                            onPressed: () => _showJoinGroupSheet(context, ref),
+                            onPressed: () =>
+                                _showJoinGroupSheet(context, ref),
                             child: const Text('Unirse con código'),
                           ),
                         ],
@@ -118,21 +102,16 @@ class GroupsScreen extends ConsumerWidget {
                               color: const Color(0xFFEF4444),
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: const Icon(
-                              Icons.delete_outline,
-                              color: Colors.white,
-                            ),
+                            child: const Icon(Icons.delete_outline,
+                                color: Colors.white),
                           ),
                           confirmDismiss: (_) async {
                             return await showDialog<bool>(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
                                     title: Text(l10n.deleteGroup),
-                                    content: Text(
-                                      l10n.deleteGroupConfirm(
-                                        group['name'] as String? ?? '',
-                                      ),
-                                    ),
+                                    content: Text(l10n.deleteGroupConfirm(
+                                        group['name'] as String? ?? '')),
                                     actions: [
                                       TextButton(
                                         onPressed: () =>
@@ -142,12 +121,9 @@ class GroupsScreen extends ConsumerWidget {
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.of(ctx).pop(true),
-                                        child: Text(
-                                          l10n.delete,
-                                          style: const TextStyle(
-                                            color: Color(0xFFEF4444),
-                                          ),
-                                        ),
+                                        child: Text(l10n.delete,
+                                            style: const TextStyle(
+                                                color: Color(0xFFEF4444))),
                                       ),
                                     ],
                                   ),
@@ -168,8 +144,10 @@ class GroupsScreen extends ConsumerWidget {
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, __) => Center(child: Text(l10n.errorLoadingGroups)),
+                loading: () =>
+                    const Center(child: CircularProgressIndicator()),
+                error: (e, __) =>
+                    Center(child: Text(l10n.errorLoadingGroups)),
               ),
             ),
           ],
@@ -210,19 +188,14 @@ class GroupsScreen extends ConsumerWidget {
     );
   }
 
-  void _openGroup(
-    BuildContext context,
-    WidgetRef ref,
-    Map<String, dynamic> group,
-  ) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ProviderScope(
-          parent: ProviderScope.containerOf(context),
-          child: _GroupDetailScreen(group: group),
-        ),
+  void _openGroup(BuildContext context, WidgetRef ref,
+      Map<String, dynamic> group) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => ProviderScope(
+        parent: ProviderScope.containerOf(context),
+        child: _GroupDetailScreen(group: group),
       ),
-    );
+    ));
   }
 }
 
@@ -253,30 +226,26 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
       final displayName = user.displayName ?? user.email ?? user.uid;
       final result = await ref
           .read(groupRepositoryProvider)
-          .joinGroupByCode(_codeController.text.trim(), user.uid, displayName);
+          .joinGroupByCode(
+              _codeController.text.trim(), user.uid, displayName);
       if (!mounted) return;
       if (result == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Código no válido. Comprueba e inténtalo de nuevo.'),
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text(
+                'Código no válido. Comprueba e inténtalo de nuevo.')));
       } else if (result == 'already_member') {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ya eres miembro de este grupo.')),
-        );
+            const SnackBar(content: Text('Ya eres miembro de este grupo.')));
         Navigator.of(context).pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Te has unido al grupo correctamente.')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Te has unido al grupo correctamente.')));
         Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -288,48 +257,33 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
     final theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20,
-        20,
-        20,
-        MediaQuery.of(context).viewInsets.bottom + 20,
-      ),
+          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Unirse a un grupo',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text('Unirse a un grupo',
+                  style: GoogleFonts.inter(
+                      fontSize: 18, fontWeight: FontWeight.w600)),
               IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop()),
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            'Introduce el código de invitación que te han compartido.',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
-          ),
+          Text('Introduce el código de invitación que te han compartido.',
+              style: GoogleFonts.inter(
+                  fontSize: 13,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
           const SizedBox(height: 20),
           TextField(
             controller: _codeController,
             textCapitalization: TextCapitalization.characters,
             maxLength: 6,
             style: GoogleFonts.inter(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 8,
-            ),
+                fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 8),
             textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: 'Código',
@@ -337,11 +291,11 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
               prefixIcon: const Icon(Icons.tag),
               hintText: 'AB3X7K',
               hintStyle: GoogleFonts.inter(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 8,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-              ),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 8,
+                  color:
+                      theme.colorScheme.onSurface.withValues(alpha: 0.2)),
             ),
           ),
           const SizedBox(height: 24),
@@ -354,10 +308,7 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
+                          strokeWidth: 2, color: Colors.white))
                   : const Text('Unirse'),
             ),
           ),
@@ -398,28 +349,22 @@ class _GroupCard extends StatelessWidget {
                 child: Text(
                   (group['name'] as String? ?? 'G')[0].toUpperCase(),
                   style: GoogleFonts.inter(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary),
                 ),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                group['name'] as String? ?? '',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
+              child: Text(group['name'] as String? ?? '',
+                  style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface)),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-            ),
+            Icon(Icons.chevron_right,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
           ],
         ),
       ),
@@ -448,30 +393,26 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     if (_nameController.text.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.enterGroupName)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.enterGroupName)));
       return;
     }
     setState(() => _isLoading = true);
     try {
       final user = ref.read(currentUserProvider);
       if (user == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.userNotAuthenticated)));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.userNotAuthenticated)));
         return;
       }
       final displayName = user.displayName ?? user.email ?? user.uid;
-      await ref
-          .read(groupRepositoryProvider)
-          .createGroup(_nameController.text.trim(), user.uid, displayName);
+      await ref.read(groupRepositoryProvider).createGroup(
+          _nameController.text.trim(), user.uid, displayName);
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -483,37 +424,27 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
     final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20,
-        20,
-        20,
-        MediaQuery.of(context).viewInsets.bottom + 20,
-      ),
+          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10n.newGroup,
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(l10n.newGroup,
+                  style: GoogleFonts.inter(
+                      fontSize: 18, fontWeight: FontWeight.w600)),
               IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop()),
             ],
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _nameController,
             decoration: InputDecoration(
-              labelText: l10n.groupName,
-              prefixIcon: const Icon(Icons.group_outlined),
-            ),
+                labelText: l10n.groupName,
+                prefixIcon: const Icon(Icons.group_outlined)),
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -525,10 +456,7 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
+                          strokeWidth: 2, color: Colors.white))
                   : Text(l10n.createGroup),
             ),
           ),
@@ -544,7 +472,8 @@ class _GroupDetailScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> group;
   const _GroupDetailScreen({required this.group});
   @override
-  ConsumerState<_GroupDetailScreen> createState() => _GroupDetailScreenState();
+  ConsumerState<_GroupDetailScreen> createState() =>
+      _GroupDetailScreenState();
 }
 
 class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
@@ -613,7 +542,8 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
       final creditor = Map<String, dynamic>.from(creditors[j]);
       final debtAmount = -(debtor['amount'] as double);
       final creditAmount = creditor['amount'] as double;
-      final settled = debtAmount < creditAmount ? debtAmount : creditAmount;
+      final settled =
+          debtAmount < creditAmount ? debtAmount : creditAmount;
       debts.add({
         'from': debtor['userId'],
         'to': creditor['userId'],
@@ -645,39 +575,35 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
             ),
             const SizedBox(height: 20),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 24, vertical: 16),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(
-                code,
-                style: GoogleFonts.inter(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 10,
-                ),
-              ),
+              child: Text(code,
+                  style: GoogleFonts.inter(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 10)),
             ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Copiar
                 TextButton.icon(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: code));
                     Navigator.of(ctx).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Código copiado al portapapeles'),
-                      ),
+                          content:
+                              Text('Código copiado al portapapeles')),
                     );
                   },
                   icon: const Icon(Icons.copy, size: 18),
                   label: const Text('Copiar'),
                 ),
-                // Compartir
                 TextButton.icon(
                   onPressed: () {
                     Navigator.of(ctx).pop();
@@ -702,25 +628,19 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final groupId = widget.group['id'] as String;
-    final currencyFormat = NumberFormat.currency(
-      locale: 'es_ES',
-      symbol: ref.watch(currencyNotifierProvider),
-    );
+    final currencyFormat =
+        NumberFormat.currency(locale: 'es_ES', symbol: '€');
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.group['name'] as String? ?? '',
-          style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-        ),
+        title: Text(widget.group['name'] as String? ?? '',
+            style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
         actions: [
-          // Botón código de invitación
           IconButton(
             icon: const Icon(Icons.person_add_outlined),
             tooltip: 'Invitar miembros',
             onPressed: () => _showInviteCode(context),
           ),
-          // Botón añadir gasto
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => _showAddExpenseSheet(context, groupId),
@@ -743,13 +663,9 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                   padding: const EdgeInsets.all(20),
                   children: [
                     // MIEMBROS
-                    Text(
-                      'Miembros (${_members.length})',
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Text('Miembros (${_members.length})',
+                        style: GoogleFonts.inter(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
@@ -760,19 +676,14 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                           avatar: CircleAvatar(
                             backgroundColor: theme.colorScheme.primary
                                 .withValues(alpha: 0.15),
-                            child: Text(
-                              name[0].toUpperCase(),
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
+                            child: Text(name[0].toUpperCase(),
+                                style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.colorScheme.primary)),
                           ),
-                          label: Text(
-                            name,
-                            style: GoogleFonts.inter(fontSize: 13),
-                          ),
+                          label: Text(name,
+                              style: GoogleFonts.inter(fontSize: 13)),
                           backgroundColor: const Color(0xFFE8EDF4),
                         );
                       }).toList(),
@@ -781,36 +692,28 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
 
                     // BALANCES
                     if (balances.isNotEmpty) ...[
-                      Text(
-                        l10n.balances,
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      Text(l10n.balances,
+                          style: GoogleFonts.inter(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 12),
                       ...balances.entries.map((e) {
                         final isPositive = e.value >= 0;
                         return Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
+                              horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                _memberName(e.key),
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                              Text(_memberName(e.key),
+                                  style: GoogleFonts.inter(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500)),
                               Text(
                                 '${isPositive ? '+' : ''}${currencyFormat.format(e.value)}',
                                 style: GoogleFonts.inter(
@@ -828,134 +731,180 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                       const SizedBox(height: 20),
                     ],
 
-                    // LIQUIDACIONES
+                    // LIQUIDACIONES — diseño mejorado
                     if (debts.isNotEmpty) ...[
-                      Text(
-                        'Liquidaciones',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      Text('Liquidaciones',
+                          style: GoogleFonts.inter(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 12),
-                      ...debts.map(
-                        (debt) => Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFF3CD),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(
-                                0xFFFFD700,
-                              ).withValues(alpha: 0.4),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.arrow_forward,
-                                size: 16,
-                                color: Color(0xFF856404),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  '${_memberName(debt['from'] as String)} → ${_memberName(debt['to'] as String)}',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: const Color(0xFF856404),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                currencyFormat.format(debt['amount']),
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF856404),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-
-                    // GASTOS
-                    Text(
-                      l10n.expenses,
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    if (expenses.isEmpty)
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 32),
-                          child: Text(
-                            l10n.noExpensesYet,
-                            style: GoogleFonts.inter(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.4,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    else
-                      ...expenses.map(
-                        (expense) => Container(
-                          margin: const EdgeInsets.only(bottom: 8),
+                      ...debts.map((debt) {
+                        final fromName =
+                            _memberName(debt['from'] as String);
+                        final toName = _memberName(debt['to'] as String);
+                        final amount = debt['amount'] as double;
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 10),
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(12),
+                            color: const Color(0xFFEF4444).withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                                color: const Color(0xFFEF4444)
+                                    .withValues(alpha: 0.2)),
                           ),
                           child: Row(
                             children: [
+                              // Avatar de quien debe
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: const Color(0xFFEF4444)
+                                    .withValues(alpha: 0.15),
+                                child: Text(
+                                  fromName[0].toUpperCase(),
+                                  style: GoogleFonts.inter(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFFEF4444)),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      expense['description'] as String? ??
-                                          l10n.expense,
-                                      style: GoogleFonts.inter(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      l10n.paidBy(
-                                        _memberName(
-                                          expense['paidBy'] as String? ?? '',
-                                        ),
-                                      ),
-                                      style: GoogleFonts.inter(
-                                        fontSize: 12,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.5),
+                                    RichText(
+                                      text: TextSpan(
+                                        style: GoogleFonts.inter(
+                                            fontSize: 14,
+                                            color: theme
+                                                .colorScheme.onSurface),
+                                        children: [
+                                          TextSpan(
+                                              text: fromName,
+                                              style: const TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.bold)),
+                                          const TextSpan(
+                                              text: ' debe a '),
+                                          TextSpan(
+                                              text: toName,
+                                              style: const TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.bold)),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Text(
-                                currencyFormat.format(expense['amount']),
-                                style: GoogleFonts.inter(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
+                              const SizedBox(width: 8),
+                              // Avatar de quien recibe
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: const Color(0xFF10B981)
+                                    .withValues(alpha: 0.15),
+                                child: Text(
+                                  toName[0].toUpperCase(),
+                                  style: GoogleFonts.inter(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF10B981)),
                                 ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                currencyFormat.format(amount),
+                                style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFFEF4444)),
                               ),
                             ],
                           ),
+                        );
+                      }),
+                      const SizedBox(height: 20),
+                    ],
+
+                    // GASTOS
+                    Text(l10n.expenses,
+                        style: GoogleFonts.inter(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 12),
+                    if (expenses.isEmpty)
+                      Center(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 32),
+                          child: Text(l10n.noExpensesYet,
+                              style: GoogleFonts.inter(
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.4))),
                         ),
-                      ),
+                      )
+                    else
+                      ...expenses.map((expense) => Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: theme
+                                  .colorScheme.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        expense['description']
+                                                as String? ??
+                                            l10n.expense,
+                                        style: GoogleFonts.inter(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Text(
+                                        l10n.paidBy(_memberName(
+                                            expense['paidBy']
+                                                as String? ??
+                                                '')),
+                                        style: GoogleFonts.inter(
+                                          fontSize: 12,
+                                          color: theme.colorScheme
+                                              .onSurface
+                                              .withValues(alpha: 0.5),
+                                        ),
+                                      ),
+                                      // Muestra quién participa en el split
+                                      if ((expense['splits'] as List?)
+                                              ?.isNotEmpty ==
+                                          true)
+                                        Text(
+                                          'Divide entre: ${(expense['splits'] as List).map((s) => _memberName(s['userId'] as String)).join(', ')}',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 11,
+                                            color: theme.colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.4),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  currencyFormat
+                                      .format(expense['amount']),
+                                  style: GoogleFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          )),
                   ],
                 );
               },
@@ -994,6 +943,7 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
   final _descController = TextEditingController();
   final _amountController = TextEditingController();
   String? _paidBy;
+  late Set<String> _selectedMembers;
   bool _isLoading = false;
 
   @override
@@ -1001,6 +951,9 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
     super.initState();
     final user = ref.read(currentUserProvider);
     _paidBy = user?.uid;
+    // Por defecto todos los miembros participan
+    _selectedMembers =
+        widget.members.map((m) => m['userId'] as String).toSet();
   }
 
   @override
@@ -1015,18 +968,27 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
     if (_descController.text.isEmpty ||
         _amountController.text.isEmpty ||
         _paidBy == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.completeAllFields)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.completeAllFields)));
       return;
     }
-    final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
+    if (_selectedMembers.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content:
+              Text('Selecciona al menos un miembro para dividir el gasto.')));
+      return;
+    }
+    final amount =
+        double.tryParse(_amountController.text.replaceAll(',', '.'));
     if (amount == null || amount <= 0) return;
 
     setState(() => _isLoading = true);
     try {
-      final splitAmount = amount / widget.members.length;
-      final splits = widget.members
+      final selectedList = widget.members
+          .where((m) => _selectedMembers.contains(m['userId'] as String))
+          .toList();
+      final splitAmount = amount / selectedList.length;
+      final splits = selectedList
           .map((m) => {'userId': m['userId'], 'amount': splitAmount})
           .toList();
 
@@ -1039,9 +1001,8 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -1051,48 +1012,48 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final amount =
+        double.tryParse(_amountController.text.replaceAll(',', '.')) ?? 0;
+    final splitAmount = _selectedMembers.isNotEmpty
+        ? amount / _selectedMembers.length
+        : 0.0;
+    final currencyFormat =
+        NumberFormat.currency(locale: 'es_ES', symbol: '€');
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20,
-        20,
-        20,
-        MediaQuery.of(context).viewInsets.bottom + 20,
-      ),
+          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10n.addExpense,
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(l10n.addExpense,
+                  style: GoogleFonts.inter(
+                      fontSize: 18, fontWeight: FontWeight.w600)),
               IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop()),
             ],
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _descController,
             decoration: InputDecoration(
-              labelText: l10n.description,
-              prefixIcon: const Icon(Icons.notes_outlined),
-            ),
+                labelText: l10n.description,
+                prefixIcon: const Icon(Icons.notes_outlined)),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _amountController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            keyboardType:
+                const TextInputType.numberWithOptions(decimal: true),
+            onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
-              labelText: l10n.amount,
-              prefixIcon: const Icon(Icons.euro_outlined),
-            ),
+                labelText: l10n.amount,
+                prefixIcon: const Icon(Icons.euro_outlined)),
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
@@ -1104,11 +1065,49 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
             items: widget.members.map((m) {
               final uid = m['userId'] as String;
               final name = m['displayName'] as String? ?? uid;
-              return DropdownMenuItem<String>(value: uid, child: Text(name));
+              return DropdownMenuItem<String>(
+                  value: uid, child: Text(name));
             }).toList(),
             onChanged: (val) => setState(() => _paidBy = val),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          // SELECTOR DE PARTICIPANTES
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Divide entre:',
+                style: GoogleFonts.inter(
+                    fontSize: 14, fontWeight: FontWeight.w500)),
+          ),
+          const SizedBox(height: 8),
+          ...widget.members.map((m) {
+            final uid = m['userId'] as String;
+            final name = m['displayName'] as String? ?? uid;
+            final isSelected = _selectedMembers.contains(uid);
+            return CheckboxListTile(
+              value: isSelected,
+              onChanged: (val) {
+                setState(() {
+                  if (val == true) {
+                    _selectedMembers.add(uid);
+                  } else {
+                    _selectedMembers.remove(uid);
+                  }
+                });
+              },
+              title: Text(name, style: GoogleFonts.inter(fontSize: 14)),
+              subtitle: isSelected && amount > 0
+                  ? Text(currencyFormat.format(splitAmount),
+                      style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w500))
+                  : null,
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            );
+          }),
+          const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -1118,10 +1117,7 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
+                          strokeWidth: 2, color: Colors.white))
                   : Text(l10n.save),
             ),
           ),

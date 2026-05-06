@@ -94,35 +94,35 @@ class GroupRepository {
   }
 
   Future<String?> joinGroupByCode(
-      String code, String userId, String displayName) async {
-    final snap = await _groups
-        .where('inviteCode', isEqualTo: code.toUpperCase().trim())
-        .limit(1)
-        .get();
+    String code, String userId, String displayName) async {
+      final snap = await _groups
+          .where('inviteCode', isEqualTo: code.toUpperCase().trim())
+          .limit(1)
+          .get();
 
-    if (snap.docs.isEmpty) return null;
+      if (snap.docs.isEmpty) return null;
 
-    final groupDoc = snap.docs.first;
-    final groupId = groupDoc.id;
+      final groupDoc = snap.docs.first;
+      final groupId = groupDoc.id;
 
-    final memberDoc = await _groups
-        .doc(groupId)
-        .collection('members')
-        .doc(userId)
-        .get();
+      final memberDoc = await _groups
+          .doc(groupId)
+          .collection('members')
+          .doc(userId)
+          .get();
 
-    if (memberDoc.exists) return 'already_member';
+      if (memberDoc.exists) return 'already_member';
 
-    await _groups.doc(groupId).collection('members').doc(userId).set({
-      'userId': userId,
-      'displayName': displayName,
-      'joinedAt': FieldValue.serverTimestamp(),
-    });
+      await _groups.doc(groupId).collection('members').doc(userId).set({
+        'userId': userId,
+        'displayName': displayName,
+        'joinedAt': FieldValue.serverTimestamp(),
+      });
 
-    await _groups.doc(groupId).update({
-      'memberIds': FieldValue.arrayUnion([userId]),
-    });
+      await _groups.doc(groupId).update({
+        'memberIds': FieldValue.arrayUnion([userId]),
+      });
 
-    return groupId;
-  }
+      return groupId;
+    }
 }
