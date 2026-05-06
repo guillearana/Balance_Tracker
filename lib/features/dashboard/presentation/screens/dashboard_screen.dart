@@ -421,7 +421,28 @@ class DashboardScreen extends ConsumerWidget {
                                 .deleteTransaction(user.uid, recent[index].id);
                           }
                         },
-                        child: _TransactionTile(transaction: recent[index]),
+                        child: GestureDetector(
+                          onTap: () => showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).scaffoldBackgroundColor,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20),
+                              ),
+                            ),
+                            builder: (_) => ProviderScope(
+                              parent: ProviderScope.containerOf(context),
+                              child: AddTransactionScreen(
+                                transaction: recent[index],
+                              ),
+                            ),
+                          ),
+                          child: _TransactionTile(transaction: recent[index]),
+                        ),
                       ),
                     ),
                     childCount: recent.length,
@@ -687,15 +708,26 @@ class _TransactionTile extends ConsumerWidget {
               ],
             ),
           ),
-          Text(
-            '${isIncome ? '+' : '-'}${currencyFormat.format(transaction.amount)}',
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: isIncome
-                  ? const Color(0xFF10B981)
-                  : const Color(0xFFEF4444),
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '${isIncome ? '+' : '-'}${currencyFormat.format(transaction.amount)}',
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: isIncome
+                      ? const Color(0xFF10B981)
+                      : const Color(0xFFEF4444),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.edit_outlined,
+                size: 16,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+              ),
+            ],
           ),
         ],
       ),

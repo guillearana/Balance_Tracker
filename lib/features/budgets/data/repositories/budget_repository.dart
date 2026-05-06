@@ -4,17 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class BudgetRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  CollectionReference _collection(String userId) => _firestore
-      .collection('users')
-      .doc(userId)
-      .collection('budgets');
+  CollectionReference _collection(String userId) =>
+      _firestore.collection('users').doc(userId).collection('budgets');
 
   Stream<List<BudgetModel>> watchBudgets(String userId) {
-    return _collection(userId)
-        .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) => BudgetModel.fromFirestore(doc))
-            .toList());
+    return _collection(userId).snapshots().map(
+      (snap) => snap.docs.map((doc) => BudgetModel.fromFirestore(doc)).toList(),
+    );
   }
 
   Future<void> addBudget(String userId, BudgetModel budget) async {

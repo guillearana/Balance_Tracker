@@ -170,6 +170,8 @@ class _BudgetsTab extends ConsumerWidget {
                             category: category,
                             spent: spent,
                             onDelete: () => _deleteBudget(context, ref, budget),
+                            onEdit: () =>
+                                _showEditBudgetSheet(context, ref, budget),
                           ),
                         );
                       },
@@ -188,6 +190,84 @@ class _BudgetsTab extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showEditBudgetSheet(
+    BuildContext context,
+    WidgetRef ref,
+    BudgetModel budget,
+  ) {
+    final controller = TextEditingController(
+      text: budget.limitAmount.toStringAsFixed(2).replaceAll('.', ','),
+    );
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (dialogContext) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          20,
+          20,
+          20,
+          MediaQuery.of(dialogContext).viewInsets.bottom + 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Editar límite',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(dialogContext),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Nuevo límite (€)',
+                prefixIcon: Icon(Icons.euro_outlined),
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final amount = double.tryParse(
+                    controller.text.replaceAll(',', '.'),
+                  );
+                  if (amount == null || amount <= 0) return;
+                  final user = ref.read(currentUserProvider);
+                  if (user == null) return;
+                  final updated = budget.copyWith(limitAmount: amount);
+                  await ref
+                      .read(budgetRepositoryProvider)
+                      .updateBudget(user.uid, updated);
+                  if (dialogContext.mounted) Navigator.pop(dialogContext);
+                },
+                child: const Text('Actualizar'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -376,16 +456,16 @@ class _DebtsTab extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(l10n.deleteDebt),
         content: Text(l10n.deleteDebtConfirm(debt.name)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(dialogContext, false),
             child: Text(l10n.no),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dialogContext, true),
             child: Text(l10n.yesDelete),
           ),
         ],
@@ -420,6 +500,7 @@ class _BudgetCard extends StatelessWidget {
   final CategoryModel category;
   final double spent;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   IconData _getCategoryIcon(String iconName) {
     const iconMap = {
@@ -446,6 +527,7 @@ class _BudgetCard extends StatelessWidget {
     required this.category,
     required this.spent,
     required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -518,13 +600,26 @@ class _BudgetCard extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                  size: 20,
-                ),
-                onPressed: onDelete,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      size: 20,
+                    ),
+                    onPressed: onEdit,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      size: 20,
+                    ),
+                    onPressed: onDelete,
+                  ),
+                ],
               ),
             ],
           ),

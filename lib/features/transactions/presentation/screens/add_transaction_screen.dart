@@ -10,7 +10,9 @@ import 'package:uuid/uuid.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
-  const AddTransactionScreen({super.key});
+  final TransactionModel? transaction;
+
+  const AddTransactionScreen({super.key, this.transaction});
 
   @override
   ConsumerState<AddTransactionScreen> createState() =>
@@ -25,6 +27,21 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   String? _selectedCategoryId;
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
+
+  bool get _isEditing => widget.transaction != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditing) {
+      final t = widget.transaction!;
+      _amountController.text = t.amount.toStringAsFixed(2).replaceAll('.', ',');
+      _noteController.text = t.note ?? '';
+      _type = t.type;
+      _selectedCategoryId = t.categoryId;
+      _selectedDate = t.date;
+    }
+  }
 
   @override
   void dispose() {
@@ -57,18 +74,24 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       final user = ref.read(currentUserProvider);
       if (user == null) return;
       final transaction = TransactionModel(
-        id: const Uuid().v4(),
+        id: _isEditing ? widget.transaction!.id : const Uuid().v4(),
         userId: user.uid,
         amount: double.parse(_amountController.text.replaceAll(',', '.')),
         type: _type,
         categoryId: _selectedCategoryId!,
         date: _selectedDate,
-        createdAt: DateTime.now(),
+        createdAt: _isEditing ? widget.transaction!.createdAt : DateTime.now(),
         note: _noteController.text.isEmpty ? null : _noteController.text,
       );
-      await ref
-          .read(transactionRepositoryProvider)
-          .addTransaction(user.uid, transaction);
+      if (_isEditing) {
+        await ref
+            .read(transactionRepositoryProvider)
+            .updateTransaction(user.uid, transaction);
+      } else {
+        await ref
+            .read(transactionRepositoryProvider)
+            .addTransaction(user.uid, transaction);
+      }
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
@@ -118,7 +141,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          l10n.newTransaction,
+          _isEditing ? 'Editar transacción' : l10n.newTransaction,
           style: GoogleFonts.inter(fontWeight: FontWeight.w600),
         ),
         leading: IconButton(
@@ -363,7 +386,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                           color: Colors.white,
                         ),
                       )
-                    : Text(l10n.save),
+                    : Text(_isEditing ? 'Actualizar' : l10n.save),
               ),
             ),
           ],
