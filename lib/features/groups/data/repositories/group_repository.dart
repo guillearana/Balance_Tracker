@@ -42,8 +42,7 @@ class GroupRepository {
         .where('createdBy', isEqualTo: userId)
         .snapshots()
         .map((snap) => snap.docs
-            .map((doc) =>
-                {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+            .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
             .toList());
   }
 
@@ -52,13 +51,11 @@ class GroupRepository {
         .where('memberIds', arrayContains: userId)
         .snapshots()
         .map((snap) => snap.docs
-            .map((doc) =>
-                {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+            .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
             .toList());
   }
 
-  Future<void> addExpense(
-      String groupId, Map<String, dynamic> expense) async {
+  Future<void> addExpense(String groupId, Map<String, dynamic> expense) async {
     final ref = await _groups.doc(groupId).collection('expenses').add({
       ...expense,
       'createdAt': FieldValue.serverTimestamp(),
@@ -79,9 +76,21 @@ class GroupRepository {
             .toList());
   }
 
+  // Solo miembros activos — para mostrar en UI
   Future<List<Map<String, dynamic>>> getGroupMembers(String groupId) async {
     final snap = await _groups.doc(groupId).collection('members').get();
-    return snap.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
+    return snap.docs
+        .map((doc) => {'id': doc.id, ...doc.data()})
+        .where((m) => m['active'] != false)
+        .toList();
+  }
+
+  // Todos los miembros incluyendo inactivos — para cálculos
+  Future<List<Map<String, dynamic>>> getAllGroupMembers(String groupId) async {
+    final snap = await _groups.doc(groupId).collection('members').get();
+    return snap.docs
+        .map((doc) => {'id': doc.id, ...doc.data()})
+        .toList();
   }
 
   Future<void> addMember(
@@ -94,45 +103,46 @@ class GroupRepository {
   }
 
   Future<String?> joinGroupByCode(
-    String code, String userId, String displayName) async {
-      final snap = await _groups
-          .where('inviteCode', isEqualTo: code.toUpperCase().trim())
-          .limit(1)
-          .get();
+      String code, String userId, String displayName) async {
+    final snap = await _groups
+        .where('inviteCode', isEqualTo: code.toUpperCase().trim())
+        .limit(1)
+        .get();
 
-      if (snap.docs.isEmpty) return null;
+    if (snap.docs.isEmpty) return null;
 
-      final groupDoc = snap.docs.first;
-      final groupId = groupDoc.id;
+    final groupDoc = snap.docs.first;
+    final groupId = groupDoc.id;
 
-      final memberDoc = await _groups
-          .doc(groupId)
-          .collection('members')
-          .doc(userId)
-          .get();
+    final memberDoc = await _groups
+        .doc(groupId)
+        .collection('members')
+        .doc(userId)
+        .get();
 
-      if (memberDoc.exists) return 'already_member';
+    if (memberDoc.exists) return 'already_member';
 
-      await _groups.doc(groupId).collection('members').doc(userId).set({
-        'userId': userId,
-        'displayName': displayName,
-        'joinedAt': FieldValue.serverTimestamp(),
-      });
+    await _groups.doc(groupId).collection('members').doc(userId).set({
+      'userId': userId,
+      'displayName': displayName,
+      'joinedAt': FieldValue.serverTimestamp(),
+    });
 
-      await _groups.doc(groupId).update({
-        'memberIds': FieldValue.arrayUnion([userId]),
-      });
+    await _groups.doc(groupId).update({
+      'memberIds': FieldValue.arrayUnion([userId]),
+    });
 
-      return groupId;
-    }
-    Future<void> removeMember(String groupId, String userId) async {
-      await _groups
-          .doc(groupId)
-          .collection('members')
-          .doc(userId)
-          .delete();
-      await _groups.doc(groupId).update({
-        'memberIds': FieldValue.arrayRemove([userId]),
-      });
-    }
+    return groupId;
+  }
+
+  Future<void> removeMember(String groupId, String userId) async {
+    await _groups
+        .doc(groupId)
+        .collection('members')
+        .doc(userId)
+        .update({'active': false});
+    await _groups.doc(groupId).update({
+      'memberIds': FieldValue.arrayRemove([userId]),
+    });
+  }
 }
