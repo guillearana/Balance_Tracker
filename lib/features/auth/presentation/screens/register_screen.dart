@@ -46,7 +46,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             password: _passwordController.text,
           );
       await credential.user?.updateDisplayName(_nameController.text.trim());
-
+      await credential.user?.reload(); // ← añade esta línea
+      
       if (credential.user != null) {
         await CategorySeeder.seedDefaultCategories(credential.user!.uid);
       }
