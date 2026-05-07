@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:balance_tracker/core/providers/currency_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
@@ -334,9 +335,14 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
     try {
       final user = ref.read(currentUserProvider);
       if (user == null) return;
-      final displayName = user.displayName ?? user.email ?? user.uid;
+
+      // Recarga el perfil para asegurar que displayName está actualizado
+      await user.reload();
+      final freshUser = FirebaseAuth.instance.currentUser;
+      final displayName = freshUser?.displayName ?? freshUser?.email ?? freshUser?.uid ?? '';
+
       final result = await ref.read(groupRepositoryProvider)
-          .joinGroupByCode(_codeController.text.trim(), user.uid, displayName);
+          .joinGroupByCode(_codeController.text.trim(), freshUser!.uid, displayName);
       if (!mounted) return;
       if (result == null) {
         ScaffoldMessenger.of(context).showSnackBar(
