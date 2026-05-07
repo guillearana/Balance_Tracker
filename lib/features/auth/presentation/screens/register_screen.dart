@@ -41,23 +41,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       _errorMessage = null;
     });
     try {
-      // 1. Crear cuenta
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
 
-      // 2. Configurar nombre
       await credential.user?.updateDisplayName(_nameController.text.trim());
       await credential.user?.reload();
 
-      // 3. Seedear categorías
       if (credential.user != null) {
         await CategorySeeder.seedDefaultCategories(credential.user!.uid);
       }
 
-      // 4. Refrescar providers y navegar manualmente
       ref.invalidate(currentUserProvider);
       ref.invalidate(authStateProvider);
 
