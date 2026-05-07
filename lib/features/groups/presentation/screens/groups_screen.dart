@@ -12,12 +12,19 @@ import 'package:share_plus/share_plus.dart';
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
 
+  static const _bgColor = Color(0xFF1E293B);
+  static const _cardColor = Color(0xFF0F172A);
+  static const _textPrimary = Color(0xFFF8FAFC);
+  static const _textMuted = Color(0xFF64748B);
+  static const _blue = Color(0xFF3B82F6);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final groupsAsync = ref.watch(userGroupsProvider);
+
     return Scaffold(
+      backgroundColor: _bgColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,29 +36,65 @@ class GroupsScreen extends ConsumerWidget {
                 children: [
                   Text(l10n.groups,
                       style: GoogleFonts.inter(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface)),
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                          color: _textPrimary,
+                          letterSpacing: -0.5)),
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () => _showJoinGroupSheet(context, ref),
-                        icon: Icon(Icons.group_add_outlined,
-                            color: theme.colorScheme.primary),
-                        tooltip: 'Unirse a grupo',
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: _cardColor,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.06)),
+                        ),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => _showJoinGroupSheet(context, ref),
+                          icon: const Icon(Icons.group_add_outlined,
+                              color: _textPrimary, size: 18),
+                          tooltip: 'Unirse a grupo',
+                        ),
                       ),
-                      IconButton(
-                        onPressed: () => _showCreateGroupSheet(context, ref),
-                        icon: Icon(Icons.add_circle_outline,
-                            color: theme.colorScheme.primary),
-                        tooltip: 'Crear grupo',
+                      const SizedBox(width: 8),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: _blue,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                                color: _blue.withValues(alpha: 0.35),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4))
+                          ],
+                        ),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => _showCreateGroupSheet(context, ref),
+                          icon: const Icon(Icons.add,
+                              color: Colors.white, size: 20),
+                          tooltip: 'Crear grupo',
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: Text('Tus grupos compartidos',
+                  style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: _textMuted,
+                      fontWeight: FontWeight.w400)),
+            ),
             Expanded(
               child: groupsAsync.when(
                 data: (groups) {
@@ -60,38 +103,71 @@ class GroupsScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.group_outlined,
-                              size: 64,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.2)),
+                          Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: _cardColor,
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.06)),
+                            ),
+                            child: const Icon(Icons.group_outlined,
+                                size: 36, color: _textMuted),
+                          ),
                           const SizedBox(height: 16),
                           Text(l10n.noGroupsCreated,
                               style: GoogleFonts.inter(
                                   fontSize: 16,
-                                  color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.4))),
-                          const SizedBox(height: 8),
-                          TextButton(
-                            onPressed: () =>
-                                _showCreateGroupSheet(context, ref),
-                            child: Text(l10n.createGroup),
-                          ),
-                          TextButton(
-                            onPressed: () =>
-                                _showJoinGroupSheet(context, ref),
-                            child: const Text('Unirse con código'),
+                                  fontWeight: FontWeight.w500,
+                                  color: _textPrimary)),
+                          const SizedBox(height: 6),
+                          Text('Crea un grupo o únete con un código',
+                              style: GoogleFonts.inter(
+                                  fontSize: 13, color: _textMuted)),
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              OutlinedButton(
+                                onPressed: () =>
+                                    _showJoinGroupSheet(context, ref),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: _textPrimary,
+                                  side: BorderSide(
+                                      color: Colors.white
+                                          .withValues(alpha: 0.12)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                ),
+                                child: const Text('Unirse con código'),
+                              ),
+                              const SizedBox(width: 12),
+                              ElevatedButton(
+                                onPressed: () =>
+                                    _showCreateGroupSheet(context, ref),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _blue,
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                ),
+                                child: Text(l10n.createGroup),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     );
                   }
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                     itemCount: groups.length,
                     itemBuilder: (context, index) {
                       final group = groups[index];
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: Dismissible(
                           key: Key(group['id'] as String),
                           direction: DismissDirection.endToStart,
@@ -99,19 +175,29 @@ class GroupsScreen extends ConsumerWidget {
                             alignment: Alignment.centerRight,
                             padding: const EdgeInsets.only(right: 20),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFEF4444),
-                              borderRadius: BorderRadius.circular(16),
+                              color: const Color(0xFFEF4444)
+                                  .withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                  color: const Color(0xFFEF4444)
+                                      .withValues(alpha: 0.3)),
                             ),
                             child: const Icon(Icons.delete_outline,
-                                color: Colors.white),
+                                color: Color(0xFFEF4444)),
                           ),
                           confirmDismiss: (_) async {
                             return await showDialog<bool>(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
-                                    title: Text(l10n.deleteGroup),
-                                    content: Text(l10n.deleteGroupConfirm(
-                                        group['name'] as String? ?? '')),
+                                    backgroundColor: _cardColor,
+                                    title: Text(l10n.deleteGroup,
+                                        style: GoogleFonts.inter(
+                                            color: _textPrimary)),
+                                    content: Text(
+                                        l10n.deleteGroupConfirm(
+                                            group['name'] as String? ?? ''),
+                                        style: GoogleFonts.inter(
+                                            color: const Color(0xFF94A3B8))),
                                     actions: [
                                       TextButton(
                                         onPressed: () =>
@@ -144,10 +230,11 @@ class GroupsScreen extends ConsumerWidget {
                     },
                   );
                 },
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                error: (e, __) =>
-                    Center(child: Text(l10n.errorLoadingGroups)),
+                loading: () => const Center(
+                    child: CircularProgressIndicator(color: _blue)),
+                error: (e, __) => Center(
+                    child: Text(l10n.errorLoadingGroups,
+                        style: GoogleFonts.inter(color: _textMuted))),
               ),
             ),
           ],
@@ -161,9 +248,9 @@ class GroupsScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: const Color(0xFF0F172A),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (_) => ProviderScope(
         parent: ProviderScope.containerOf(context),
@@ -177,9 +264,9 @@ class GroupsScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: const Color(0xFF0F172A),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (_) => ProviderScope(
         parent: ProviderScope.containerOf(context),
@@ -196,6 +283,101 @@ class GroupsScreen extends ConsumerWidget {
         child: _GroupDetailScreen(group: group),
       ),
     ));
+  }
+}
+
+// ─── GROUP CARD ────────────────────────────────────────────────────────────
+
+class _GroupCard extends StatelessWidget {
+  final Map<String, dynamic> group;
+  final VoidCallback onTap;
+  const _GroupCard({required this.group, required this.onTap});
+
+  Color _avatarColor(String name) {
+    const colors = [
+      Color(0xFF8B5CF6),
+      Color(0xFF3B82F6),
+      Color(0xFFEC4899),
+      Color(0xFF10B981),
+      Color(0xFFF59E0B),
+      Color(0xFFEF4444),
+    ];
+    return colors[name.codeUnits.first % colors.length];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const cardColor = Color(0xFF0F172A);
+    const textPrimary = Color(0xFFF8FAFC);
+    const textMuted = Color(0xFF64748B);
+
+    final name = group['name'] as String? ?? 'G';
+    final color = _avatarColor(name);
+    final memberCount = (group['memberIds'] as List?)?.length ?? 1;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        ),
+        child: Row(
+          children: [
+            // Avatar
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Center(
+                child: Text(
+                  name[0].toUpperCase(),
+                  style: GoogleFonts.inter(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: color),
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name,
+                      style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textPrimary,
+                          letterSpacing: -0.2)),
+                  const SizedBox(height: 3),
+                  Text('$memberCount miembro${memberCount == 1 ? '' : 's'}',
+                      style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: textMuted,
+                          fontWeight: FontWeight.w400)),
+                ],
+              ),
+            ),
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.chevron_right,
+                  color: textMuted, size: 18),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -231,8 +413,8 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
       if (!mounted) return;
       if (result == null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text(
-                'Código no válido. Comprueba e inténtalo de nuevo.')));
+            content:
+                Text('Código no válido. Comprueba e inténtalo de nuevo.')));
       } else if (result == 'already_member') {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Ya eres miembro de este grupo.')));
@@ -276,7 +458,8 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
           Text('Introduce el código de invitación que te han compartido.',
               style: GoogleFonts.inter(
                   fontSize: 13,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
+                  color:
+                      theme.colorScheme.onSurface.withValues(alpha: 0.5))),
           const SizedBox(height: 20),
           TextField(
             controller: _codeController,
@@ -318,66 +501,13 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
   }
 }
 
-// ─── GROUP CARD ────────────────────────────────────────────────────────────
-
-class _GroupCard extends StatelessWidget {
-  final Map<String, dynamic> group;
-  final VoidCallback onTap;
-  const _GroupCard({required this.group, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Center(
-                child: Text(
-                  (group['name'] as String? ?? 'G')[0].toUpperCase(),
-                  style: GoogleFonts.inter(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(group['name'] as String? ?? '',
-                  style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface)),
-            ),
-            Icon(Icons.chevron_right,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 // ─── CREATE GROUP SHEET ────────────────────────────────────────────────────
 
 class _CreateGroupSheet extends ConsumerStatefulWidget {
   const _CreateGroupSheet();
   @override
-  ConsumerState<_CreateGroupSheet> createState() => _CreateGroupSheetState();
+  ConsumerState<_CreateGroupSheet> createState() =>
+      _CreateGroupSheetState();
 }
 
 class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
@@ -481,6 +611,15 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
   List<Map<String, dynamic>> _members = [];
   bool _loading = true;
 
+  static const _bgColor = Color(0xFF1E293B);
+  static const _cardColor = Color(0xFF0F172A);
+  static const _textPrimary = Color(0xFFF8FAFC);
+  static const _textSecondary = Color(0xFF94A3B8);
+  static const _textMuted = Color(0xFF64748B);
+  static const _green = Color(0xFF10B981);
+  static const _red = Color(0xFFEF4444);
+  static const _blue = Color(0xFF3B82F6);
+
   @override
   void initState() {
     super.initState();
@@ -503,6 +642,18 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
       orElse: () => {'displayName': userId},
     );
     return member['displayName'] as String? ?? userId;
+  }
+
+  Color _avatarColor(String name) {
+    const colors = [
+      Color(0xFF8B5CF6),
+      Color(0xFF3B82F6),
+      Color(0xFFEC4899),
+      Color(0xFF10B981),
+      Color(0xFFF59E0B),
+      Color(0xFFEF4444),
+    ];
+    return colors[name.codeUnits.first % colors.length];
   }
 
   Map<String, double> _calculateBalances() {
@@ -558,34 +709,36 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
   }
 
   void _showInviteCode(BuildContext context) {
-    final theme = Theme.of(context);
     final code = widget.group['inviteCode'] as String? ?? '------';
     final groupName = widget.group['name'] as String? ?? 'el grupo';
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Código de invitación'),
+        backgroundColor: _cardColor,
+        title: Text('Código de invitación',
+            style: GoogleFonts.inter(color: _textPrimary)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'Comparte este código para que otros se unan a "$groupName":',
-              style: GoogleFonts.inter(fontSize: 14),
+              style: GoogleFonts.inter(fontSize: 14, color: _textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 16),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
+                color: _bgColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(code,
                   style: GoogleFonts.inter(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: 10)),
+                      letterSpacing: 10,
+                      color: _textPrimary)),
             ),
             const SizedBox(height: 16),
             Row(
@@ -597,8 +750,7 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                     Navigator.of(ctx).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content:
-                              Text('Código copiado al portapapeles')),
+                          content: Text('Código copiado al portapapeles')),
                     );
                   },
                   icon: const Icon(Icons.copy, size: 18),
@@ -625,25 +777,75 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final groupId = widget.group['id'] as String;
+    final currentUser = ref.read(currentUserProvider);
+    final isAdmin = widget.group['createdBy'] == currentUser?.uid;
     final currencyFormat =
         NumberFormat.currency(locale: 'es_ES', symbol: '€');
 
     return Scaffold(
+      backgroundColor: _bgColor,
       appBar: AppBar(
-        title: Text(widget.group['name'] as String? ?? '',
-            style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+        backgroundColor: _bgColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: _textPrimary, size: 20),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Grupo',
+                style: GoogleFonts.inter(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: _textMuted,
+                    letterSpacing: 0.5)),
+            Text(widget.group['name'] as String? ?? '',
+                style: GoogleFonts.inter(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: _textPrimary,
+                    letterSpacing: -0.4)),
+          ],
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person_add_outlined),
-            tooltip: 'Invitar miembros',
-            onPressed: () => _showInviteCode(context),
+          Container(
+            width: 40,
+            height: 40,
+            margin: const EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF334155),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.person_add_outlined,
+                  color: _textPrimary, size: 18),
+              onPressed: () => _showInviteCode(context),
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showAddExpenseSheet(context, groupId),
+          Container(
+            width: 40,
+            height: 40,
+            margin: const EdgeInsets.only(right: 16),
+            decoration: BoxDecoration(
+              color: _blue,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                    color: _blue.withValues(alpha: 0.35),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6))
+              ],
+            ),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.add, color: Colors.white, size: 20),
+              onPressed: () => _showAddExpenseSheet(context, groupId),
+            ),
           ),
         ],
       ),
@@ -658,84 +860,290 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                 _expenses = expenses;
                 final debts = _calculateDebts();
                 final balances = _calculateBalances();
+                final totalGasto = expenses.fold<double>(
+                    0, (sum, e) => sum + (e['amount'] as num).toDouble());
 
                 return ListView(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 40),
                   children: [
-                    // MIEMBROS
-                    Text('Miembros (${_members.length})',
-                        style: GoogleFonts.inter(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: _members.map((m) {
-                        final name = m['displayName'] as String? ?? '?';
-                        return Chip(
-                          avatar: CircleAvatar(
-                            backgroundColor: theme.colorScheme.primary
-                                .withValues(alpha: 0.15),
-                            child: Text(name[0].toUpperCase(),
-                                style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.primary)),
+
+                    // SUMMARY CARD
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 18),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF1E40AF), _blue],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(22),
+                        boxShadow: [
+                          BoxShadow(
+                              color: _blue.withValues(alpha: 0.25),
+                              blurRadius: 28,
+                              offset: const Offset(0, 12))
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Total del grupo',
+                                  style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color:
+                                          Colors.white.withValues(alpha: 0.75),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.3)),
+                              const SizedBox(height: 4),
+                              Text(currencyFormat.format(totalGasto),
+                                  style: GoogleFonts.inter(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      letterSpacing: -0.6)),
+                            ],
                           ),
-                          label: Text(name,
-                              style: GoogleFonts.inter(fontSize: 13)),
-                          backgroundColor: const Color(0xFFE8EDF4),
-                        );
-                      }).toList(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.receipt_outlined,
+                                    color: Colors.white, size: 14),
+                                const SizedBox(width: 6),
+                                Text('${expenses.length} gastos',
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 26),
+
+                    // MIEMBROS
+                    _SectionHead(
+                        title: 'Miembros', count: '${_members.length}'),
+                    const SizedBox(height: 12),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _members.map((m) {
+                          final name = m['displayName'] as String? ?? '?';
+                          final color = _avatarColor(name);
+                          final uid = m['userId'] as String;
+                          final isMemberAdmin =
+                              widget.group['createdBy'] == uid;
+                          final canRemove = isAdmin &&
+                              uid != currentUser?.uid;
+
+                          return Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: EdgeInsets.fromLTRB(
+                                6, 6, canRemove ? 4 : 14, 6),
+                            decoration: BoxDecoration(
+                              color: _cardColor,
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(
+                                  color:
+                                      Colors.white.withValues(alpha: 0.06)),
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: color,
+                                  child: Text(name[0].toUpperCase(),
+                                      style: GoogleFonts.inter(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white)),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(name,
+                                    style: GoogleFonts.inter(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        color: _textPrimary)),
+                                if (isMemberAdmin) ...[
+                                  const SizedBox(width: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: _blue.withValues(alpha: 0.15),
+                                      borderRadius:
+                                          BorderRadius.circular(999),
+                                    ),
+                                    child: Text('admin',
+                                        style: GoogleFonts.inter(
+                                            fontSize: 10,
+                                            color: _blue,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
+                                ],
+                                if (canRemove) ...[
+                                  const SizedBox(width: 4),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (ctx) => AlertDialog(
+                                          backgroundColor: _cardColor,
+                                          title: Text('Eliminar miembro',
+                                              style: GoogleFonts.inter(
+                                                  color: _textPrimary)),
+                                          content: Text(
+                                              '¿Eliminar a $name del grupo?',
+                                              style: GoogleFonts.inter(
+                                                  color: _textSecondary)),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(ctx)
+                                                      .pop(false),
+                                              child: const Text('Cancelar'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(ctx).pop(true),
+                                              child: Text('Eliminar',
+                                                  style: const TextStyle(
+                                                      color: _red)),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirm == true && mounted) {
+                                        await ref
+                                            .read(groupRepositoryProvider)
+                                            .removeMember(groupId, uid);
+                                        await _loadData();
+                                      }
+                                    },
+                                    child: Container(
+                                      width: 26,
+                                      height: 26,
+                                      decoration: BoxDecoration(
+                                        color: _red.withValues(alpha: 0.12),
+                                        borderRadius:
+                                            BorderRadius.circular(999),
+                                      ),
+                                      child: Icon(Icons.close,
+                                          size: 14,
+                                          color:
+                                              _red.withValues(alpha: 0.8)),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 26),
 
                     // BALANCES
                     if (balances.isNotEmpty) ...[
-                      Text(l10n.balances,
-                          style: GoogleFonts.inter(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                      _SectionHead(
+                          title: 'Balances', count: 'Neto por persona'),
                       const SizedBox(height: 12),
-                      ...balances.entries.map((e) {
-                        final isPositive = e.value >= 0;
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(_memberName(e.key),
-                                  style: GoogleFonts.inter(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500)),
-                              Text(
-                                '${isPositive ? '+' : ''}${currencyFormat.format(e.value)}',
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: isPositive
-                                      ? const Color(0xFF10B981)
-                                      : const Color(0xFFEF4444),
+                      GridView.count(
+                        crossAxisCount:
+                            balances.length > 2 ? 3 : balances.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 0.85,
+                        children: balances.entries.map((e) {
+                          final isPos = e.value >= 0;
+                          final name = _memberName(e.key);
+                          final color = _avatarColor(name);
+                          final amountColor = isPos ? _green : _red;
+                          final pillBg = isPos
+                              ? _green.withValues(alpha: 0.14)
+                              : _red.withValues(alpha: 0.12);
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: _cardColor,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                  color:
+                                      Colors.white.withValues(alpha: 0.04)),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 16),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: color,
+                                  child: Text(name[0].toUpperCase(),
+                                      style: GoogleFonts.inter(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white)),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                      const SizedBox(height: 20),
+                                const SizedBox(height: 8),
+                                Text(name,
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: _textSecondary),
+                                    overflow: TextOverflow.ellipsis),
+                                const SizedBox(height: 6),
+                                Text(
+                                  '${isPos ? '+' : ''}${currencyFormat.format(e.value)}',
+                                  style: GoogleFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: amountColor,
+                                      letterSpacing: -0.3),
+                                ),
+                                const SizedBox(height: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: pillBg,
+                                    borderRadius: BorderRadius.circular(999),
+                                  ),
+                                  child: Text(
+                                    isPos ? 'a favor' : 'debe',
+                                    style: GoogleFonts.inter(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: amountColor,
+                                        letterSpacing: 0.4),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 26),
                     ],
 
-                    // LIQUIDACIONES — diseño mejorado
+                    // LIQUIDACIONES
                     if (debts.isNotEmpty) ...[
-                      Text('Liquidaciones',
-                          style: GoogleFonts.inter(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
+                      _SectionHead(
+                          title: 'Liquidaciones',
+                          count: '${debts.length} pendientes'),
                       const SizedBox(height: 12),
                       ...debts.map((debt) {
                         final fromName =
@@ -744,163 +1152,184 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
                         final amount = debt['amount'] as double;
                         return Container(
                           margin: const EdgeInsets.only(bottom: 10),
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFEF4444).withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(14),
+                            color: _cardColor,
+                            borderRadius: BorderRadius.circular(18),
                             border: Border.all(
-                                color: const Color(0xFFEF4444)
-                                    .withValues(alpha: 0.2)),
+                                color: Colors.white.withValues(alpha: 0.04)),
                           ),
                           child: Row(
                             children: [
-                              // Avatar de quien debe
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: const Color(0xFFEF4444)
-                                    .withValues(alpha: 0.15),
-                                child: Text(
-                                  fromName[0].toUpperCase(),
-                                  style: GoogleFonts.inter(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFFEF4444)),
+                              SizedBox(
+                                width: 52,
+                                height: 32,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 0,
+                                      child: CircleAvatar(
+                                        radius: 16,
+                                        backgroundColor:
+                                            _red.withValues(alpha: 0.18),
+                                        child: Text(
+                                            fromName[0].toUpperCase(),
+                                            style: GoogleFonts.inter(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                                color: _red)),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 20,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: _cardColor, width: 2),
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: 16,
+                                          backgroundColor:
+                                              _green.withValues(alpha: 0.18),
+                                          child: Text(
+                                              toName[0].toUpperCase(),
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: _green)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                   children: [
+                                    Text('Pago pendiente',
+                                        style: GoogleFonts.inter(
+                                            fontSize: 11,
+                                            color: _textMuted,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 0.4)),
+                                    const SizedBox(height: 2),
                                     RichText(
                                       text: TextSpan(
                                         style: GoogleFonts.inter(
                                             fontSize: 14,
-                                            color: theme
-                                                .colorScheme.onSurface),
+                                            color: _textPrimary),
                                         children: [
                                           TextSpan(
                                               text: fromName,
                                               style: const TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.bold)),
-                                          const TextSpan(
-                                              text: ' debe a '),
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white)),
+                                          const TextSpan(text: ' debe a '),
                                           TextSpan(
                                               text: toName,
                                               style: const TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.bold)),
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white)),
                                         ],
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              // Avatar de quien recibe
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: const Color(0xFF10B981)
-                                    .withValues(alpha: 0.15),
-                                child: Text(
-                                  toName[0].toUpperCase(),
+                              Text(currencyFormat.format(amount),
                                   style: GoogleFonts.inter(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF10B981)),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                currencyFormat.format(amount),
-                                style: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xFFEF4444)),
-                              ),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: _red,
+                                      letterSpacing: -0.3)),
                             ],
                           ),
                         );
                       }),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 26),
                     ],
 
                     // GASTOS
-                    Text(l10n.expenses,
-                        style: GoogleFonts.inter(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    _SectionHead(
+                        title: l10n.expenses,
+                        count: '${expenses.length} en total'),
                     const SizedBox(height: 12),
                     if (expenses.isEmpty)
                       Center(
                         child: Padding(
-                          padding:
-                              const EdgeInsets.symmetric(vertical: 32),
+                          padding: const EdgeInsets.symmetric(vertical: 32),
                           child: Text(l10n.noExpensesYet,
-                              style: GoogleFonts.inter(
-                                  color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.4))),
+                              style: GoogleFonts.inter(color: _textMuted)),
                         ),
                       )
                     else
                       ...expenses.map((expense) => Container(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.all(16),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: theme
-                                  .colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(12),
+                              color: _cardColor,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                  color:
+                                      Colors.white.withValues(alpha: 0.04)),
                             ),
                             child: Row(
                               children: [
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                    color: _blue.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: const Icon(Icons.receipt_outlined,
+                                      color: _blue, size: 22),
+                                ),
+                                const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        expense['description']
-                                                as String? ??
+                                        expense['description'] as String? ??
                                             l10n.expense,
                                         style: GoogleFonts.inter(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: -0.1),
                                       ),
+                                      const SizedBox(height: 3),
                                       Text(
-                                        l10n.paidBy(_memberName(
-                                            expense['paidBy']
-                                                as String? ??
-                                                '')),
+                                        'Pagado por ${_memberName(expense['paidBy'] as String? ?? '')}',
                                         style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: theme.colorScheme
-                                              .onSurface
-                                              .withValues(alpha: 0.5),
-                                        ),
+                                            fontSize: 11.5,
+                                            color: _textSecondary),
                                       ),
-                                      // Muestra quién participa en el split
                                       if ((expense['splits'] as List?)
                                               ?.isNotEmpty ==
                                           true)
                                         Text(
                                           'Divide entre: ${(expense['splits'] as List).map((s) => _memberName(s['userId'] as String)).join(', ')}',
                                           style: GoogleFonts.inter(
-                                            fontSize: 11,
-                                            color: theme.colorScheme
-                                                .onSurface
-                                                .withValues(alpha: 0.4),
-                                          ),
+                                              fontSize: 11.5,
+                                              color: _textMuted),
                                         ),
                                     ],
                                   ),
                                 ),
                                 Text(
-                                  currencyFormat
-                                      .format(expense['amount']),
+                                  currencyFormat.format(expense['amount']),
                                   style: GoogleFonts.inter(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      letterSpacing: -0.3),
                                 ),
                               ],
                             ),
@@ -917,9 +1346,9 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: _cardColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (_) => ProviderScope(
         parent: ProviderScope.containerOf(context),
@@ -946,12 +1375,23 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
   late Set<String> _selectedMembers;
   bool _isLoading = false;
 
+  static const _cardColor = Color(0xFF0F172A);
+  static const _surfaceColor = Color(0xFF1E293B);
+  static const _textPrimary = Color(0xFFF8FAFC);
+  static const _textMuted = Color(0xFF64748B);
+  static const _blue = Color(0xFF3B82F6);
+  static const _borderColor = Color(0xFF334155);
+
   @override
   void initState() {
     super.initState();
     final user = ref.read(currentUserProvider);
-    _paidBy = user?.uid;
-    // Por defecto todos los miembros participan
+    if (user != null &&
+        widget.members.any((m) => m['userId'] == user.uid)) {
+      _paidBy = user.uid;
+    } else if (widget.members.isNotEmpty) {
+      _paidBy = widget.members.first['userId'] as String;
+    }
     _selectedMembers =
         widget.members.map((m) => m['userId'] as String).toSet();
   }
@@ -961,6 +1401,30 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
     _descController.dispose();
     _amountController.dispose();
     super.dispose();
+  }
+
+  InputDecoration _inputDeco(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: _textMuted, fontSize: 14),
+      prefixIcon: Icon(icon, color: _textMuted, size: 20),
+      filled: true,
+      fillColor: _surfaceColor,
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _borderColor),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _borderColor),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _blue, width: 1.5),
+      ),
+    );
   }
 
   Future<void> _save() async {
@@ -974,8 +1438,8 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
     }
     if (_selectedMembers.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text('Selecciona al menos un miembro para dividir el gasto.')));
+          content: Text(
+              'Selecciona al menos un miembro para dividir el gasto.')));
       return;
     }
     final amount =
@@ -985,7 +1449,8 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
     setState(() => _isLoading = true);
     try {
       final selectedList = widget.members
-          .where((m) => _selectedMembers.contains(m['userId'] as String))
+          .where(
+              (m) => _selectedMembers.contains(m['userId'] as String))
           .toList();
       final splitAmount = amount / selectedList.length;
       final splits = selectedList
@@ -1012,7 +1477,6 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
     final amount =
         double.tryParse(_amountController.text.replaceAll(',', '.')) ?? 0;
     final splitAmount = _selectedMembers.isNotEmpty
@@ -1021,96 +1485,189 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
     final currencyFormat =
         NumberFormat.currency(locale: 'es_ES', symbol: '€');
 
-    return Padding(
+    return Container(
+      decoration: const BoxDecoration(
+        color: _cardColor,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: _borderColor,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(l10n.addExpense,
                   style: GoogleFonts.inter(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
-              IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop()),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: _textPrimary)),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: _surfaceColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.close, color: _textMuted, size: 18),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           TextField(
             controller: _descController,
-            decoration: InputDecoration(
-                labelText: l10n.description,
-                prefixIcon: const Icon(Icons.notes_outlined)),
+            style: const TextStyle(color: _textPrimary, fontSize: 15),
+            decoration: _inputDeco(l10n.description, Icons.notes_outlined),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _amountController,
+            style: const TextStyle(color: _textPrimary, fontSize: 15),
             keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => setState(() {}),
-            decoration: InputDecoration(
-                labelText: l10n.amount,
-                prefixIcon: const Icon(Icons.euro_outlined)),
+            decoration: _inputDeco(l10n.amount, Icons.euro_outlined),
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             value: _paidBy,
-            decoration: const InputDecoration(
-              labelText: 'Pagado por',
-              prefixIcon: Icon(Icons.person_outline),
-            ),
+            dropdownColor: _surfaceColor,
+            style: const TextStyle(color: _textPrimary, fontSize: 15),
+            icon: const Icon(Icons.keyboard_arrow_down, color: _textMuted),
+            decoration: _inputDeco('Pagado por', Icons.person_outline),
             items: widget.members.map((m) {
               final uid = m['userId'] as String;
               final name = m['displayName'] as String? ?? uid;
               return DropdownMenuItem<String>(
-                  value: uid, child: Text(name));
+                value: uid,
+                child: Text(name,
+                    style: const TextStyle(color: _textPrimary)),
+              );
             }).toList(),
             onChanged: (val) => setState(() => _paidBy = val),
           ),
-          const SizedBox(height: 16),
-          // SELECTOR DE PARTICIPANTES
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Divide entre:',
-                style: GoogleFonts.inter(
-                    fontSize: 14, fontWeight: FontWeight.w500)),
-          ),
+          const SizedBox(height: 20),
+          Text('Divide entre:',
+              style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: _textPrimary)),
           const SizedBox(height: 8),
-          ...widget.members.map((m) {
-            final uid = m['userId'] as String;
-            final name = m['displayName'] as String? ?? uid;
-            final isSelected = _selectedMembers.contains(uid);
-            return CheckboxListTile(
-              value: isSelected,
-              onChanged: (val) {
-                setState(() {
-                  if (val == true) {
-                    _selectedMembers.add(uid);
-                  } else {
-                    _selectedMembers.remove(uid);
-                  }
-                });
-              },
-              title: Text(name, style: GoogleFonts.inter(fontSize: 14)),
-              subtitle: isSelected && amount > 0
-                  ? Text(currencyFormat.format(splitAmount),
-                      style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w500))
-                  : null,
-              controlAffinity: ListTileControlAffinity.leading,
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-            );
-          }),
-          const SizedBox(height: 16),
+          Container(
+            decoration: BoxDecoration(
+              color: _surfaceColor,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: _borderColor),
+            ),
+            child: Column(
+              children: widget.members.asMap().entries.map((entry) {
+                final idx = entry.key;
+                final m = entry.value;
+                final uid = m['userId'] as String;
+                final name = m['displayName'] as String? ?? uid;
+                final isSelected = _selectedMembers.contains(uid);
+                final isLast = idx == widget.members.length - 1;
+                return Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            _selectedMembers.remove(uid);
+                          } else {
+                            _selectedMembers.add(uid);
+                          }
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        child: Row(
+                          children: [
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 150),
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? _blue
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color:
+                                      isSelected ? _blue : _borderColor,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: isSelected
+                                  ? const Icon(Icons.check,
+                                      color: Colors.white, size: 14)
+                                  : null,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(name,
+                                  style: GoogleFonts.inter(
+                                      fontSize: 14, color: _textPrimary)),
+                            ),
+                            if (isSelected && amount > 0)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: _blue.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  currencyFormat.format(splitAmount),
+                                  style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: _blue,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (!isLast)
+                      Divider(
+                          height: 1,
+                          color: _borderColor.withValues(alpha: 0.5)),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
+            height: 50,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _blue,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
+              ),
               onPressed: _isLoading ? null : _save,
               child: _isLoading
                   ? const SizedBox(
@@ -1118,11 +1675,42 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
                       width: 20,
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white))
-                  : Text(l10n.save),
+                  : Text(l10n.save,
+                      style: GoogleFonts.inter(
+                          fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+// ─── SECTION HEAD ──────────────────────────────────────────────────────────
+
+class _SectionHead extends StatelessWidget {
+  final String title;
+  final String count;
+  const _SectionHead({required this.title, required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Text(title,
+            style: GoogleFonts.inter(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFFF8FAFC))),
+        Text(count,
+            style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF64748B))),
+      ],
     );
   }
 }
