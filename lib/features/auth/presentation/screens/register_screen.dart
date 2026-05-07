@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:balance_tracker/features/auth/data/repositories/category_seeder.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
+import 'package:balance_tracker/features/auth/providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -40,16 +41,28 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       _errorMessage = null;
     });
     try {
+      // 1. Crear cuenta
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
+
+      // 2. Configurar nombre
       await credential.user?.updateDisplayName(_nameController.text.trim());
-      await credential.user?.reload(); // ← añade esta línea
-      
+      await credential.user?.reload();
+
+      // 3. Seedear categorías
       if (credential.user != null) {
         await CategorySeeder.seedDefaultCategories(credential.user!.uid);
+      }
+
+      // 4. Refrescar providers y navegar manualmente
+      ref.invalidate(currentUserProvider);
+      ref.invalidate(authStateProvider);
+
+      if (mounted) {
+        context.go('/');
       }
     } on FirebaseAuthException catch (e) {
       setState(() => _errorMessage = _getErrorMessage(e.code));

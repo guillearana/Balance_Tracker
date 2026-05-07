@@ -36,9 +36,18 @@ GoRouter appRouter(AppRouterRef ref) {
   return GoRouter(
     initialLocation: AppRoutes.main,
     redirect: (context, state) {
-      final isLoggedIn = authState.valueOrNull != null;
-      final isAuthRoute = state.matchedLocation == AppRoutes.login ||
+      final user = authState.valueOrNull;
+      final isLoggedIn = user != null;
+      final isAuthRoute =
+          state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.register;
+
+      // Si está logueado pero sin displayName, esperar (registro en curso)
+      if (isLoggedIn &&
+          (user.displayName == null || user.displayName!.isEmpty) &&
+          isAuthRoute)
+        return null;
+
       if (!isLoggedIn && !isAuthRoute) return AppRoutes.login;
       if (isLoggedIn && isAuthRoute) return AppRoutes.main;
       return null;

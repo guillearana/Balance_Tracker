@@ -10,5 +10,8 @@ Stream<User?> authState(AuthStateRef ref) {
 
 @riverpod
 User? currentUser(CurrentUserRef ref) {
-  return ref.watch(authStateProvider).valueOrNull;
+  // Escucha cambios de auth
+  ref.watch(authStateProvider);
+  // Devuelve siempre el usuario actual "fresco" de Firebase
+  return FirebaseAuth.instance.currentUser;
 }

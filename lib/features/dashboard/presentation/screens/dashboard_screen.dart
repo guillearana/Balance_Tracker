@@ -328,7 +328,12 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toString();
-    final user = ref.watch(currentUserProvider);
+    var user = ref.watch(currentUserProvider);
+    // Si el usuario no tiene nombre, refrescar desde Firebase
+    if (user != null &&
+        (user.displayName == null || user.displayName!.isEmpty)) {
+      user = FirebaseAuth.instance.currentUser;
+    }
     final transactionsAsync = ref.watch(transactionsProvider);
     final subscriptionsAsync = ref.watch(subscriptionsProvider);
     ref.watch(debtsProvider);
