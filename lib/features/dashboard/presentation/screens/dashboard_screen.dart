@@ -163,8 +163,7 @@ class DashboardScreen extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.payments_outlined),
-                title: const Text('Moneda'),
-                subtitle: Text(ref.read(currencyNotifierProvider)),
+                title: Text('Moneda  ·  ${ref.read(currencyNotifierProvider)}'),
                 onTap: () {
                   Navigator.of(ctx).pop();
                   _showCurrencyDialog(context, ref);
