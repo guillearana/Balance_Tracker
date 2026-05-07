@@ -125,4 +125,14 @@ class GroupRepository {
 
       return groupId;
     }
+    Future<void> removeMember(String groupId, String userId) async {
+      await _groups
+          .doc(groupId)
+          .collection('members')
+          .doc(userId)
+          .delete();
+      await _groups.doc(groupId).update({
+        'memberIds': FieldValue.arrayRemove([userId]),
+      });
+    }
 }
