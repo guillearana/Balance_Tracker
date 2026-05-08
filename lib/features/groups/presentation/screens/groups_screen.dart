@@ -1502,27 +1502,43 @@ class _DebtCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(radius: 18, backgroundColor: fromColor,
-                  child: Text(fromName[0].toUpperCase(),
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white))),
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: fromColor,
+                child: Text(fromName[0].toUpperCase(),
+                    style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+              ),
               const SizedBox(width: 8),
-              RichText(
-                text: TextSpan(
-                  style: GoogleFonts.inter(fontSize: 15, color: theme.colorScheme.onSurface),
-                  children: [
-                    TextSpan(text: isMyDebt ? 'Tú' : fromName,
-                        style: const TextStyle(fontWeight: FontWeight.w700)),
-                    TextSpan(text: ' debe a ',
-                        style: GoogleFonts.inter(fontSize: 14,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
-                    TextSpan(text: toName, style: const TextStyle(fontWeight: FontWeight.w700)),
-                  ],
+              Flexible(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  text: TextSpan(
+                    style: GoogleFonts.inter(fontSize: 13, color: theme.colorScheme.onSurface),
+                    children: [
+                      TextSpan(
+                        text: isMyDebt ? 'Tú' : (fromName.length > 15 ? '${fromName.substring(0, 15)}…' : fromName),
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(
+                        text: ' debe a ',
+                        style: GoogleFonts.inter(fontSize: 12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                      ),
+                      TextSpan(
+                        text: toName.length > 15 ? '${toName.substring(0, 15)}…' : toName,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
-              CircleAvatar(radius: 18, backgroundColor: toColor,
-                  child: Text(toName[0].toUpperCase(),
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white))),
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: toColor,
+                child: Text(toName[0].toUpperCase(),
+                    style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+              ),
             ],
           ),
           const SizedBox(height: 10),
