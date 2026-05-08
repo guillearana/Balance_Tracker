@@ -10,6 +10,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 
+/// Lista completa de transacciones filtrable por tipo (todas, ingresos, gastos).
+///
+/// Las transacciones filtradas se agrupan por fecha mediante [_groupByDate]
+/// y se muestran con cabeceras de día localizadas.
 class TransactionsScreen extends ConsumerStatefulWidget {
   const TransactionsScreen({super.key});
 
@@ -173,6 +177,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     );
   }
 
+  /// Agrupa [transactions] por fecha formateada con [locale] (formato «dd MMMM yyyy»).
+  /// El orden de las claves refleja el orden de aparición en la lista original.
   Map<String, List<TransactionModel>> _groupByDate(
     List<TransactionModel> transactions,
     String locale,

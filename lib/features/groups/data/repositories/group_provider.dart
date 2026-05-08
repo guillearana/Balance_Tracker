@@ -5,11 +5,18 @@ import 'package:rxdart/rxdart.dart';
 
 part 'group_provider.g.dart';
 
+/// Expone una instancia singleton de [GroupRepository].
 @riverpod
 GroupRepository groupRepository(GroupRepositoryRef ref) {
   return GroupRepository();
 }
 
+/// Expone un stream con todos los grupos relacionados con el usuario autenticado.
+///
+/// Combina con `Rx.combineLatest2` los grupos creados por el usuario y los
+/// grupos en los que es miembro, deduplicando por `id`.
+/// Devuelve un stream vacío si no hay usuario activo.
+/// Utiliza [groupRepositoryProvider] y [currentUserProvider].
 @riverpod
 Stream<List<Map<String, dynamic>>> userGroups(UserGroupsRef ref) {
   final user = ref.watch(currentUserProvider);

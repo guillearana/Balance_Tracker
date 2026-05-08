@@ -5,11 +5,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debt_provider.g.dart';
 
+/// Expone una instancia singleton de [DebtRepository].
 @riverpod
 DebtRepository debtRepository(DebtRepositoryRef ref) {
   return DebtRepository();
 }
 
+/// Expone un stream con la lista de deudas del usuario autenticado.
+///
+/// Devuelve un stream vacío si no hay usuario activo.
+/// Utiliza [debtRepositoryProvider] y [currentUserProvider].
 @riverpod
 Stream<List<DebtModel>> debts(DebtsRef ref) {
   final user = ref.watch(currentUserProvider);

@@ -11,6 +11,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:balance_tracker/core/providers/currency_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// Pantalla de grupos compartidos.
+///
+/// Lista todos los grupos en los que participa el usuario actual (creados
+/// por él o en los que es miembro). Permite crear un grupo nuevo o unirse
+/// a uno existente mediante código de invitación.
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
 
@@ -274,6 +279,7 @@ class GroupsScreen extends ConsumerWidget {
     );
   }
 
+  /// Abre el bottom sheet [_CreateGroupSheet] para crear un nuevo grupo.
   void _showCreateGroupSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
@@ -290,6 +296,8 @@ class GroupsScreen extends ConsumerWidget {
     );
   }
 
+  /// Abre el bottom sheet [_JoinGroupSheet] para unirse a un grupo
+  /// mediante un código de invitación de 6 caracteres.
   void _showJoinGroupSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
@@ -306,6 +314,7 @@ class GroupsScreen extends ConsumerWidget {
     );
   }
 
+  /// Navega a [_GroupDetailScreen] con los datos del grupo seleccionado.
   void _openGroup(
     BuildContext context,
     WidgetRef ref,
@@ -324,6 +333,11 @@ class GroupsScreen extends ConsumerWidget {
 
 // ─── GROUP CARD ────────────────────────────────────────────────────────────
 
+/// Tarjeta de grupo en la lista principal.
+///
+/// Muestra el nombre del grupo, el número de miembros y un botón de
+/// eliminar (administrador) o salir (miembro). El color del avatar se
+/// determina de forma determinista a partir del primer carácter del nombre.
 class _GroupCard extends StatelessWidget {
   final Map<String, dynamic> group;
   final bool isAdmin;
@@ -339,6 +353,8 @@ class _GroupCard extends StatelessWidget {
     required this.onLeave,
   });
 
+  /// Devuelve uno de 6 colores fijos según `name.codeUnits.first % 6`,
+  /// garantizando un color consistente para el mismo nombre entre sesiones.
   Color _avatarColor(String name) {
     const colors = [
       Color(0xFF8B5CF6),
@@ -688,6 +704,12 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
 
 // ─── GROUP DETAIL SCREEN ───────────────────────────────────────────────────
 
+/// Pantalla de detalle de un grupo compartido.
+///
+/// Muestra un resumen del gasto total del grupo y tres pestañas:
+/// gastos (lista cronológica), saldos (balance neto por miembro y deudas
+/// pendientes del usuario actual) y miembros (con opción de expulsión
+/// para el administrador).
 class _GroupDetailScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> group;
   const _GroupDetailScreen({required this.group});
@@ -716,6 +738,8 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
     super.dispose();
   }
 
+  /// Carga los miembros activos ([_members]) y todos los miembros históricos
+  /// ([_allMembers]) del grupo desde Firestore.
   Future<void> _loadData() async {
     final repo = ref.read(groupRepositoryProvider);
     final groupId = widget.group['id'] as String;
@@ -748,6 +772,9 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
     return colors[name.codeUnits.first % colors.length];
   }
 
+  /// Calcula el saldo neto de cada miembro.
+  /// Para cada gasto suma el importe completo al pagador y resta la parte
+  /// proporcional a cada participante según los [splits].
   Map<String, double> _calculateBalances() {
     final Map<String, double> balances = {};
     for (final m in _allMembers) balances[m['userId'] as String] = 0.0;
@@ -765,6 +792,8 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
     return balances;
   }
 
+  /// Resuelve la lista mínima de transferencias necesarias para saldar
+  /// los balances del grupo (algoritmo greedy deudor–acreedor).
   List<Map<String, dynamic>> _calculateDebts() {
     final balances = _calculateBalances();
     final debtors = balances.entries
@@ -796,6 +825,8 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
     return debts;
   }
 
+  /// Muestra el código de invitación del grupo con botones para copiarlo
+  /// al portapapeles o compartirlo mediante el sistema nativo de compartir.
   void _showInviteCode(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
@@ -1554,6 +1585,8 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
     );
   }
 
+  /// Abre el bottom sheet [_AddExpenseSheet] para registrar un nuevo
+  /// gasto compartido en el grupo.
   void _showAddExpenseSheet(BuildContext context, String groupId) {
     showModalBottomSheet(
       context: context,
@@ -1641,6 +1674,9 @@ class _AddExpenseSheetState extends ConsumerState<_AddExpenseSheet> {
     super.dispose();
   }
 
+  /// Registra el gasto dividiéndolo a partes iguales entre los miembros
+  /// seleccionados ([_selectedMembers]). El importe de cada split es
+  /// `amount / selectedMembers.length`.
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     if (_descController.text.isEmpty ||

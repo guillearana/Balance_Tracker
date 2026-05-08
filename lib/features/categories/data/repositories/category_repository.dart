@@ -1,9 +1,17 @@
 import 'package:balance_tracker/features/categories/domain/models/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Repositorio que gestiona el acceso a datos de categorías en Firestore.
+///
+/// Utiliza dos colecciones:
+/// - `categories` — categorías globales predeterminadas del sistema.
+/// - `users/{userId}/categories` — categorías personalizadas del usuario.
 class CategoryRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  /// Devuelve un stream con las categorías globales predeterminadas del sistema.
+  ///
+  /// Colección Firestore: `categories`
   Stream<List<CategoryModel>> watchDefaultCategories() {
     return _firestore
         .collection('categories')
@@ -13,6 +21,9 @@ class CategoryRepository {
             .toList());
   }
 
+  /// Devuelve un stream con las categorías personalizadas del usuario [userId].
+  ///
+  /// Colección Firestore: `users/{userId}/categories`
   Stream<List<CategoryModel>> watchUserCategories(String userId) {
     return _firestore
         .collection('users')
@@ -24,6 +35,10 @@ class CategoryRepository {
             .toList());
   }
 
+  /// Guarda una nueva [category] personalizada para el usuario [userId].
+  ///
+  /// Fuerza `isDefault` a `false` y asocia el `userId` al documento.
+  /// Colección Firestore: `users/{userId}/categories`
   Future<void> addUserCategory(String userId, CategoryModel category) async {
     await _firestore
         .collection('users')
@@ -40,6 +55,9 @@ class CategoryRepository {
     });
   }
 
+  /// Elimina la categoría [categoryId] del usuario [userId].
+  ///
+  /// Colección Firestore: `users/{userId}/categories`
   Future<void> deleteUserCategory(String userId, String categoryId) async {
     await _firestore
         .collection('users')
@@ -49,6 +67,10 @@ class CategoryRepository {
         .delete();
   }
 
+  /// Inserta el conjunto de categorías predeterminadas del sistema en la
+  /// colección global `categories` mediante un batch write.
+  ///
+  /// Colección Firestore: `categories`
   Future<void> seedDefaultCategories() async {
     final categories = [
       {'name': 'Comida', 'icon': 'restaurant', 'color': '#FF6B6B', 'type': 'expense'},

@@ -10,6 +10,11 @@ import 'package:uuid/uuid.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:balance_tracker/core/providers/currency_provider.dart';
 
+/// Formulario para añadir o editar una transacción.
+///
+/// Si se pasa [transaction], el formulario se precarga en modo edición
+/// y el botón de guardar llama a [TransactionRepository.updateTransaction].
+/// En modo creación se genera un nuevo UUID y se llama a [addTransaction].
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final TransactionModel? transaction;
 
@@ -51,6 +56,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     super.dispose();
   }
 
+  /// Abre el selector de fecha nativo y actualiza [_selectedDate].
   Future<void> _selectDate() async {
     final picked = await showDatePicker(
       context: context,
@@ -61,6 +67,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     if (picked != null) setState(() => _selectedDate = picked);
   }
 
+  /// Valida el formulario y persiste la transacción en Firestore.
+  /// En modo edición actualiza el documento existente; en modo creación
+  /// genera un nuevo UUID y llama a [TransactionRepository.addTransaction].
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
@@ -105,6 +114,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     }
   }
 
+  /// Convierte el nombre de icono almacenado en Firestore al [IconData]
+  /// de Material correspondiente. Devuelve [Icons.category] por defecto.
   IconData _getCategoryIcon(String iconName) {
     const iconMap = {
       'restaurant': Icons.restaurant,
@@ -125,6 +136,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     return iconMap[iconName] ?? Icons.category;
   }
 
+  /// Convierte una cadena de color en formato `#RRGGBB` o entero decimal a [Color].
   Color _parseColor(String color) {
     if (color.startsWith('#')) {
       final hex = color.replaceFirst('#', '');

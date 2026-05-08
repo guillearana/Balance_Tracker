@@ -18,6 +18,9 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 
+/// Pantalla de control financiero con dos pestañas: presupuestos y deudas.
+///
+/// Utiliza [DefaultTabController] con [_BudgetsTab] y [_DebtsTab].
 class BudgetsScreen extends ConsumerWidget {
   const BudgetsScreen({super.key});
 
@@ -67,6 +70,10 @@ class BudgetsScreen extends ConsumerWidget {
   }
 }
 
+/// Pestaña de presupuestos mensuales.
+///
+/// Muestra cada presupuesto con su barra de progreso y alerta visual si el
+/// gasto se acerca al umbral ([BudgetModel.alertThreshold]) o lo supera.
 class _BudgetsTab extends ConsumerWidget {
   const _BudgetsTab();
 
@@ -194,6 +201,8 @@ class _BudgetsTab extends ConsumerWidget {
     );
   }
 
+  /// Abre un bottom sheet con un campo de texto para editar el límite
+  /// del presupuesto y guarda el nuevo valor mediante [BudgetRepository].
   void _showEditBudgetSheet(
     BuildContext context,
     WidgetRef ref,
@@ -273,6 +282,7 @@ class _BudgetsTab extends ConsumerWidget {
     );
   }
 
+  /// Muestra un diálogo de confirmación y elimina el presupuesto de Firestore.
   void _deleteBudget(
     BuildContext context,
     WidgetRef ref,
@@ -308,6 +318,7 @@ class _BudgetsTab extends ConsumerWidget {
     }
   }
 
+  /// Abre el bottom sheet [_AddBudgetSheet] para crear un nuevo presupuesto.
   void _showAddBudgetSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
@@ -325,6 +336,10 @@ class _BudgetsTab extends ConsumerWidget {
   }
 }
 
+/// Pestaña de deudas del usuario.
+///
+/// Muestra el total pendiente de deudas activas y la lista completa con
+/// barra de progreso del porcentaje pagado.
 class _DebtsTab extends ConsumerWidget {
   const _DebtsTab();
 
@@ -450,6 +465,8 @@ class _DebtsTab extends ConsumerWidget {
     );
   }
 
+  /// Marca la deuda como pagada: pone el estado en [DebtStatus.paid]
+  /// y el importe pendiente a 0 en Firestore.
   void _markAsPaid(WidgetRef ref, DebtModel debt) async {
     final user = ref.read(currentUserProvider);
     if (user == null) return;
@@ -457,6 +474,7 @@ class _DebtsTab extends ConsumerWidget {
     await ref.read(debtRepositoryProvider).updateDebt(user.uid, updated);
   }
 
+  /// Muestra confirmación y elimina la deuda de Firestore.
   void _deleteDebt(BuildContext context, WidgetRef ref, DebtModel debt) async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
@@ -483,6 +501,7 @@ class _DebtsTab extends ConsumerWidget {
     }
   }
 
+  /// Abre el bottom sheet [_AddDebtSheet] para registrar una nueva deuda.
   void _showAddSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
@@ -500,6 +519,12 @@ class _DebtsTab extends ConsumerWidget {
   }
 }
 
+/// Tarjeta de presupuesto con barra de progreso tricolor.
+///
+/// El color de la barra cambia según el nivel de gasto:
+/// - Verde si [spent] < [BudgetModel.alertThreshold] × [BudgetModel.limitAmount]
+/// - Amarillo si se supera el umbral pero no el límite
+/// - Rojo si [spent] ≥ [BudgetModel.limitAmount]
 class _BudgetCard extends ConsumerWidget {
   final BudgetModel budget;
   final CategoryModel category;
@@ -689,6 +714,8 @@ class _BudgetCard extends ConsumerWidget {
     );
   }
 
+  /// Convierte un color hex `#RRGGBB` a [Color]. Devuelve gris si el formato
+  /// no es válido.
   Color _hexToColor(String hex) {
     try {
       return Color(int.parse(hex.replaceFirst('#', '0xFF')));
@@ -698,6 +725,10 @@ class _BudgetCard extends ConsumerWidget {
   }
 }
 
+/// Tarjeta de deuda con barra de progreso del porcentaje pagado.
+///
+/// El progreso se calcula como `(totalAmount − pendingAmount) / totalAmount`.
+/// Muestra borde rojo si la deuda está vencida y no pagada.
 class _DebtCard extends ConsumerWidget {
   final DebtModel debt;
   final VoidCallback onMarkPaid;
@@ -913,6 +944,9 @@ class _AddBudgetSheetState extends ConsumerState<_AddBudgetSheet> {
     super.dispose();
   }
 
+  /// Crea y guarda un nuevo [BudgetModel] para el mes actual.
+  /// El campo [BudgetModel.periodMonth] se formatea como `YYYY-MM`
+  /// y el umbral de alerta por defecto es 0.8 (80 % del límite).
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     if (_selectedCategoryId == null || _amountController.text.isEmpty) {
@@ -1089,6 +1123,7 @@ class _AddDebtSheetState extends ConsumerState<_AddDebtSheet> {
   final _nameController = TextEditingController();
   final _totalController = TextEditingController();
   final _monthlyController = TextEditingController();
+  // Fecha de vencimiento por defecto: un año desde hoy.
   DateTime _dueDate = DateTime.now().add(const Duration(days: 365));
   bool _isLoading = false;
 

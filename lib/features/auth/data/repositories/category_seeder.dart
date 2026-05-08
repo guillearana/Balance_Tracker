@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Inserta categorías predeterminadas para un usuario recién registrado.
 class CategorySeeder {
+  /// Crea en batch las categorías predeterminadas en la subcolección
+  /// `users/{userId}/categories` del usuario [userId].
+  ///
+  /// Se ejecuta típicamente durante el registro inicial del usuario.
   static Future<void> seedDefaultCategories(String userId) async {
     final firestore = FirebaseFirestore.instance;
     final categoriesRef = firestore

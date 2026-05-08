@@ -20,6 +20,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/features/transactions/presentation/screens/add_transaction_screen.dart';
 
+/// Devuelve el saludo localizado según la hora: buenos días (<13h),
+/// buenas tardes (<20h) o buenas noches.
 String _getGreeting(DateTime now, AppLocalizations l10n) {
   final hour = now.hour;
   if (hour < 13) return l10n.goodMorning;
@@ -27,9 +29,16 @@ String _getGreeting(DateTime now, AppLocalizations l10n) {
   return l10n.goodEvening;
 }
 
+/// Pantalla principal del dashboard.
+///
+/// Muestra el saldo del mes en curso (ingresos − gastos), las últimas 5
+/// transacciones y los próximos pagos de suscripciones. El FAB abre
+/// [AddTransactionScreen] para registrar una nueva transacción.
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
+  /// Muestra un bottom sheet con las monedas disponibles (€, $, £, ¥, CHF)
+  /// y aplica la moneda seleccionada mediante [CurrencyNotifier].
   void _showCurrencyDialog(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final currencies = [
@@ -128,6 +137,8 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
+  /// Muestra el menú de perfil con opciones de tema, moneda, idioma,
+  /// información de la app y cierre de sesión (con confirmación).
   void _showProfileMenu(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = ref.read(themeNotifierProvider) == ThemeMode.dark;
@@ -291,6 +302,8 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
+  /// Muestra un diálogo para cambiar el idioma entre español, inglés y euskera
+  /// mediante [LocaleNotifier].
   void _showLanguageDialog(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     showDialog(

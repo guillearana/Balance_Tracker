@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Usuario\\\\balance_tracker\\\\lib\" -Recurse | Sort-Object FullName | ForEach-Object { $_.FullName })",
+      "Bash(dart doc *)"
+    ]
+  }
+}

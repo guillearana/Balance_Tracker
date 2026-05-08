@@ -5,11 +5,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'budget_provider.g.dart';
 
+/// Expone una instancia singleton de [BudgetRepository].
 @riverpod
 BudgetRepository budgetRepository(BudgetRepositoryRef ref) {
   return BudgetRepository();
 }
 
+/// Expone un stream con la lista de presupuestos del usuario autenticado.
+///
+/// Devuelve un stream vacío si no hay usuario activo.
+/// Utiliza [budgetRepositoryProvider] y [currentUserProvider].
 @riverpod
 Stream<List<BudgetModel>> budgets(BudgetsRef ref) {
   final user = ref.watch(currentUserProvider);

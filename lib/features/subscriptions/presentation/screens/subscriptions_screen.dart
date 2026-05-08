@@ -10,6 +10,11 @@ import 'package:uuid/uuid.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:balance_tracker/core/providers/currency_provider.dart';
 
+/// Pantalla de suscripciones activas.
+///
+/// Muestra el gasto mensual total (solo frecuencia mensual) y la lista
+/// de suscripciones con los días restantes hasta el próximo pago.
+/// Resalta en rojo las suscripciones con ≤ 3 días.
 class SubscriptionsScreen extends ConsumerWidget {
   const SubscriptionsScreen({super.key});
 
@@ -158,6 +163,8 @@ class SubscriptionsScreen extends ConsumerWidget {
     );
   }
 
+  /// Muestra un diálogo de confirmación y cancela la suscripción en Firestore
+  /// mediante [SubscriptionRepository.cancelSubscription].
   void _cancelSubscription(
     BuildContext context,
     WidgetRef ref,
@@ -190,6 +197,7 @@ class SubscriptionsScreen extends ConsumerWidget {
     }
   }
 
+  /// Abre el bottom sheet [_AddSubscriptionSheet] para crear una suscripción.
   void _showAddSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
@@ -352,6 +360,8 @@ class _AddSubscriptionSheetState extends ConsumerState<_AddSubscriptionSheet> {
     super.dispose();
   }
 
+  /// Calcula la fecha del próximo pago según la frecuencia:
+  /// mensual (+1 mes), anual (+1 año) o semanal (+7 días).
   DateTime _calculateNextPayment(DateTime start, SubscriptionFrequency freq) {
     switch (freq) {
       case SubscriptionFrequency.monthly:

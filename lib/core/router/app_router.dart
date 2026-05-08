@@ -16,6 +16,20 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'app_router.g.dart';
 
+/// Constantes de ruta para toda la aplicación.
+///
+/// | Constante        | Ruta                  | Pantalla destino          |
+/// |------------------|-----------------------|---------------------------|
+/// | [login]          | `/login`              | [LoginScreen]             |
+/// | [register]       | `/register`           | [RegisterScreen]          |
+/// | [main]           | `/`                   | [DashboardScreen]         |
+/// | [analytics]      | `/analytics`          | [AnalyticsScreen]         |
+/// | [budgets]        | `/budgets`            | [BudgetsScreen]           |
+/// | [subscriptions]  | `/subscriptions`      | [SubscriptionsScreen]     |
+/// | [debts]          | `/debts`              | [DebtsScreen]             |
+/// | [groups]         | `/groups`             | [GroupsScreen]            |
+/// | [transactions]   | `/transactions`       | [TransactionsScreen]      |
+/// | [addTransaction] | `/transactions/add`   | [AddTransactionScreen]    |
 class AppRoutes {
   static const login = '/login';
   static const register = '/register';
@@ -30,6 +44,15 @@ class AppRoutes {
   static const analytics = '/analytics';
 }
 
+/// Proveedor del router principal de la aplicación.
+///
+/// Observa [authStateProvider] y redirige:
+/// - A [AppRoutes.login] si el usuario no está autenticado.
+/// - A [AppRoutes.main] si el usuario ya está autenticado e intenta acceder
+///   a una ruta de auth.
+/// Las rutas shell (`/`, `/analytics`, `/budgets`, `/subscriptions`,
+/// `/debts`, `/groups`) se envuelven en [MainScreen] con la barra de
+/// navegación inferior.
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
   final authState = ref.watch(authStateProvider);

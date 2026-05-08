@@ -7,6 +7,11 @@ import 'package:balance_tracker/features/auth/data/repositories/category_seeder.
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:balance_tracker/features/auth/providers/auth_provider.dart';
 
+/// Pantalla de registro de nuevo usuario con email y contraseña.
+///
+/// Al crear la cuenta en Firebase Auth, actualiza el nombre visible del usuario
+/// y llama a [CategorySeeder.seedDefaultCategories] para poblar las categorías
+/// iniciales del nuevo usuario.
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -34,6 +39,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     super.dispose();
   }
 
+  /// Valida el formulario, crea la cuenta en Firebase y siembra las categorías.
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() {
@@ -67,6 +73,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
   }
 
+  /// Traduce un código de error de Firebase Auth a un mensaje localizado.
   String _getErrorMessage(String code) {
     final l10n = AppLocalizations.of(context)!;
     switch (code) {

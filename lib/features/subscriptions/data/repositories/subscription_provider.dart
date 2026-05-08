@@ -5,11 +5,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'subscription_provider.g.dart';
 
+/// Expone una instancia singleton de [SubscriptionRepository].
 @riverpod
 SubscriptionRepository subscriptionRepository(SubscriptionRepositoryRef ref) {
   return SubscriptionRepository();
 }
 
+/// Expone un stream con las suscripciones activas del usuario autenticado.
+///
+/// Devuelve un stream vacío si no hay usuario activo.
+/// Utiliza [subscriptionRepositoryProvider] y [currentUserProvider].
 @riverpod
 Stream<List<SubscriptionModel>> subscriptions(SubscriptionsRef ref) {
   final user = ref.watch(currentUserProvider);

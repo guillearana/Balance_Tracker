@@ -9,6 +9,11 @@ import 'package:intl/intl.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:balance_tracker/core/providers/currency_provider.dart';
 
+/// Pantalla de análisis financiero.
+///
+/// Muestra un gráfico de barras con ingresos vs. gastos de los últimos
+/// 6 meses y un gráfico circular con gastos por categoría del mes actual.
+/// Usa [fl_chart] para renderizar ambos gráficos.
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
 
@@ -26,6 +31,9 @@ class AnalyticsScreen extends ConsumerWidget {
     final locale = Localizations.localeOf(context).toString();
 
     // ── Traducción de categorías ──────────────────────────────────────────
+    /// Traduce el nombre canónico de una categoría al idioma activo.
+    /// Normaliza el nombre (minúsculas, sin tildes) para construir la clave
+    /// del mapa y devuelve [name] sin cambios si no existe traducción.
     String translateCategory(String name) {
       final key = 'cat_${name
           .toLowerCase()

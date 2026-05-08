@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:balance_tracker/l10n/app_localizations.dart';
 
+/// Utilidad estática para traducir nombres canónicos de categorías al
+/// idioma activo de la interfaz.
+///
+/// El mapa interno relaciona el nombre en español almacenado en Firestore
+/// con un getter de [AppLocalizations]. Si no existe entrada para [name],
+/// [translate] devuelve el propio [name] sin modificar.
 class CategoryTranslator {
   static final Map<String, String Function(AppLocalizations)> _map = {
     'Comida': (l) => l.cat_comida,
@@ -20,6 +26,9 @@ class CategoryTranslator {
     'Vivienda': (l) => l.cat_vivienda,
   };
 
+  /// Devuelve la cadena localizada correspondiente a [name].
+  /// Si [AppLocalizations] no está disponible o el nombre no está en el mapa,
+  /// devuelve [name] tal cual.
   static String translate(BuildContext context, String name) {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) return name;

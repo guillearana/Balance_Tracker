@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Temas claro y oscuro de la aplicación basados en Material 3.
+///
+/// Paleta primaria: azul `#3B82F6` (Deep Navy Blue).
+/// Paleta secundaria: verde `#10B981`.
+/// Fuente: Inter (Google Fonts).
 class AppTheme {
   // Deep Navy palette
   static const _primaryColor = Color(0xFF3B82F6);
   static const _secondaryColor = Color(0xFF10B981);
 
+  /// Tema claro con fondo `#F8FAFC` y superficies blancas.
   static final light = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.light(
@@ -63,6 +69,8 @@ class AppTheme {
     ),
   );
 
+  /// Tema oscuro con fondo `#0F172A` (Slate 900) y superficies en
+  /// tonos azul-gris oscuro.
   static final dark = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.dark(

@@ -6,6 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Pantalla de inicio de sesión con email y contraseña mediante Firebase Auth.
+///
+/// Muestra el formulario de login con opción "Recordar sesión". Si el usuario
+/// no activa esa opción, aplica [Persistence.SESSION] para que la sesión
+/// no persista al cerrar el navegador.
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -29,6 +34,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  /// Valida el formulario e intenta autenticar al usuario en Firebase.
+  ///
+  /// Si `_rememberMe` es `false`, aplica [Persistence.SESSION] antes de
+  /// llamar a `signInWithEmailAndPassword`.
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() {
@@ -53,6 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  /// Traduce un código de error de Firebase Auth a un mensaje localizado.
   String _getErrorMessage(String code) {
     final l10n = AppLocalizations.of(context)!;
     switch (code) {

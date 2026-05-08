@@ -3,10 +3,16 @@ import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// Pantalla contenedora principal que envuelve el [child] activo con la
+/// barra de navegación inferior de 5 secciones.
+///
+/// El botón central navega siempre al dashboard. Lee la ruta activa de
+/// [GoRouterState] para resaltar el ítem correspondiente.
 class MainScreen extends StatelessWidget {
   final Widget child;
   const MainScreen({super.key, required this.child});
 
+  /// Devuelve el índice de navegación correspondiente a la ruta actual.
   int _getCurrentIndex(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;
     if (location == AppRoutes.analytics) return 0;

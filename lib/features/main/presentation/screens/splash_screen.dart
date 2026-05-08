@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Pantalla de inicio animada que muestra el logo durante 3 segundos.
+///
+/// Recibe el [child] que se mostrará tras el splash. Aplica una animación
+/// de entrada con fade-in de 1,5 s y después sustituye el contenido por [child].
 class SplashScreen extends StatefulWidget {
   final Widget child;
   const SplashScreen({super.key, required this.child});
