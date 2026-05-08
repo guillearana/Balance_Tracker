@@ -206,5 +206,69 @@
   "cat_inversiones": "Investments",
   "cat_regalos": "Gifts",
   "cat_suscripciones": "Subscriptions",
-  "cat_vivienda": "Housing"
+  "cat_vivienda": "Housing",
+
+  "cat_vivienda": "Housing",
+
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "darkMode": "Dark mode",
+  "lightMode": "Light mode",
+  "currency": "Currency",
+  "aboutApp": "About the app",
+  "close": "Close",
+  "update": "Update",
+  "editLimit": "Edit limit",
+  "newLimit": "New limit",
+  "deleteBudget": "Delete budget",
+  "deleteBudgetConfirm": "Delete this budget?",
+  "deleteTransaction": "Delete transaction",
+  "deleteTransactionConfirm": "Are you sure you want to delete this transaction?",
+  "editTransaction": "Edit transaction",
+  "joinGroup": "Join a group",
+  "joinWithCode": "Join with code",
+  "join": "Join",
+  "inviteCode": "Invite code",
+  "code": "Code",
+  "copy": "Copy",
+  "share": "Share",
+  "codeCopied": "Code copied to clipboard",
+  "invalidCode": "Invalid code. Please check and try again.",
+  "alreadyMember": "You are already a member of this group.",
+  "joinedGroup": "You have joined the group successfully.",
+  "removeMember": "Remove member",
+  "removeMemberConfirm": "Remove {name} from the group?",
+  "@removeMemberConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "shareInvite": "Join my group \"{group}\" on BalanceTracker with the code: {code}",
+  "@shareInvite": {
+    "placeholders": {
+      "group": { "type": "String" },
+      "code": { "type": "String" }
+    }
+  },
+  "inviteSubject": "BalanceTracker group invitation",
+  "shareCodePrompt": "Share this code so others can join \"{group}\":",
+  "@shareCodePrompt": {
+    "placeholders": {
+      "group": { "type": "String" }
+    }
+  },
+  "joinCodeHint": "Enter the invite code that was shared with you.",
+  "yourSharedGroups": "Your shared groups",
+  "createOrJoin": "Create a group or join with a code",
+  "selectMemberForSplit": "Select at least one member to split the expense.",
+  "divideBetween": "Divide between:",
+  "pendingPayment": "Pending payment",
+  "owesTo": "{from} owes {to}",
+  "@owesTo": {
+    "placeholders": {
+      "from": { "type": "String" },
+      "to": { "type": "String" }
+    }
+  }
 }

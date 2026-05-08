@@ -921,6 +921,240 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Vivienda'**
   String get cat_vivienda;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In es, this message translates to:
+  /// **'Buenos días'**
+  String get goodMorning;
+
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In es, this message translates to:
+  /// **'Buenas tardes'**
+  String get goodAfternoon;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In es, this message translates to:
+  /// **'Buenas noches'**
+  String get goodEvening;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo oscuro'**
+  String get darkMode;
+
+  /// No description provided for @lightMode.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo claro'**
+  String get lightMode;
+
+  /// No description provided for @currency.
+  ///
+  /// In es, this message translates to:
+  /// **'Moneda'**
+  String get currency;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In es, this message translates to:
+  /// **'Sobre la app'**
+  String get aboutApp;
+
+  /// No description provided for @close.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get close;
+
+  /// No description provided for @update.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar'**
+  String get update;
+
+  /// No description provided for @editLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar límite'**
+  String get editLimit;
+
+  /// No description provided for @newLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo límite'**
+  String get newLimit;
+
+  /// No description provided for @deleteBudget.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar presupuesto'**
+  String get deleteBudget;
+
+  /// No description provided for @deleteBudgetConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar este presupuesto?'**
+  String get deleteBudgetConfirm;
+
+  /// No description provided for @deleteTransaction.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar transacción'**
+  String get deleteTransaction;
+
+  /// No description provided for @deleteTransactionConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Estás seguro de eliminar esta transacción?'**
+  String get deleteTransactionConfirm;
+
+  /// No description provided for @editTransaction.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar transacción'**
+  String get editTransaction;
+
+  /// No description provided for @joinGroup.
+  ///
+  /// In es, this message translates to:
+  /// **'Unirse a un grupo'**
+  String get joinGroup;
+
+  /// No description provided for @joinWithCode.
+  ///
+  /// In es, this message translates to:
+  /// **'Unirse con código'**
+  String get joinWithCode;
+
+  /// No description provided for @join.
+  ///
+  /// In es, this message translates to:
+  /// **'Unirse'**
+  String get join;
+
+  /// No description provided for @inviteCode.
+  ///
+  /// In es, this message translates to:
+  /// **'Código de invitación'**
+  String get inviteCode;
+
+  /// No description provided for @code.
+  ///
+  /// In es, this message translates to:
+  /// **'Código'**
+  String get code;
+
+  /// No description provided for @copy.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar'**
+  String get copy;
+
+  /// No description provided for @share.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir'**
+  String get share;
+
+  /// No description provided for @codeCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'Código copiado al portapapeles'**
+  String get codeCopied;
+
+  /// No description provided for @invalidCode.
+  ///
+  /// In es, this message translates to:
+  /// **'Código no válido. Comprueba e inténtalo de nuevo.'**
+  String get invalidCode;
+
+  /// No description provided for @alreadyMember.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya eres miembro de este grupo.'**
+  String get alreadyMember;
+
+  /// No description provided for @joinedGroup.
+  ///
+  /// In es, this message translates to:
+  /// **'Te has unido al grupo correctamente.'**
+  String get joinedGroup;
+
+  /// No description provided for @removeMember.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar miembro'**
+  String get removeMember;
+
+  /// No description provided for @removeMemberConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar a {name} del grupo?'**
+  String removeMemberConfirm(String name);
+
+  /// No description provided for @shareInvite.
+  ///
+  /// In es, this message translates to:
+  /// **'Únete a mi grupo \"{group}\" en BalanceTracker con el código: {code}'**
+  String shareInvite(String group, String code);
+
+  /// No description provided for @inviteSubject.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitación a grupo BalanceTracker'**
+  String get inviteSubject;
+
+  /// No description provided for @shareCodePrompt.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparte este código para que otros se unan a \"{group}\":'**
+  String shareCodePrompt(String group);
+
+  /// No description provided for @joinCodeHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Introduce el código de invitación que te han compartido.'**
+  String get joinCodeHint;
+
+  /// No description provided for @yourSharedGroups.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus grupos compartidos'**
+  String get yourSharedGroups;
+
+  /// No description provided for @createOrJoin.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea un grupo o únete con un código'**
+  String get createOrJoin;
+
+  /// No description provided for @selectMemberForSplit.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona al menos un miembro para dividir el gasto.'**
+  String get selectMemberForSplit;
+
+  /// No description provided for @divideBetween.
+  ///
+  /// In es, this message translates to:
+  /// **'Divide entre:'**
+  String get divideBetween;
+
+  /// No description provided for @pendingPayment.
+  ///
+  /// In es, this message translates to:
+  /// **'Pago pendiente'**
+  String get pendingPayment;
+
+  /// No description provided for @owesTo.
+  ///
+  /// In es, this message translates to:
+  /// **'{from} debe a {to}'**
+  String owesTo(String from, String to);
 }
 
 class _AppLocalizationsDelegate

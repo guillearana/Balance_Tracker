@@ -442,4 +442,131 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cat_vivienda => 'Housing';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get goodAfternoon => 'Good afternoon';
+
+  @override
+  String get goodEvening => 'Good evening';
+
+  @override
+  String get darkMode => 'Dark mode';
+
+  @override
+  String get lightMode => 'Light mode';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
+  String get aboutApp => 'About the app';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get editLimit => 'Edit limit';
+
+  @override
+  String get newLimit => 'New limit';
+
+  @override
+  String get deleteBudget => 'Delete budget';
+
+  @override
+  String get deleteBudgetConfirm => 'Delete this budget?';
+
+  @override
+  String get deleteTransaction => 'Delete transaction';
+
+  @override
+  String get deleteTransactionConfirm =>
+      'Are you sure you want to delete this transaction?';
+
+  @override
+  String get editTransaction => 'Edit transaction';
+
+  @override
+  String get joinGroup => 'Join a group';
+
+  @override
+  String get joinWithCode => 'Join with code';
+
+  @override
+  String get join => 'Join';
+
+  @override
+  String get inviteCode => 'Invite code';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get codeCopied => 'Code copied to clipboard';
+
+  @override
+  String get invalidCode => 'Invalid code. Please check and try again.';
+
+  @override
+  String get alreadyMember => 'You are already a member of this group.';
+
+  @override
+  String get joinedGroup => 'You have joined the group successfully.';
+
+  @override
+  String get removeMember => 'Remove member';
+
+  @override
+  String removeMemberConfirm(String name) {
+    return 'Remove $name from the group?';
+  }
+
+  @override
+  String shareInvite(String group, String code) {
+    return 'Join my group \"$group\" on BalanceTracker with the code: $code';
+  }
+
+  @override
+  String get inviteSubject => 'BalanceTracker group invitation';
+
+  @override
+  String shareCodePrompt(String group) {
+    return 'Share this code so others can join \"$group\":';
+  }
+
+  @override
+  String get joinCodeHint => 'Enter the invite code that was shared with you.';
+
+  @override
+  String get yourSharedGroups => 'Your shared groups';
+
+  @override
+  String get createOrJoin => 'Create a group or join with a code';
+
+  @override
+  String get selectMemberForSplit =>
+      'Select at least one member to split the expense.';
+
+  @override
+  String get divideBetween => 'Divide between:';
+
+  @override
+  String get pendingPayment => 'Pending payment';
+
+  @override
+  String owesTo(String from, String to) {
+    return '$from owes $to';
+  }
 }

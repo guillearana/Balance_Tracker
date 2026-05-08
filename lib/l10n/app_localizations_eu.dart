@@ -233,7 +233,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get totalAmount => 'Kopuru osoa';
 
   @override
-  String get monthlyPayment => 'Hileko kuota (€)';
+  String get monthlyPayment => 'Hileko kuota';
 
   @override
   String get dueDate => 'Epemuga';
@@ -442,4 +442,131 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get cat_vivienda => 'Etxebizitza';
+
+  @override
+  String get goodMorning => 'Egun on';
+
+  @override
+  String get goodAfternoon => 'Arratsalde on';
+
+  @override
+  String get goodEvening => 'Gabon';
+
+  @override
+  String get darkMode => 'Modu iluna';
+
+  @override
+  String get lightMode => 'Modu argia';
+
+  @override
+  String get currency => 'Moneta';
+
+  @override
+  String get aboutApp => 'Aplikazioari buruz';
+
+  @override
+  String get close => 'Itxi';
+
+  @override
+  String get update => 'Eguneratu';
+
+  @override
+  String get editLimit => 'Muga editatu';
+
+  @override
+  String get newLimit => 'Muga berria';
+
+  @override
+  String get deleteBudget => 'Aurrekontua ezabatu';
+
+  @override
+  String get deleteBudgetConfirm => 'Aurrekontu hau ezabatu?';
+
+  @override
+  String get deleteTransaction => 'Transakzioa ezabatu';
+
+  @override
+  String get deleteTransactionConfirm =>
+      'Ziur zaude transakzio hau ezabatu nahi duzula?';
+
+  @override
+  String get editTransaction => 'Transakzioa editatu';
+
+  @override
+  String get joinGroup => 'Talde batera sartu';
+
+  @override
+  String get joinWithCode => 'Kodearekin sartu';
+
+  @override
+  String get join => 'Sartu';
+
+  @override
+  String get inviteCode => 'Gonbidapen kodea';
+
+  @override
+  String get code => 'Kodea';
+
+  @override
+  String get copy => 'Kopiatu';
+
+  @override
+  String get share => 'Partekatu';
+
+  @override
+  String get codeCopied => 'Kodea arbelera kopiatua';
+
+  @override
+  String get invalidCode => 'Kode baliogabea. Egiaztatu eta saiatu berriro.';
+
+  @override
+  String get alreadyMember => 'Dagoeneko talde honetako kidea zara.';
+
+  @override
+  String get joinedGroup => 'Taldean ondo sartu zara.';
+
+  @override
+  String get removeMember => 'Kidea kendu';
+
+  @override
+  String removeMemberConfirm(String name) {
+    return '$name taldetik kendu?';
+  }
+
+  @override
+  String shareInvite(String group, String code) {
+    return 'Sartu nire \"$group\" taldean BalanceTracker-en kode honekin: $code';
+  }
+
+  @override
+  String get inviteSubject => 'BalanceTracker talde gonbidapena';
+
+  @override
+  String shareCodePrompt(String group) {
+    return 'Partekatu kode hau besteak \"$group\" taldera sartu daitezen:';
+  }
+
+  @override
+  String get joinCodeHint => 'Sartu partekatu dizuten gonbidapen kodea.';
+
+  @override
+  String get yourSharedGroups => 'Zure talde partekatuak';
+
+  @override
+  String get createOrJoin => 'Sortu talde bat edo sartu kode batekin';
+
+  @override
+  String get selectMemberForSplit =>
+      'Hautatu gutxienez kide bat gastua banatzeko.';
+
+  @override
+  String get divideBetween => 'Banatu:';
+
+  @override
+  String get pendingPayment => 'Ordainketa pendientea';
+
+  @override
+  String owesTo(String from, String to) {
+    return '$from-(e)k $to-(r)i zor dio';
+  }
 }

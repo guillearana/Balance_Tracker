@@ -206,5 +206,69 @@
   "cat_inversiones": "Inversiones",
   "cat_regalos": "Regalos",
   "cat_suscripciones": "Suscripciones",
-  "cat_vivienda": "Vivienda"
+  "cat_vivienda": "Vivienda",
+
+  "cat_vivienda": "Vivienda",
+
+  "goodMorning": "Buenos días",
+  "goodAfternoon": "Buenas tardes",
+  "goodEvening": "Buenas noches",
+  "darkMode": "Modo oscuro",
+  "lightMode": "Modo claro",
+  "currency": "Moneda",
+  "aboutApp": "Sobre la app",
+  "close": "Cerrar",
+  "update": "Actualizar",
+  "editLimit": "Editar límite",
+  "newLimit": "Nuevo límite",
+  "deleteBudget": "Eliminar presupuesto",
+  "deleteBudgetConfirm": "¿Eliminar este presupuesto?",
+  "deleteTransaction": "Eliminar transacción",
+  "deleteTransactionConfirm": "¿Estás seguro de eliminar esta transacción?",
+  "editTransaction": "Editar transacción",
+  "joinGroup": "Unirse a un grupo",
+  "joinWithCode": "Unirse con código",
+  "join": "Unirse",
+  "inviteCode": "Código de invitación",
+  "code": "Código",
+  "copy": "Copiar",
+  "share": "Compartir",
+  "codeCopied": "Código copiado al portapapeles",
+  "invalidCode": "Código no válido. Comprueba e inténtalo de nuevo.",
+  "alreadyMember": "Ya eres miembro de este grupo.",
+  "joinedGroup": "Te has unido al grupo correctamente.",
+  "removeMember": "Eliminar miembro",
+  "removeMemberConfirm": "¿Eliminar a {name} del grupo?",
+  "@removeMemberConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "shareInvite": "Únete a mi grupo \"{group}\" en BalanceTracker con el código: {code}",
+  "@shareInvite": {
+    "placeholders": {
+      "group": { "type": "String" },
+      "code": { "type": "String" }
+    }
+  },
+  "inviteSubject": "Invitación a grupo BalanceTracker",
+  "shareCodePrompt": "Comparte este código para que otros se unan a \"{group}\":",
+  "@shareCodePrompt": {
+    "placeholders": {
+      "group": { "type": "String" }
+    }
+  },
+  "joinCodeHint": "Introduce el código de invitación que te han compartido.",
+  "yourSharedGroups": "Tus grupos compartidos",
+  "createOrJoin": "Crea un grupo o únete con un código",
+  "selectMemberForSplit": "Selecciona al menos un miembro para dividir el gasto.",
+  "divideBetween": "Divide entre:",
+  "pendingPayment": "Pago pendiente",
+  "owesTo": "{from} debe a {to}",
+  "@owesTo": {
+    "placeholders": {
+      "from": { "type": "String" },
+      "to": { "type": "String" }
+    }
+  }
 }

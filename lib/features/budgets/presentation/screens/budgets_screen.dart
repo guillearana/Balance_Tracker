@@ -199,6 +199,7 @@ class _BudgetsTab extends ConsumerWidget {
     WidgetRef ref,
     BudgetModel budget,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController(
       text: budget.limitAmount.toStringAsFixed(2).replaceAll('.', ','),
     );
@@ -223,7 +224,7 @@ class _BudgetsTab extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Editar límite',
+                  l10n.editLimit,
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -241,9 +242,9 @@ class _BudgetsTab extends ConsumerWidget {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: const InputDecoration(
-                labelText: 'Nuevo límite (€)',
-                prefixIcon: Icon(Icons.payments_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.newLimit,
+                prefixIcon: const Icon(Icons.payments_outlined),
               ),
             ),
             const SizedBox(height: 24),
@@ -263,7 +264,7 @@ class _BudgetsTab extends ConsumerWidget {
                       .updateBudget(user.uid, updated);
                   if (dialogContext.mounted) Navigator.pop(dialogContext);
                 },
-                child: const Text('Actualizar'),
+                child: Text(l10n.update),
               ),
             ),
           ],
@@ -281,8 +282,8 @@ class _BudgetsTab extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text('Eliminar presupuesto'),
-        content: Text('¿Eliminar este presupuesto?'),
+        title: Text(l10n.deleteBudget),
+        content: Text(l10n.deleteBudgetConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),

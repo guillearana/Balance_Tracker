@@ -98,7 +98,7 @@
   "newDebt": "Zor berria",
   "totalPending": "Guztira zain",
   "totalAmount": "Kopuru osoa",
-  "monthlyPayment": "Hileko kuota (€)",
+  "monthlyPayment": "Hileko kuota",
   "dueDate": "Epemuga",
   "due": "Epemuga: {date}",
   "@due": {
@@ -206,5 +206,68 @@
   "cat_inversiones": "Inbertsioak",
   "cat_regalos": "Opariak",
   "cat_suscripciones": "Harpidetzak",
-  "cat_vivienda": "Etxebizitza"
+  "cat_vivienda": "Etxebizitza",
+  "cat_vivienda": "Etxebizitza",
+
+  "goodMorning": "Egun on",
+  "goodAfternoon": "Arratsalde on",
+  "goodEvening": "Gabon",
+  "darkMode": "Modu iluna",
+  "lightMode": "Modu argia",
+  "currency": "Moneta",
+  "aboutApp": "Aplikazioari buruz",
+  "close": "Itxi",
+  "update": "Eguneratu",
+  "editLimit": "Muga editatu",
+  "newLimit": "Muga berria",
+  "deleteBudget": "Aurrekontua ezabatu",
+  "deleteBudgetConfirm": "Aurrekontu hau ezabatu?",
+  "deleteTransaction": "Transakzioa ezabatu",
+  "deleteTransactionConfirm": "Ziur zaude transakzio hau ezabatu nahi duzula?",
+  "editTransaction": "Transakzioa editatu",
+  "joinGroup": "Talde batera sartu",
+  "joinWithCode": "Kodearekin sartu",
+  "join": "Sartu",
+  "inviteCode": "Gonbidapen kodea",
+  "code": "Kodea",
+  "copy": "Kopiatu",
+  "share": "Partekatu",
+  "codeCopied": "Kodea arbelera kopiatua",
+  "invalidCode": "Kode baliogabea. Egiaztatu eta saiatu berriro.",
+  "alreadyMember": "Dagoeneko talde honetako kidea zara.",
+  "joinedGroup": "Taldean ondo sartu zara.",
+  "removeMember": "Kidea kendu",
+  "removeMemberConfirm": "{name} taldetik kendu?",
+  "@removeMemberConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "shareInvite": "Sartu nire \"{group}\" taldean BalanceTracker-en kode honekin: {code}",
+  "@shareInvite": {
+    "placeholders": {
+      "group": { "type": "String" },
+      "code": { "type": "String" }
+    }
+  },
+  "inviteSubject": "BalanceTracker talde gonbidapena",
+  "shareCodePrompt": "Partekatu kode hau besteak \"{group}\" taldera sartu daitezen:",
+  "@shareCodePrompt": {
+    "placeholders": {
+      "group": { "type": "String" }
+    }
+  },
+  "joinCodeHint": "Sartu partekatu dizuten gonbidapen kodea.",
+  "yourSharedGroups": "Zure talde partekatuak",
+  "createOrJoin": "Sortu talde bat edo sartu kode batekin",
+  "selectMemberForSplit": "Hautatu gutxienez kide bat gastua banatzeko.",
+  "divideBetween": "Banatu:",
+  "pendingPayment": "Ordainketa pendientea",
+  "owesTo": "{from}-(e)k {to}-(r)i zor dio",
+  "@owesTo": {
+    "placeholders": {
+      "from": { "type": "String" },
+      "to": { "type": "String" }
+    }
+  }
 }

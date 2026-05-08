@@ -142,7 +142,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _isEditing ? 'Editar transacción' : l10n.newTransaction,
+          _isEditing ? l10n.editTransaction : l10n.newTransaction,
           style: GoogleFonts.inter(fontWeight: FontWeight.w600),
         ),
         leading: IconButton(
@@ -387,7 +387,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                           color: Colors.white,
                         ),
                       )
-                    : Text(_isEditing ? 'Actualizar' : l10n.save),
+                    : Text(_isEditing ? l10n.update : l10n.save),
               ),
             ),
           ],

@@ -20,17 +20,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:balance_tracker/features/transactions/presentation/screens/add_transaction_screen.dart';
 
-String _getGreeting(DateTime now) {
+String _getGreeting(DateTime now, AppLocalizations l10n) {
   final hour = now.hour;
-  if (hour < 13) return 'Buenos días';
-  if (hour < 20) return 'Buenas tardes';
-  return 'Buenas noches';
+  if (hour < 13) return l10n.goodMorning;
+  if (hour < 20) return l10n.goodAfternoon;
+  return l10n.goodEvening;
 }
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   void _showCurrencyDialog(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final currencies = [
       {'symbol': '€', 'name': 'Euro'},
       {'symbol': '\$', 'name': 'Dólar'},
@@ -65,7 +66,7 @@ class DashboardScreen extends ConsumerWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Seleccionar moneda',
+                    l10n.currency,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -155,7 +156,7 @@ class DashboardScreen extends ConsumerWidget {
                 leading: Icon(
                   isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
                 ),
-                title: Text(isDark ? 'Modo claro' : 'Modo oscuro'),
+                title: Text(isDark ? l10n.lightMode : l10n.darkMode),
                 onTap: () {
                   ref.read(themeNotifierProvider.notifier).toggleTheme();
                   Navigator.of(ctx).pop();
@@ -163,7 +164,9 @@ class DashboardScreen extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.payments_outlined),
-                title: Text('Moneda  ·  ${ref.read(currencyNotifierProvider)}'),
+                title: Text(
+                  '${l10n.currency}  ·  ${ref.read(currencyNotifierProvider)}',
+                ),
                 onTap: () {
                   Navigator.of(ctx).pop();
                   _showCurrencyDialog(context, ref);
@@ -179,7 +182,7 @@ class DashboardScreen extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.info_outline),
-                title: const Text('Sobre la app'),
+                title: Text(l10n.aboutApp),
                 onTap: () {
                   Navigator.of(ctx).pop();
                   showDialog(
@@ -241,7 +244,7 @@ class DashboardScreen extends ConsumerWidget {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(dialogContext),
-                          child: const Text('Cerrar'),
+                          child: Text(l10n.close),
                         ),
                       ],
                     ),
@@ -329,7 +332,6 @@ class DashboardScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toString();
     var user = ref.watch(currentUserProvider);
-    // Si el usuario no tiene nombre, refrescar desde Firebase
     if (user != null &&
         (user.displayName == null || user.displayName!.isEmpty)) {
       user = FirebaseAuth.instance.currentUser;
@@ -371,7 +373,7 @@ class DashboardScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${_getGreeting(now)}, ${user?.displayName?.split(' ').first ?? 'Usuario'}',
+                          '${_getGreeting(now, l10n)}, ${user?.displayName?.split(' ').first ?? 'Usuario'}',
                           style: GoogleFonts.inter(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -582,22 +584,20 @@ class DashboardScreen extends ConsumerWidget {
                           return await showDialog<bool>(
                                 context: context,
                                 builder: (dialogContext) => AlertDialog(
-                                  title: const Text('Eliminar transacción'),
-                                  content: const Text(
-                                    '¿Estás seguro de eliminar esta transacción?',
-                                  ),
+                                  title: Text(l10n.deleteTransaction),
+                                  content: Text(l10n.deleteTransactionConfirm),
                                   actions: [
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.pop(dialogContext, false),
-                                      child: const Text('No'),
+                                      child: Text(l10n.no),
                                     ),
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.pop(dialogContext, true),
-                                      child: const Text(
-                                        'Sí, eliminar',
-                                        style: TextStyle(
+                                      child: Text(
+                                        l10n.yesDelete,
+                                        style: const TextStyle(
                                           color: Color(0xFFEF4444),
                                         ),
                                       ),
@@ -799,7 +799,6 @@ class _SummaryChip extends StatelessWidget {
 
 class _TransactionTile extends ConsumerWidget {
   final TransactionModel transaction;
-
   const _TransactionTile({required this.transaction});
 
   IconData _getCategoryIcon(String iconName) {
@@ -896,7 +895,7 @@ class _TransactionTile extends ConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${catName} · ${DateFormat('dd MMM', locale).format(transaction.date)}',
+                  '$catName · ${DateFormat('dd MMM', locale).format(transaction.date)}',
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -934,7 +933,6 @@ class _TransactionTile extends ConsumerWidget {
 
 class _SubscriptionTile extends ConsumerWidget {
   final SubscriptionModel subscription;
-
   const _SubscriptionTile({required this.subscription});
 
   @override
@@ -945,7 +943,6 @@ class _SubscriptionTile extends ConsumerWidget {
       locale: 'es_ES',
       symbol: ref.watch(currencyNotifierProvider),
     );
-
     final daysLeft = subscription.nextPayment.difference(DateTime.now()).inDays;
 
     return Container(
@@ -1011,7 +1008,6 @@ class _SubscriptionTile extends ConsumerWidget {
 class _EmptyState extends StatelessWidget {
   final IconData icon;
   final String message;
-
   const _EmptyState({required this.icon, required this.message});
 
   @override

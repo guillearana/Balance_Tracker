@@ -442,4 +442,132 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cat_vivienda => 'Vivienda';
+
+  @override
+  String get goodMorning => 'Buenos días';
+
+  @override
+  String get goodAfternoon => 'Buenas tardes';
+
+  @override
+  String get goodEvening => 'Buenas noches';
+
+  @override
+  String get darkMode => 'Modo oscuro';
+
+  @override
+  String get lightMode => 'Modo claro';
+
+  @override
+  String get currency => 'Moneda';
+
+  @override
+  String get aboutApp => 'Sobre la app';
+
+  @override
+  String get close => 'Cerrar';
+
+  @override
+  String get update => 'Actualizar';
+
+  @override
+  String get editLimit => 'Editar límite';
+
+  @override
+  String get newLimit => 'Nuevo límite';
+
+  @override
+  String get deleteBudget => 'Eliminar presupuesto';
+
+  @override
+  String get deleteBudgetConfirm => '¿Eliminar este presupuesto?';
+
+  @override
+  String get deleteTransaction => 'Eliminar transacción';
+
+  @override
+  String get deleteTransactionConfirm =>
+      '¿Estás seguro de eliminar esta transacción?';
+
+  @override
+  String get editTransaction => 'Editar transacción';
+
+  @override
+  String get joinGroup => 'Unirse a un grupo';
+
+  @override
+  String get joinWithCode => 'Unirse con código';
+
+  @override
+  String get join => 'Unirse';
+
+  @override
+  String get inviteCode => 'Código de invitación';
+
+  @override
+  String get code => 'Código';
+
+  @override
+  String get copy => 'Copiar';
+
+  @override
+  String get share => 'Compartir';
+
+  @override
+  String get codeCopied => 'Código copiado al portapapeles';
+
+  @override
+  String get invalidCode => 'Código no válido. Comprueba e inténtalo de nuevo.';
+
+  @override
+  String get alreadyMember => 'Ya eres miembro de este grupo.';
+
+  @override
+  String get joinedGroup => 'Te has unido al grupo correctamente.';
+
+  @override
+  String get removeMember => 'Eliminar miembro';
+
+  @override
+  String removeMemberConfirm(String name) {
+    return '¿Eliminar a $name del grupo?';
+  }
+
+  @override
+  String shareInvite(String group, String code) {
+    return 'Únete a mi grupo \"$group\" en BalanceTracker con el código: $code';
+  }
+
+  @override
+  String get inviteSubject => 'Invitación a grupo BalanceTracker';
+
+  @override
+  String shareCodePrompt(String group) {
+    return 'Comparte este código para que otros se unan a \"$group\":';
+  }
+
+  @override
+  String get joinCodeHint =>
+      'Introduce el código de invitación que te han compartido.';
+
+  @override
+  String get yourSharedGroups => 'Tus grupos compartidos';
+
+  @override
+  String get createOrJoin => 'Crea un grupo o únete con un código';
+
+  @override
+  String get selectMemberForSplit =>
+      'Selecciona al menos un miembro para dividir el gasto.';
+
+  @override
+  String get divideBetween => 'Divide entre:';
+
+  @override
+  String get pendingPayment => 'Pago pendiente';
+
+  @override
+  String owesTo(String from, String to) {
+    return '$from debe a $to';
+  }
 }
