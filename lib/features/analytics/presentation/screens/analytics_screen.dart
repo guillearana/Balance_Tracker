@@ -25,6 +25,36 @@ class AnalyticsScreen extends ConsumerWidget {
     final now = DateTime.now();
     final locale = Localizations.localeOf(context).toString();
 
+    // ── Traducción de categorías ──────────────────────────────────────────
+    String translateCategory(String name) {
+      final key = 'cat_${name
+          .toLowerCase()
+          .replaceAll('á', 'a')
+          .replaceAll('é', 'e')
+          .replaceAll('í', 'i')
+          .replaceAll('ó', 'o')
+          .replaceAll('ú', 'u')
+          .replaceAll(' ', '_')}';
+      final map = {
+        'cat_comida':        l10n.cat_comida,
+        'cat_transporte':    l10n.cat_transporte,
+        'cat_ocio':          l10n.cat_ocio,
+        'cat_salud':         l10n.cat_salud,
+        'cat_hogar':         l10n.cat_hogar,
+        'cat_ropa':          l10n.cat_ropa,
+        'cat_educacion':     l10n.cat_educacion,
+        'cat_otros':         l10n.cat_otros,
+        'cat_sueldo':        l10n.cat_sueldo,
+        'cat_freelance':     l10n.cat_freelance,
+        'cat_inversiones':   l10n.cat_inversiones,
+        'cat_regalos':       l10n.cat_regalos,
+        'cat_suscripciones': l10n.cat_suscripciones,
+        'cat_vivienda':      l10n.cat_vivienda,
+      };
+      return map[key] ?? name;
+    }
+    // ─────────────────────────────────────────────────────────────────────
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -73,10 +103,8 @@ class AnalyticsScreen extends ConsumerWidget {
           final categoryTotals = <String, double>{};
           final categoryColorMap = <String, Color>{};
           for (final t in monthExpenses) {
-            final cat = categories
-                .where((c) => c.id == t.categoryId)
-                .firstOrNull;
-            final name = cat?.name ?? l10n.noCategory;
+            final cat = categories.where((c) => c.id == t.categoryId).firstOrNull;
+            final name = cat != null ? translateCategory(cat.name) : l10n.noCategory; // ← fix
             categoryTotals[name] = (categoryTotals[name] ?? 0) + t.amount;
             if (cat != null && !categoryColorMap.containsKey(name)) {
               final colorStr = cat.color;
@@ -95,10 +123,7 @@ class AnalyticsScreen extends ConsumerWidget {
             children: [
               Text(
                 l10n.incomeVsExpense,
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
               Text(
@@ -122,15 +147,10 @@ class AnalyticsScreen extends ConsumerWidget {
                       barTouchData: BarTouchData(
                         touchTooltipData: BarTouchTooltipData(
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                            final label = rodIndex == 0
-                                ? l10n.incomes
-                                : l10n.expenses;
+                            final label = rodIndex == 0 ? l10n.incomes : l10n.expenses;
                             return BarTooltipItem(
                               '$label\n${currencyFormat.format(rod.toY)}',
-                              GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
+                              GoogleFonts.inter(color: Colors.white, fontSize: 12),
                             );
                           },
                         ),
@@ -187,25 +207,15 @@ class AnalyticsScreen extends ConsumerWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  _LegendDot(
-                    color: const Color(0xFF10B981),
-                    label: l10n.incomes,
-                  ),
+                  _LegendDot(color: const Color(0xFF10B981), label: l10n.incomes),
                   const SizedBox(width: 16),
-                  _LegendDot(
-                    color: const Color(0xFFEF4444),
-                    label: l10n.expenses,
-                  ),
+                  _LegendDot(color: const Color(0xFFEF4444), label: l10n.expenses),
                 ],
               ),
               const SizedBox(height: 32),
-
               Text(
                 l10n.expensesByCategory,
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
               Text(
@@ -227,9 +237,7 @@ class AnalyticsScreen extends ConsumerWidget {
                     child: Text(
                       l10n.noExpensesThisMonth,
                       style: GoogleFonts.inter(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.4,
-                        ),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -254,8 +262,7 @@ class AnalyticsScreen extends ConsumerWidget {
                                 .asMap()
                                 .entries
                                 .map((e) {
-                                  final color =
-                                      categoryColorMap[e.value.key] ??
+                                  final color = categoryColorMap[e.value.key] ??
                                       const Color(0xFFB2BEC3);
                                   final pct = totalExpense > 0
                                       ? (e.value.value / totalExpense * 100)
@@ -277,11 +284,8 @@ class AnalyticsScreen extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      ...categoryTotals.entries.toList().asMap().entries.map((
-                        e,
-                      ) {
-                        final color =
-                            categoryColorMap[e.value.key] ??
+                      ...categoryTotals.entries.toList().asMap().entries.map((e) {
+                        final color = categoryColorMap[e.value.key] ??
                             const Color(0xFFB2BEC3);
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),

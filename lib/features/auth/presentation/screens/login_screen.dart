@@ -19,6 +19,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
+  bool _rememberMe = true; // ← nuevo
   String? _errorMessage;
 
   @override
@@ -35,11 +36,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _errorMessage = null;
     });
     try {
+      if (!_rememberMe) {
+        await FirebaseAuth.instance.setPersistence(Persistence.SESSION);
+      }
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      await credential.user?.reload(); // ← añade esta línea
+      await credential.user?.reload();
     } on FirebaseAuthException catch (e) {
       setState(() {
         _errorMessage = _getErrorMessage(e.code);
@@ -169,6 +173,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           if (v.length < 6) return l10n.minChars;
                           return null;
                         },
+                      ),
+                      const SizedBox(height: 8),
+                      // ── RECORDAR SESIÓN ──
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Checkbox(
+                              value: _rememberMe,
+                              onChanged: (val) =>
+                                  setState(() => _rememberMe = val ?? true),
+                              activeColor: theme.colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () =>
+                                setState(() => _rememberMe = !_rememberMe),
+                            child: Text(
+                              l10n.rememberSession,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       if (_errorMessage != null) ...[
                         const SizedBox(height: 12),

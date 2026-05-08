@@ -190,6 +190,36 @@ abstract class AppLocalizations {
   /// **'En {days} días'**
   String daysLeft(int days);
 
+  /// No description provided for @rememberSession.
+  ///
+  /// In es, this message translates to:
+  /// **'Recordar sesión'**
+  String get rememberSession;
+
+  /// No description provided for @navLimits.
+  ///
+  /// In es, this message translates to:
+  /// **'Límites'**
+  String get navLimits;
+
+  /// No description provided for @navPayments.
+  ///
+  /// In es, this message translates to:
+  /// **'Pagos'**
+  String get navPayments;
+
+  /// No description provided for @members.
+  ///
+  /// In es, this message translates to:
+  /// **'Miembros'**
+  String get members;
+
+  /// No description provided for @admin.
+  ///
+  /// In es, this message translates to:
+  /// **'Administrador'**
+  String get admin;
+
   /// No description provided for @appSubtitle.
   ///
   /// In es, this message translates to:
@@ -837,6 +867,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ingresos'**
   String get incomes;
+
+  /// No description provided for @memberCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, one{{count} miembro} other{{count} miembros}}'**
+  String memberCount(int count);
 
   /// No description provided for @cat_comida.
   ///

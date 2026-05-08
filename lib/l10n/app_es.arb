@@ -20,6 +20,11 @@
       "days": { "type": "int" }
     }
   },
+  "rememberSession": "Recordar sesión",
+  "navLimits": "Límites",
+  "navPayments": "Pagos",
+  "members": "Miembros",
+  "admin": "Administrador",
   "appSubtitle": "Controla tus finanzas personales",
   "login": "Iniciar sesión",
   "email": "Email",
@@ -192,6 +197,9 @@
   "expensesByCategory": "Gastos por categoría",
   "noExpensesThisMonth": "No hay gastos este mes",
   "incomes": "Ingresos",
+
+  "memberCount": "{count, plural, one{{count} miembro} other{{count} miembros}}",
+  "@memberCount": { "placeholders": { "count": { "type": "int" } } },
 
   "cat_comida": "Comida",
   "cat_transporte": "Transporte",

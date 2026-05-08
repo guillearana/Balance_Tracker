@@ -20,6 +20,11 @@
       "days": { "type": "int" }
     }
   },
+  "rememberSession": "Saioa gogoratu",
+  "members": "Kideak",
+  "admin": "Administratzailea",
+  "navLimits": "Mugak",
+  "navPayments": "Ordainketak",
   "appSubtitle": "Kontrolatu zure finantza pertsonalak",
   "login": "Saioa hasi",
   "email": "Emaila",
@@ -35,6 +40,9 @@
   "errorWrongPassword": "Pasahitz okerra.",
   "errorUserDisabled": "Kontu hau desgaituta dago.",
   "errorInvalidCredential": "Email edo pasahitz okerra.",
+
+  "memberCount": "{count, plural, one{{count} kide} other{{count} kide}}",
+  "@memberCount": { "placeholders": { "count": { "type": "int" } } },
 
   "createAccount": "Kontua sortu",
   "createAccountSubtitle": "Hasi zure finantzak kontrolatzen gaur",

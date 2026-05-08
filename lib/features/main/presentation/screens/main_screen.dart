@@ -1,4 +1,5 @@
 import 'package:balance_tracker/core/router/app_router.dart';
+import 'package:balance_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,6 +20,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final currentIndex = _getCurrentIndex(context);
 
     return Scaffold(
@@ -43,14 +45,14 @@ class MainScreen extends StatelessWidget {
                 _NavItem(
                   icon: Icons.bar_chart_outlined,
                   activeIcon: Icons.bar_chart,
-                  label: 'Análisis',
+                  label: l10n.analysis,
                   isActive: currentIndex == 0,
                   onTap: () => context.go(AppRoutes.analytics),
                 ),
                 _NavItem(
                   icon: Icons.receipt_long_outlined,
                   activeIcon: Icons.receipt_long,
-                  label: 'Límites',
+                  label: l10n.navLimits,
                   isActive: currentIndex == 1,
                   onTap: () => context.go(AppRoutes.budgets),
                 ),
@@ -64,9 +66,7 @@ class MainScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: theme.colorScheme.primary.withValues(
-                            alpha: 0.4,
-                          ),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.4),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -82,14 +82,14 @@ class MainScreen extends StatelessWidget {
                 _NavItem(
                   icon: Icons.repeat_outlined,
                   activeIcon: Icons.repeat,
-                  label: 'Pagos',
+                  label: l10n.navPayments,
                   isActive: currentIndex == 3,
                   onTap: () => context.go(AppRoutes.subscriptions),
                 ),
                 _NavItem(
                   icon: Icons.group_outlined,
                   activeIcon: Icons.group,
-                  label: 'Grupos',
+                  label: l10n.groups,
                   isActive: currentIndex == 4,
                   onTap: () => context.go(AppRoutes.groups),
                 ),

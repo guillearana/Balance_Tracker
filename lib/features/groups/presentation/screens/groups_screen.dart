@@ -402,7 +402,7 @@ class _GroupCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    '$memberCount miembro${memberCount == 1 ? '' : 's'}',
+                    AppLocalizations.of(context)!.memberCount(memberCount),
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -1052,7 +1052,7 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
                           tabs: [
                             Tab(text: l10n.expenses),
                             Tab(text: l10n.balances),
-                            const Tab(text: 'Miembros'),
+                            Tab(text: l10n.members),
                           ],
                           labelStyle: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
@@ -1455,7 +1455,7 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
                                             ),
                                             if (isMemberAdmin)
                                               Text(
-                                                'Admin',
+                                                l10n.admin,
                                                 style: GoogleFonts.inter(
                                                   fontSize: 12,
                                                   color:

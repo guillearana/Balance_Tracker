@@ -56,6 +56,21 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get rememberSession => 'Recordar sesión';
+
+  @override
+  String get navLimits => 'Límites';
+
+  @override
+  String get navPayments => 'Pagos';
+
+  @override
+  String get members => 'Miembros';
+
+  @override
+  String get admin => 'Administrador';
+
+  @override
   String get appSubtitle => 'Controla tus finanzas personales';
 
   @override
@@ -400,6 +415,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get incomes => 'Ingresos';
+
+  @override
+  String memberCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count miembros',
+      one: '$count miembro',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get cat_comida => 'Comida';

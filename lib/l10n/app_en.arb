@@ -47,12 +47,18 @@
   "signIn": "Sign in",
   "errorEmailInUse": "An account already exists with this email.",
   "errorWeakPassword": "The password is too weak.",
-
+  "rememberSession": "Remember me",
   "transactions": "Transactions",
   "all": "All",
   "noTransactionsFound": "No transactions",
   "noCategory": "No category",
   "errorLoadingTransactions": "Error loading transactions",
+
+  "memberCount": "{count, plural, one{{count} member} other{{count} members}}",
+  "@memberCount": { "placeholders": { "count": { "type": "int" } } },
+
+  "navLimits": "Limits",
+  "navPayments": "Payments",
 
   "newTransaction": "New transaction",
   "selectCategory": "Select a category",
@@ -63,7 +69,8 @@
   "noteOptional": "Note (optional)",
   "save": "Save",
   "errorLoadingCategories": "Error loading categories",
-
+  "members": "Members",
+  "admin": "Admin",
   "financialControl": "Financial control",
   "budgets": "Budgets",
   "debts": "Debts",

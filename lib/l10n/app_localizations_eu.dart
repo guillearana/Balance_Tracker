@@ -56,6 +56,21 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
+  String get rememberSession => 'Saioa gogoratu';
+
+  @override
+  String get navLimits => 'Mugak';
+
+  @override
+  String get navPayments => 'Ordainketak';
+
+  @override
+  String get members => 'Kideak';
+
+  @override
+  String get admin => 'Administratzailea';
+
+  @override
   String get appSubtitle => 'Kontrolatu zure finantza pertsonalak';
 
   @override
@@ -400,6 +415,17 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get incomes => 'Sarrerak';
+
+  @override
+  String memberCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kide',
+      one: '$count kide',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get cat_comida => 'Janaria';
