@@ -1,6 +1,6 @@
 {
-    "name": "balance_tracker",
-    "short_name": "balance_tracker",
+    "name": "BalanceTracker",
+    "short_name": "BalanceTracker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
